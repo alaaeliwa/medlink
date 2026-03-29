@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedLink - Find Your Medicine Easily</title>
+    <meta name="description" content="MedLink helps you find available medicines in nearby pharmacies quickly and easily.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">Med<span>Link</span></a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html">Pharmacy Portal</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                    <li><a href="login.html" class="btn btn-accent">Login / Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Find Available Medicines Instantly</h1>
+                <p>Search for any medicine and see which pharmacies have it in stock near you.</p>
+                <div class="search-box">
+                    <input type="text" id="medicineSearch" placeholder="Enter medicine name (e.g., Panadol)...">
+                    <button class="btn btn-accent" onclick="handleSearch()">Search</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="searchResults" class="container" style="display: none;">
+            <div class="section-title">
+                <h2>Search Results</h2>
+                <p id="searchQueryText">Showing results for your search</p>
+            </div>
+            <div id="resultsGrid" class="results-grid">
+                <!-- Results UI dynamically injected here -->
+            </div>
+        </section>
+
+        <section class="how-it-works container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Getting your medicine has never been easier.</p>
+            </div>
+            <div class="steps-grid">
+                <article class="step-card card">
+                    <div class="step-icon">1</div>
+                    <h3>Search</h3>
+                    <p>Enter the name of the medicine you are looking for in the search bar.</p>
+                </article>
+                <article class="step-card card">
+                    <div class="step-icon">2</div>
+                    <h3>Compare</h3>
+                    <p>Browse available pharmacies, check availability status, and compare locations.</p>
+                </article>
+                <article class="step-card card">
+                    <div class="step-icon">3</div>
+                    <h3>Locate</h3>
+                    <p>Get the pharmacy's contact info and visit them to pick up your medicine.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="featured-medicines container">
+            <div class="section-title">
+                <h2>Featured Medicines</h2>
+                <p>Commonly searched medicines now available.</p>
+            </div>
+            <div id="featuredGrid" class="results-grid">
+                <!-- Featured medicines dynamically injected here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <a href="index.html" class="logo" style="color: white; margin-bottom: 20px; display: inline-block;">Med<span>Link</span></a>
+                    <p>Connecting patients with pharmacies for better healthcare access.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Pharmacy Network</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li>Email: support@medlink.com</li>
+                        <li>Phone: +1 (234) 567-890</li>
+                        <li>Address: 123 Health St, Med City</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 MedLink. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

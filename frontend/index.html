@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="MedLink helps you find available medicines in nearby pharmacies quickly and easily."
+    />
+    <link rel="icon" href="images/favicon.ico" />
+    <title>MedLink - Find Your Medicine Easily</title>
+    <!-- icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- import global css -->
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/home.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <a href="#"
+          ><img src="images/logo.png" alt="MedLink logo" class="logo"
+        /></a>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#Home">Home</a></li>
+            <li><a href="#Features">Features</a></li>
+            <li><a href="#How-Work">How It Works</a></li>
+          </ul>
+        </nav>
+        <div class="auth-buttons">
+          <a href="login.html" class="btn btn-accent">Log in</a>
+          <a href="register.html" class="btn btn-primary">Register</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section id="Home" class="hero container">
+        <div class="hero-content">
+          <div class="badge badge-accent">
+            <i class="fas fa-heart"></i> Trusted by 5,000+ Pharmacies
+          </div>
+          <h1>
+            Find Your <span>Medicine</span><br />
+            Easily and Quickly
+          </h1>
+          <p>
+            Stop wandering between pharmacies. MedLink connects you to real-time
+            stock availability, allowing you to locate and reserve your
+            prescriptions in seconds.
+          </p>
+
+          <div class="search-container">
+            <div class="input-group">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                class="input"
+                placeholder="Enter medicine name (e.g. Paracetamol)..."
+              />
+              <button class="btn btn-primary">Search Now</button>
+            </div>
+          </div>
+
+          <div class="flex gap-md">
+            <a href="#" class="btn btn-outline">Request Missing Medicine</a>
+            <div class="social-proof">
+              <div class="user-avatars">
+                <img src="https://i.pravatar.cc/150?u=1" alt="User" />
+                <img src="https://i.pravatar.cc/150?u=2" alt="User" />
+                <img src="https://i.pravatar.cc/150?u=3" alt="User" />
+              </div>
+              <div class="social-proof-text">
+                Join <span>10k+</span> active users
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="images/hero-machine.png" alt="Smart Pharmacy Machine" />
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section id="How-Work" class="section container">
+        <div class="section-header">
+          <h2>How MedLink Works</h2>
+          <p>
+            Three simple steps to bridge the gap between you and your healthcare
+            needs.
+          </p>
+        </div>
+        <div class="steps-container">
+          <div class="step-item">
+            <div class="step-icon">
+              <i class="fas fa-search-plus"></i>
+              <div class="step-number">01</div>
+            </div>
+            <h3>Search Medicine</h3>
+            <p>
+              Enter the name or active ingredient of the medicine you need in
+              our smart search bar.
+            </p>
+          </div>
+          <div class="step-item">
+            <div class="step-icon">
+              <i class="fas fa-clinic-medical"></i>
+              <div class="step-number">02</div>
+            </div>
+            <h3>View Pharmacies</h3>
+            <p>
+              Instantly see which nearby pharmacies have the medicine in stock
+              and compare prices.
+            </p>
+          </div>
+          <div class="step-item">
+            <div class="step-icon">
+              <i class="fas fa-mobile-alt"></i>
+              <div class="step-number">03</div>
+            </div>
+            <h3>Get It Easily</h3>
+            <p>
+              Reserve your item online or navigate directly to the pharmacy
+              using our integrated maps.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section id="Features" class="section container">
+        <div class="section-header">
+          <h2>Everything You Need for a<br />Seamless Health Journey</h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="feature-icon"><i class="fas fa-search"></i></div>
+            <h3>Fast Search</h3>
+            <p>
+              Proprietary AI-driven search that understands misspellings and
+              provides generic alternatives.
+            </p>
+          </div>
+          <div class="card">
+            <div class="feature-icon"><i class="fas fa-clock"></i></div>
+            <h3>Real-time Availability</h3>
+            <p>
+              Direct integration with pharmacy software ensures stock counts are
+              accurate to the minute.
+            </p>
+          </div>
+          <div class="card">
+            <div class="feature-icon"><i class="fas fa-cubes"></i></div>
+            <h3>Stock Management</h3>
+            <p>
+              Tools for pharmacies to track high-demand items and automate
+              inventory reordering.
+            </p>
+          </div>
+          <div class="card">
+            <div class="feature-icon"><i class="fas fa-bell"></i></div>
+            <h3>Smart Notifications</h3>
+            <p>
+              Get alerted the moment a requested medicine becomes available in
+              your local area.
+            </p>
+          </div>
+          <div class="card">
+            <div class="feature-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <h3>Location Search</h3>
+            <p>
+              Find pharmacies within walking distance or filter by those
+              offering 24/7 delivery services.
+            </p>
+          </div>
+          <div class="card">
+            <div class="feature-icon"><i class="fas fa-user-check"></i></div>
+            <h3>Verified Providers</h3>
+            <p>
+              Every pharmacy on MedLink is licensed and manually verified for
+              quality assurance.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Target Audience Section -->
+      <section class="section container">
+        <div class="section-header">
+          <h2>Who is MedLink For?</h2>
+          <p>
+            Our platform serves the entire healthcare ecosystem with tailored
+            tools for everyone.
+          </p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card audience-card">
+            <div class="audience-icon"><i class="fas fa-users"></i></div>
+            <h3>Citizens</h3>
+            <p>
+              For individuals seeking peace of mind and quick access to their
+              prescriptions.
+            </p>
+            <ul class="audience-list">
+              <li><i class="fas fa-check"></i> Locate medicines in seconds</li>
+              <li><i class="fas fa-check"></i> Compare prices locally</li>
+              <li><i class="fas fa-check"></i> Check pharmacy open hours</li>
+              <li><i class="fas fa-check"></i> Request unavailable items</li>
+            </ul>
+          </div>
+          <div class="card audience-card">
+            <div class="audience-icon"><i class="fas fa-store"></i></div>
+            <h3>Pharmacies</h3>
+            <p>
+              For business owners looking to digitize their inventory and
+              attract new customers.
+            </p>
+            <ul class="audience-list">
+              <li><i class="fas fa-check"></i> Expand digital footprint</li>
+              <li><i class="fas fa-check"></i> Reduce phone inquiries</li>
+              <li><i class="fas fa-check"></i> Manage stock efficiently</li>
+              <li><i class="fas fa-check"></i> Customer analytics dashboard</li>
+            </ul>
+          </div>
+          <div class="card audience-card">
+            <div class="audience-icon">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <h3>Admins</h3>
+            <p>
+              For regulatory bodies and health systems overseeing the
+              pharmaceutical network.
+            </p>
+            <ul class="audience-list">
+              <li><i class="fas fa-check"></i> Track medicine shortages</li>
+              <li><i class="fas fa-check"></i> Verify pharmacy licenses</li>
+              <li><i class="fas fa-check"></i> Generate region reports</li>
+              <li><i class="fas fa-check"></i> Control system access</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pharmacy Banner -->
+      <section class="section container">
+        <div class="banner">
+          <div>
+            <h2>Are you a pharmacy?</h2>
+            <p>
+              Join MedLink today and reach thousands of customers in your area.
+              Modernize your stock management for free.
+            </p>
+          </div>
+          <a href="register.html" class="btn btn-white">
+            Register as Pharmacy <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <img src="images/logo.png" alt="MedLink Logo" class="footer-logo" />
+            <p class="footer-description">
+              Connecting people with essential healthcare through technology.
+              Your health is our priority.
+            </p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer-heading">Quick Links</h4>
+            <ul class="footer-links">
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact Support</a></li>
+              <li><a href="#">Pharmacy Network</a></li>
+              <li><a href="#">Careers</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="footer-heading">Legal</h4>
+            <ul class="footer-links">
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Cookie Policy</a></li>
+              <li><a href="#">Data Security</a></li>
+            </ul>
+            
+          </div>
+          <div>
+            <h4 class="footer-heading">Stay Updated</h4>
+            <p>Subscribe to get medical alerts and platform updates.</p>
+            <a
+              href="register.html"
+              class="btn btn-primary"
+              >Enjoy MedLink</a
+            >
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 MedLink. All rights reserved.</p>
+          <div class="flex gap-md">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+            <a href="#">Cookies</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

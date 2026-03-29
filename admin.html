@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedLink - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-sidebar { background: #0f172a; color: white; }
+        .admin-sidebar .sidebar-link { color: white; opacity: 0.7; }
+        .admin-sidebar .sidebar-link.active { background: rgba(255,255,255,0.1); opacity: 1; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">Med<span>Link</span> Admin</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">View Site</a></li>
+                    <li><button class="btn btn-accent" onclick="logout()">Logout</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar admin-sidebar">
+            <a href="admin.html" class="sidebar-link active">System Overview</a>
+            <a href="#" class="sidebar-link">Manage Pharmacies</a>
+            <a href="#" class="sidebar-link">User Reports</a>
+            <a href="#" class="sidebar-link">Site Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <h2 style="margin-bottom: 30px;">Administrator Overview</h2>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value">54</span>
+                    <p>Total Pharmacies</p>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">1,240</span>
+                    <p>Active Users</p>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">8,900</span>
+                    <p>Total Searches</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 20px;">Recent Activity</h3>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="padding: 15px; border-left: 4px solid var(--accent-color); background: #f8fafc;">
+                        <strong>New Pharmacy Registered:</strong> "Care Pharmacy" joined the network.
+                        <small style="display: block; color: var(--text-muted);">2 hours ago</small>
+                    </div>
+                    <div style="padding: 15px; border-left: 4px solid var(--primary-color); background: #f8fafc;">
+                        <strong>Out of Stock Alert:</strong> Panadol is low in 12 pharmacies.
+                        <small style="display: block; color: var(--text-muted);">5 hours ago</small>
+                    </div>
+                    <div style="padding: 15px; border-left: 4px solid #10b981; background: #f8fafc;">
+                        <strong>System Update:</strong> Version 2.4.1 deployed successfully.
+                        <small style="display: block; color: var(--text-muted);">1 day ago</small>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

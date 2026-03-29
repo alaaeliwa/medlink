@@ -1,0 +1,246 @@
+:root {
+  /* Color Palette - Directly from the MedLink Logo */
+  --primary: #074799; /* Deep Medical Blue */
+  --primary-light: #0d59b8;
+  --accent: #00A9E0; /* Vibrant Link Cyan */
+  --accent-hover: #008fbd;
+  --accent-soft: rgba(0, 169, 224, 0.1);
+  --success: #97C93E; /* Leaf Green */
+  --success-soft: #f0f9e6;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Neutrals - Harmonized with Logo Blues */
+  --bg-main: #f0f7ff; /* Very soft blue tint */
+  --bg-card: #ffffff;
+  --text-main: #334e68;
+  --text-heading: #052C54; /* Dark Navy from 'Med' */
+  --text-muted: #627d98;
+  --border: #d9e2ec;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(5 44 84 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(5 44 84 / 0.1), 0 2px 4px -2px rgb(5 44 84 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(5 44 84 / 0.1), 0 4px 6px -4px rgb(5 44 84 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(5 44 84 / 0.1), 0 8px 10px -6px rgb(5 44 84 / 0.1);
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --container-max: 1200px;
+  --section-spacing: 120px;
+  --gutter: 32px;
+
+  /* Transitions */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-spacing: 80px;
+    --gutter: 24px;
+  }
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Outfit", sans-serif;
+  color: var(--text-heading);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 24px;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  margin-bottom: 24px;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+
+ul {
+  list-style: none;
+}
+
+/* Layout Components */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding-top: var(--section-spacing);
+  padding-bottom: var(--section-spacing);
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+
+.gap-md {
+  gap: 24px;
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Reusable UI Elements */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 25px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-outline:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-accent {
+  color: var(--accent);
+}
+
+.btn-accent:hover {
+  color: var(--accent-hover);
+}
+
+.card {
+  background: var(--bg-card);
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--accent-soft);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-accent {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* Form Elements */
+.input-group {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  transition: var(--transition);
+}
+
+.input-group:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+}
+
+.input-group i {
+  margin-left: 18px;
+  color: var(--text-muted);
+}
+
+.input {
+  flex: 1;
+  padding: 12px 18px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+  color: var(--text-main);
+}
