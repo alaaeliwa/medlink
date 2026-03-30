@@ -93,7 +93,7 @@
                     </div>
                   </div>
 
-                  <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                  <div class="form-row form-row-responsive" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
                     <div class="form-group">
                       <label style="font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; display: block; color: var(--text-heading);">Full Name</label>
                       <input type="text" id="settings-name" class="form-control premium-input" placeholder="Your full name" required />
@@ -110,7 +110,7 @@
                   </div>
                 </div>
                 
-                <div class="card-footer" style="padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg-hover); display: flex; justify-content: flex-end; align-items: center;">
+                <div class="card-footer" style="padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg-hover, #f8fafc); display: flex; justify-content: flex-end; align-items: center;">
                    <span id="profile-save-status" class="text-success text-sm" style="display: none; margin-right: 16px; font-weight: 500;"><i class="fas fa-check-circle"></i> Saved Successfully</span>
                    <button id="btn-save-profile" class="btn btn-primary modern-btn" style="padding: 10px 24px; transition: all 0.2s ease;">Save Changes</button>
                 </div>
@@ -133,7 +133,7 @@
                       <input type="password" class="form-control premium-input" placeholder="Create a new password" />
                     </div>
                 </div>
-                <div class="card-footer" style="padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg-hover); display: flex; justify-content: flex-end;">
+                <div class="card-footer" style="padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg-hover, #f8fafc); display: flex; justify-content: flex-end;">
                    <button class="btn btn-outline modern-btn-outline" style="padding: 10px 24px;">Update Password</button>
                 </div>
               </div>
@@ -228,5 +228,4 @@
       }
     </script>
   </body>
-</html>
 </html>

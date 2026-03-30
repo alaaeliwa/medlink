@@ -30,16 +30,21 @@
           ><img src="images/logo.png" alt="MedLink logo" class="logo"
         /></a>
         <nav>
-          <ul class="nav-links">
+          <ul class="nav-links" id="homeNavLinks">
             <li><a href="#Home">Home</a></li>
             <li><a href="#Features">Features</a></li>
             <li><a href="#How-Work">How It Works</a></li>
+            <li class="mobile-auth-link"><a href="login.html">Log in</a></li>
+            <li class="mobile-auth-link"><a href="register.html">Register</a></li>
           </ul>
         </nav>
         <div class="auth-buttons">
           <a href="login.html" class="btn btn-accent">Log in</a>
           <a href="register.html" class="btn btn-primary">Register</a>
         </div>
+        <button class="home-menu-btn" id="homeMenuBtn" aria-label="Toggle menu">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
     </header>
 
@@ -74,16 +79,6 @@
 
           <div class="flex gap-md">
             <a href="#" class="btn btn-outline">Request Missing Medicine</a>
-            <div class="social-proof">
-              <div class="user-avatars">
-                <img src="images/user.png" alt="User" />
-                <img src="images/user.png" alt="User" />
-                <img src="images/user.png" alt="User" />
-              </div>
-              <div class="social-proof-text">
-                Join <span>10k+</span> active users
-              </div>
-            </div>
           </div>
         </div>
         <div class="hero-image">
@@ -325,5 +320,28 @@
         </div>
       </div>
     </footer>
+
+    <script>
+      // Mobile menu toggle for home page
+      const homeMenuBtn = document.getElementById('homeMenuBtn');
+      const homeNavLinks = document.getElementById('homeNavLinks');
+      if (homeMenuBtn && homeNavLinks) {
+        homeMenuBtn.addEventListener('click', () => {
+          homeNavLinks.classList.toggle('active');
+          const icon = homeMenuBtn.querySelector('i');
+          icon.classList.toggle('fa-bars');
+          icon.classList.toggle('fa-times');
+        });
+        // Close menu when a link is clicked
+        homeNavLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            homeNavLinks.classList.remove('active');
+            const icon = homeMenuBtn.querySelector('i');
+            icon.classList.add('fa-bars');
+            icon.classList.remove('fa-times');
+          });
+        });
+      }
+    </script>
   </body>
 </html>

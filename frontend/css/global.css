@@ -137,9 +137,28 @@ ul {
   gap: 24px;
 }
 
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .grid-3 {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
+
+/* Utility Classes */
+.text-success { color: var(--success); }
+.text-accent { color: var(--accent); }
+.text-warning { color: #f59e0b; }
+.text-danger { color: var(--danger); }
+.text-muted { color: var(--text-muted); }
+.text-primary { color: var(--primary); }
+.text-sm { font-size: 0.875rem; }
+.text-base { font-size: 1rem; }
+.w-full { width: 100%; }
+.mb-4 { margin-bottom: 16px; }
+.mt-4 { margin-top: 16px; }
+.pb-100 { padding-bottom: 100px; }
+.pb-0 { padding-bottom: 0; }
 
 /* Reusable UI Elements */
 .logo {
@@ -249,4 +268,39 @@ ul {
   font-size: 1rem;
   background: transparent;
   color: var(--text-main);
+}
+
+/* ============================================= */
+/* COMPREHENSIVE RESPONSIVE GRID FIXES */
+/* ============================================= */
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .card {
+    padding: 24px;
+  }
+  .card:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --gutter: 16px;
+    --section-spacing: 60px;
+  }
+  h1 {
+    font-size: 1.75rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
 }

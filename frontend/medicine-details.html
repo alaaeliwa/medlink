@@ -63,19 +63,19 @@
           <span style="color: var(--primary);">Panadol Extra (500mg)</span>
         </nav>
 
-        <div class="grid" style="grid-template-columns: 1fr 1.5fr; gap: 48px; align-items: start;">
+        <div class="detail-grid">
           <!-- Left: Image -->
-          <div class="modern-card" style="padding: 24px;">
-            <div class="card-image-wrapper" style="height: 400px; border-radius: 16px;">
+          <div class="modern-card detail-image-card">
+            <div class="card-image-wrapper detail-image-wrapper">
               <img src="images/MID.webp" class="card-img" alt="Panadol" />
             </div>
           </div>
 
           <!-- Right: Info -->
           <div>
-            <div class="flex-between mb-4">
-              <h1 style="font-size: 2.8rem; margin-bottom: 0;">Panadol Extra (500mg)</h1>
-              <button class="favorite-btn shadow" title="Add to Favorites" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="far fa-heart"></i></button>
+            <div class="detail-header-row">
+              <h1 class="detail-title">Panadol Extra (500mg)</h1>
+              <button class="favorite-btn shadow detail-favorite-btn" title="Add to Favorites"><i class="far fa-heart"></i></button>
             </div>
             
             <span class="glass-badge" style="position: static; display: inline-block; margin-bottom: 24px; background: var(--accent-soft); box-shadow: none;">Pain Relief</span>
@@ -84,7 +84,7 @@
               Panadol Extra provides temporary relief from strong pain, including headaches, migraines, period pain, toothache, and osteoarthritis. It contains paracetamol and caffeine for enhanced pain relief.
             </p>
 
-            <div class="card-meta" style="font-size: 1.1rem; gap: 16px;">
+            <div class="card-meta detail-meta">
               <div class="meta-item"><i class="fas fa-store-alt text-success text-xl"></i> <span>Available in 12 Local Pharmacies</span></div>
               <div class="meta-item"><i class="fas fa-tag text-accent text-xl"></i> <span>Estimated Price: $5.00 - $7.50</span></div>
               <div class="meta-item"><i class="fas fa-prescription text-warning text-xl"></i> <span>No Prescription Required (OTC)</span></div>
@@ -98,17 +98,17 @@
               <h2><i class="fas fa-store text-accent"></i> Pharmacies with Stock</h2>
             </div>
             <div class="grid grid-2">
-              <div class="modern-card" style="padding: 24px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+              <div class="modern-card stock-card">
                 <div>
-                  <h4 style="font-size: 1.3rem; margin-bottom: 8px;">Al Shifa Pharmacy</h4>
+                  <h4 class="stock-title" style="font-size: 1.3rem; margin-bottom: 8px;">Al Shifa Pharmacy</h4>
                   <p class="text-muted mb-0"><i class="fas fa-map-marker-alt text-accent"></i> 1.2 km away</p>
                   <span class="text-success font-bold" style="display: inline-block; margin-top: 12px;"><i class="fas fa-check-circle"></i> In Stock (15)</span>
                 </div>
                 <a href="pharmacy-details.html" class="btn btn-primary modern-btn-outline">View Pharmacy</a>
               </div>
-              <div class="modern-card" style="padding: 24px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+              <div class="modern-card stock-card">
                 <div>
-                  <h4 style="font-size: 1.3rem; margin-bottom: 8px;">CarePlus Pharmacy</h4>
+                  <h4 class="stock-title" style="font-size: 1.3rem; margin-bottom: 8px;">CarePlus Pharmacy</h4>
                   <p class="text-muted mb-0"><i class="fas fa-map-marker-alt text-accent"></i> 2.5 km away</p>
                   <span class="text-success font-bold" style="display: inline-block; margin-top: 12px;"><i class="fas fa-check-circle"></i> In Stock (3)</span>
                 </div>
@@ -120,9 +120,5 @@
     </main>
 
     <script src="js/citizen-dashboard.js"></script>
-    <style>
-       .text-xl { font-size: 1.4rem; width: 30px; text-align: center; }
-       .font-bold { font-weight: 700; }
-    </style>
   </body>
 </html>
