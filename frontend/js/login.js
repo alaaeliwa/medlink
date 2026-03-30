@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.disabled = true;
 
         setTimeout(() => {
-          alert("Login Successful! Welcome to MedLink.");
-          window.location.href = "index.html";
+          // Direct users to the unified Citizen Dashboard
+          window.location.href = "citizen-dashboard.html";
         }, 1500);
       }
     });

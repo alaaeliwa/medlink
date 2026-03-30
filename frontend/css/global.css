@@ -2,10 +2,10 @@
   /* Color Palette - Directly from the MedLink Logo */
   --primary: #074799; /* Deep Medical Blue */
   --primary-light: #0d59b8;
-  --accent: #00A9E0; /* Vibrant Link Cyan */
+  --accent: #00a9e0; /* Vibrant Link Cyan */
   --accent-hover: #008fbd;
   --accent-soft: rgba(0, 169, 224, 0.1);
-  --success: #97C93E; /* Leaf Green */
+  --success: #97c93e; /* Leaf Green */
   --success-soft: #f0f9e6;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -14,15 +14,18 @@
   --bg-main: #f0f7ff; /* Very soft blue tint */
   --bg-card: #ffffff;
   --text-main: #334e68;
-  --text-heading: #052C54; /* Dark Navy from 'Med' */
+  --text-heading: #052c54; /* Dark Navy from 'Med' */
   --text-muted: #627d98;
   --border: #d9e2ec;
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(5 44 84 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(5 44 84 / 0.1), 0 2px 4px -2px rgb(5 44 84 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(5 44 84 / 0.1), 0 4px 6px -4px rgb(5 44 84 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(5 44 84 / 0.1), 0 8px 10px -6px rgb(5 44 84 / 0.1);
+  --shadow-md:
+    0 4px 6px -1px rgb(5 44 84 / 0.1), 0 2px 4px -2px rgb(5 44 84 / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgb(5 44 84 / 0.1), 0 4px 6px -4px rgb(5 44 84 / 0.1);
+  --shadow-xl:
+    0 20px 25px -5px rgb(5 44 84 / 0.1), 0 8px 10px -6px rgb(5 44 84 / 0.1);
 
   /* Border Radius */
   --radius-sm: 8px;
@@ -125,7 +128,6 @@ ul {
   align-items: center;
 }
 
-
 .gap-md {
   gap: 24px;
 }
@@ -136,10 +138,14 @@ ul {
 }
 
 .grid-3 {
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 /* Reusable UI Elements */
+.logo {
+  height: 36px;
+  display: block;
+}
 .btn {
   display: inline-flex;
   align-items: center;

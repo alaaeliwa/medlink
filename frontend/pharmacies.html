@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="images/favicon.ico" />
+
+    <title>All Pharmacies - MedLink</title>
+    <!-- icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- globals -->
+    <link rel="stylesheet" href="css/global.css" />
+    <!-- specific styles -->
+    <link rel="stylesheet" href="css/citizen-dashboard.css" />
+    <style>
+      .page-header { text-align: center; margin: 0 auto; }
+      .page-header p { margin: 0 auto; }
+      .mini-search { max-width: 600px; margin-left: auto; margin-right: auto; margin-top: -30px; margin-bottom: 40px; }
+      
+      /* Pagination System */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 56px;
+        padding-bottom: 32px;
+      }
+      .page-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--text-main);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .page-btn:hover:not(:disabled) {
+        background: var(--bg-main);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .page-btn.active {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+        box-shadow: var(--shadow-md);
+      }
+      .page-btn.nav-btn {
+        width: auto;
+        padding: 0 16px;
+        border-radius: 100px;
+      }
+      .page-btn[disabled], .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--bg-main);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="dashboard-header">
+      <div class="container flex-between">
+        <a href="index.html" class="logo-link">
+          <img src="images/logo.png" alt="MedLink logo" class="logo" />
+        </a>
+        
+        <nav class="dashboard-nav">
+          <ul class="nav-links">
+            <li><a href="citizen-dashboard.html">Dashboard</a></li>
+            <li><a href="medicines.html">Medicines</a></li>
+            <li><a href="pharmacies.html" class="active">Pharmacies</a></li>
+            <li><a href="requests.html">My Requests</a></li>
+          </ul>
+        </nav>
+
+        <div class="header-actions">
+          <a href="favorites.html" class="icon-btn" title="Favorites">
+            <i class="far fa-heart"></i>
+          </a>
+          <div class="profile-dropdown">
+            <button class="profile-btn" id="profileToggle" title="Profile Details">
+              <img src="images/user.png" alt="Ahmed Ali" class="profile-img" />
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-header">
+                <strong>Ahmed Ali</strong>
+                <p class="text-sm text-muted mb-0">ahmed@example.com</p>
+              </div>
+              <hr class="dropdown-divider" />
+              <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+              <a href="requests.html" class="dropdown-item"><i class="fas fa-clipboard-list"></i> My Requests</a>
+              <hr class="dropdown-divider" />
+              <a href="login.html" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+          <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main pb-0">
+      <section class="welcome-banner" style="padding: 40px 0 60px 0;">
+        <div class="container welcome-container">
+          <div class="welcome-text page-header">
+            <h1>Browse <span>Pharmacies</span></h1>
+            <p class="subtitle page-header">Find reliable pharmacies near you to fulfill your medical needs directly.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-section container mini-search">
+        <div class="search-container-large">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="medicine-search" class="search-input-large" placeholder="Search pharmacies by name..." />
+          <button class="btn btn-primary modern-btn" id="btn-search" style="padding: 12px 24px;">Search</button>
+        </div>
+        
+        <!-- Smart Search Results / Empty State -->
+        <div class="search-results-container" id="search-results" style="display: none; padding: 24px; margin-top: 16px;">
+          <!-- Empty State -->
+          <div class="empty-state" id="empty-state" style="display: none; padding: 24px;">
+             <div class="empty-icon-modern" style="width: 60px; height: 60px; font-size: 1.5rem;"><i class="fas fa-box-open"></i></div>
+             <h4>Pharmacy Not Found</h4>
+             <p class="text-sm">We couldn't find "<span id="search-query-display" class="highlight-query"></span>".</p>
+             <button class="btn btn-primary mt-4 modern-btn" id="btn-request-medicine" style="padding: 10px 24px; font-size: 1rem;"><i class="fas fa-paper-plane"></i> Request in Network</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="container main-content-padding pb-100">
+        <!-- Filter Bar -->
+        <div class="section-header-flex" style="margin-bottom: 24px;">
+          <div>
+            <span class="text-muted" id="stats-display">Loading...</span>
+          </div>
+          <div style="display:flex; gap:16px; align-items: center; flex-wrap: wrap;">
+            
+            <!-- Custom Category Select -->
+            <div class="custom-select-wrapper">
+              <div class="custom-select" data-filter-type="category">
+                <div class="custom-select-trigger">
+                  <span>Any Status</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="custom-options">
+                  <span class="custom-option selected" data-value="All">Any Status</span>
+                  <span class="custom-option" data-value="Open Now">Open Now</span>
+                  <span class="custom-option" data-value="Open 24/7">Open 24/7</span>
+                  <span class="custom-option" data-value="Downtown">Downtown Area</span>
+                  <span class="custom-option" data-value="North District">North District</span>
+                  <span class="custom-option" data-value="West End">West End</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Custom Sort Select -->
+            <div class="custom-select-wrapper">
+              <div class="custom-select" data-filter-type="sort">
+                <div class="custom-select-trigger">
+                  <span>Sort by: Top Rated</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="custom-options">
+                  <span class="custom-option selected" data-value="Default">Sort by: Default</span>
+                  <span class="custom-option" data-value="Nearest">Sort by: Nearest Location</span>
+                  <span class="custom-option" data-value="Highest Rated">Sort by: Highest Rated</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- JS Data Engine Grid -->
+        <div class="grid grid-3" id="pharmacies-grid">
+          <!-- Dynamically populated by data-engine.js -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="dynamic-pagination">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </main>
+    <!-- Scripts -->
+    <script src="js/citizen-dashboard.js"></script>
+    <script src="js/data-engine.js"></script>
+  </body>
+</html>

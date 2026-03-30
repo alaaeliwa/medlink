@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/favicon.ico" />
+
+    <title>My Network Requests - MedLink</title>
+    <!-- icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- globals -->
+    <link rel="stylesheet" href="css/global.css" />
+    <!-- specific styles -->
+    <link rel="stylesheet" href="css/citizen-dashboard.css" />
+    <style>
+      /* Premium Request Form */
+      .request-form-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      }
+
+      .urgency-pills {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .urgency-pill {
+        flex: 1;
+        min-width: 140px;
+      }
+
+      .urgency-pill input[type="radio"] {
+        display: none;
+      }
+
+      .urgency-pill label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        font-weight: 500;
+        transition: var(--transition);
+        color: var(--text-muted);
+        user-select: none;
+      }
+
+      .urgency-pill input[type="radio"]:checked + label {
+        background: #ebf5ff;
+        border-color: var(--primary);
+        color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+      }
+
+      /* Premium Tracking Cards */
+      .tracking-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .tracking-card {
+        background: #fff;
+        border-radius: var(--radius-lg);
+        border-left: 4px solid var(--border);
+        padding: 24px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .tracking-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      @media (max-width: 768px) {
+        .tracking-card {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
+        .tracking-actions {
+          width: 100%;
+          text-align: left !important;
+          border-top: 1px solid var(--border);
+          padding-top: 16px;
+        }
+      }
+
+      .tracking-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        flex-shrink: 0;
+      }
+
+      .tracking-content {
+        flex-grow: 1;
+      }
+
+      .tracking-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-heading);
+        margin-bottom: 6px;
+      }
+
+      .tracking-meta {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .tracking-actions {
+        text-align: right;
+        flex-shrink: 0;
+      }
+
+      /* Status Colors */
+      .status-available {
+        border-left-color: var(--success);
+      }
+      .status-available .tracking-icon {
+        background: #dcfce7;
+        color: var(--success);
+      }
+      .status-available .tracking-pill {
+        background: var(--success);
+        color: #fff;
+      }
+
+      .status-pending {
+        border-left-color: var(--accent);
+      }
+      .status-pending .tracking-icon {
+        background: #e0f2fe;
+        color: var(--accent);
+      }
+      .status-pending .tracking-pill {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .status-delayed {
+        border-left-color: var(--warning);
+      }
+      .status-delayed .tracking-icon {
+        background: #fef3c7;
+        color: var(--warning);
+      }
+      .status-delayed .tracking-pill {
+        background: var(--warning);
+        color: #fff;
+      }
+
+      .status-unavailable {
+        border-left-color: var(--danger);
+        opacity: 0.8;
+      }
+      .status-unavailable .tracking-icon {
+        background: #fee2e2;
+        color: var(--danger);
+      }
+      .status-unavailable .tracking-pill {
+        background: var(--bg-hover);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+      }
+
+      .tracking-pill {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 100px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="dashboard-header">
+      <div class="container flex-between">
+        <a href="index.html" class="logo-link">
+          <img src="images/logo.png" alt="MedLink logo" class="logo" />
+        </a>
+        <nav class="dashboard-nav">
+          <ul class="nav-links">
+            <li><a href="citizen-dashboard.html">Dashboard</a></li>
+            <li><a href="medicines.html">Medicines</a></li>
+            <li><a href="pharmacies.html">Pharmacies</a></li>
+            <li><a href="requests.html" class="active">My Requests</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <a href="favorites.html" class="icon-btn" title="Favorites">
+            <i class="far fa-heart"></i>
+          </a>
+          <div class="profile-dropdown">
+            <button
+              class="profile-btn"
+              id="profileToggle"
+              title="Profile Details"
+            >
+              <img src="images/user.png" alt="Ahmed Ali" class="profile-img" />
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-header">
+                <strong>Ahmed Ali</strong>
+                <p class="text-sm text-muted mb-0">ahmed@example.com</p>
+              </div>
+              <hr class="dropdown-divider" />
+              <a href="settings.html" class="dropdown-item"
+                ><i class="fas fa-cog"></i> Settings</a
+              >
+              <a href="requests.html" class="dropdown-item active"
+                ><i class="fas fa-clipboard-list"></i> My Requests</a
+              >
+              <hr class="dropdown-divider" />
+              <a href="login.html" class="dropdown-item text-danger"
+                ><i class="fas fa-sign-out-alt"></i> Logout</a
+              >
+            </div>
+          </div>
+          <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main pb-0">
+      <section class="welcome-banner" style="padding: 40px 0 60px 0">
+        <div class="container welcome-container">
+          <div
+            class="welcome-text page-header"
+            style="text-align: center; margin: 0 auto"
+          >
+            <h1>My <span>Requests</span></h1>
+            <p
+              class="subtitle page-header"
+              style="text-align: center; margin: 0 auto; min-width: 100%"
+            >
+              Create broadcast requests to instantly scan nearby pharmacies for
+              specific stock.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div
+        class="container main-content-padding mt-4"
+        style="margin-top: -80px; position: relative; z-index: 10"
+      >
+        <!-- Submit New Request Form -->
+        <div class="request-form-card">
+          <div class="section-header-flex" style="margin-bottom: 8px">
+            <h2 style="font-size: 1.6rem">
+              <i
+                class="fas fa-search-plus text-primary"
+                style="margin-right: 12px"
+              ></i
+              >Can't Find a Medicine?
+            </h2>
+          </div>
+          <p class="text-muted mb-4 text-base">
+            Submit a request below, and we'll instantly broadcast your search to
+            all pharmacies in your network.
+          </p>
+
+          <form
+            id="standalone-request-form"
+            style="display: flex; flex-direction: column; gap: 24px"
+          >
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 24px;
+              "
+            >
+              <div class="form-group">
+                <label
+                  for="med-name"
+                  style="
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    display: block;
+                    font-size: 0.95rem;
+                  "
+                  >Medicine Name</label
+                >
+                <input
+                  type="text"
+                  id="med-name"
+                  class="form-control modern-input"
+                  style="width: 100%; border-radius: 12px; padding: 14px"
+                  placeholder="e.g., Panadol Extra 500mg"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label
+                  for="med-qty"
+                  style="
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    display: block;
+                    font-size: 0.95rem;
+                  "
+                  >Quantity Needed</label
+                >
+                <input
+                  type="number"
+                  id="med-qty"
+                  class="form-control modern-input"
+                  style="width: 100%; border-radius: 12px; padding: 14px"
+                  placeholder="e.g., 2 boxes"
+                  min="1"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label
+                style="
+                  font-weight: 600;
+                  margin-bottom: 12px;
+                  display: block;
+                  font-size: 0.95rem;
+                "
+                >Urgency Level</label
+              >
+              <div class="urgency-pills">
+                <div class="urgency-pill">
+                  <input
+                    type="radio"
+                    id="urg-standard"
+                    name="urgency"
+                    value="standard"
+                    checked
+                  />
+                  <label for="urg-standard"
+                    ><i class="fas fa-clock"></i> Standard</label
+                  >
+                </div>
+                <div class="urgency-pill">
+                  <input
+                    type="radio"
+                    id="urg-high"
+                    name="urgency"
+                    value="high"
+                  />
+                  <label for="urg-high"
+                    ><i class="fas fa-exclamation-triangle"></i> Urgent
+                    (24h)</label
+                  >
+                </div>
+                <div class="urgency-pill">
+                  <input
+                    type="radio"
+                    id="urg-critical"
+                    name="urgency"
+                    value="critical"
+                  />
+                  <label for="urg-critical" style="color: var(--danger)"
+                    ><i class="fas fa-ambulance"></i> Critical Now!</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label
+                for="med-notes"
+                style="
+                  font-weight: 600;
+                  margin-bottom: 8px;
+                  display: block;
+                  font-size: 0.95rem;
+                "
+                >Additional Notes (Optional)</label
+              >
+              <textarea
+                id="med-notes"
+                class="form-control modern-input"
+                style="width: 100%; border-radius: 12px; padding: 14px"
+                rows="2"
+                placeholder="Any specific instructions, dosage alternatives..."
+              ></textarea>
+            </div>
+
+            <div
+              style="display: flex; justify-content: flex-end; margin-top: 8px"
+            >
+              <button
+                type="submit"
+                id="btn-submit-request"
+                class="btn btn-primary modern-btn"
+                style="
+                  padding: 14px 32px;
+                  font-size: 1.05rem;
+                  transition: all 0.25s ease;
+                "
+              >
+                Request
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tracking History -->
+        <div class="pb-100">
+          <div class="section-header-flex" style="margin-bottom: 24px">
+            <h2 style="font-size: 1.5rem">Recent Requests</h2>
+          </div>
+
+          <div class="tracking-grid">
+            <!-- Item 1: Success -->
+            <div class="tracking-card status-available">
+              <div class="tracking-icon"><i class="fas fa-check"></i></div>
+              <div class="tracking-content">
+                <h3 class="tracking-title">Novolog FlexPen 100U/mL</h3>
+                <div class="tracking-meta">
+                  <span
+                    ><i class="far fa-calendar text-muted"></i> Today, 9:00
+                    AM</span
+                  >
+                  <span><i class="fas fa-box text-muted"></i> 2 Items</span>
+                </div>
+              </div>
+              <div class="tracking-actions">
+                <span class="tracking-pill"
+                  ><i class="fas fa-check-circle"></i> Available Now</span
+                >
+                <p
+                  style="margin: 0; font-size: 0.9rem; color: var(--text-main)"
+                >
+                  Located at <strong>Al Shifa Pharmacy</strong> (1.2 km)
+                </p>
+                <a
+                  href="pharmacy-details.html"
+                  style="
+                    font-size: 0.85rem;
+                    color: var(--success);
+                    font-weight: 600;
+                    text-decoration: none;
+                    margin-top: 6px;
+                    display: inline-block;
+                  "
+                  >View Pharmacy <i class="fas fa-chevron-right text-xs"></i
+                ></a>
+              </div>
+            </div>
+
+            <!-- Item 2: Broadcasting -->
+            <div class="tracking-card status-pending">
+              <div class="tracking-icon">
+                <i class="fas fa-satellite-dish"></i>
+              </div>
+              <div class="tracking-content">
+                <h3 class="tracking-title">Ozempic 0.5mg Pen</h3>
+                <div class="tracking-meta">
+                  <span
+                    ><i class="far fa-calendar text-muted"></i> 10 mins
+                    ago</span
+                  >
+                  <span><i class="fas fa-box text-muted"></i> 1 Item</span>
+                  <span class="text-danger"
+                    ><i class="fas fa-ambulance"></i> Critical</span
+                  >
+                </div>
+              </div>
+              <div class="tracking-actions">
+                <span class="tracking-pill"
+                  ><i class="fas fa-broadcast-tower"></i> Searching...</span
+                >
+                <p
+                  style="margin: 0; font-size: 0.9rem; color: var(--text-muted)"
+                >
+                  Waiting for pharmacies to respond.
+                </p>
+              </div>
+            </div>
+
+            <!-- Item 3: Delayed -->
+            <div class="tracking-card status-delayed">
+              <div class="tracking-icon"><i class="fas fa-truck"></i></div>
+              <div class="tracking-content">
+                <h3 class="tracking-title">Euthyrox 50mcg</h3>
+                <div class="tracking-meta">
+                  <span
+                    ><i class="far fa-calendar text-muted"></i> Yesterday</span
+                  >
+                  <span><i class="fas fa-box text-muted"></i> 3 Items</span>
+                </div>
+              </div>
+              <div class="tracking-actions">
+                <span class="tracking-pill"
+                  ><i class="fas fa-clock"></i> Arriving Tomorrow</span
+                >
+                <p
+                  style="margin: 0; font-size: 0.9rem; color: var(--text-muted)"
+                >
+                  Supplier shipment bound for CarePlus Pharmacy.
+                </p>
+              </div>
+            </div>
+
+            <!-- Item 4: Unavailable -->
+            <div class="tracking-card status-unavailable">
+              <div class="tracking-icon"><i class="fas fa-times"></i></div>
+              <div class="tracking-content">
+                <h3
+                  class="tracking-title"
+                  style="text-decoration: line-through"
+                >
+                  Specialized Topical Cream 4%
+                </h3>
+                <div class="tracking-meta">
+                  <span
+                    ><i class="far fa-calendar text-muted"></i> Last Week</span
+                  >
+                  <span><i class="fas fa-box text-muted"></i> 1 Item</span>
+                </div>
+              </div>
+              <div class="tracking-actions">
+                <span class="tracking-pill"
+                  ><i class="fas fa-ban"></i> Not Available</span
+                >
+                <p
+                  style="margin: 0; font-size: 0.9rem; color: var(--text-muted)"
+                >
+                  No pharmacies reported stock in network.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/citizen-dashboard.js"></script>
+    <script>
+      // Simulate modern form submission with no alerts
+      const submitBtn = document.getElementById("btn-submit-request");
+      const form = document.getElementById("standalone-request-form");
+
+      if (form && submitBtn) {
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const btnContent = submitBtn.innerHTML;
+
+          submitBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Broadcasting...';
+          submitBtn.disabled = true;
+
+          setTimeout(() => {
+            submitBtn.innerHTML =
+              '<i class="fas fa-check"></i> Broadcast Successful!';
+            submitBtn.style.backgroundColor = "var(--success)";
+            submitBtn.style.borderColor = "var(--success)";
+
+            setTimeout(() => {
+              submitBtn.innerHTML = btnContent;
+              submitBtn.style.backgroundColor = "";
+              submitBtn.style.borderColor = "";
+              submitBtn.disabled = false;
+              form.reset();
+            }, 3000);
+          }, 1200);
+        });
+      }
+    </script>
+  </body>
+</html>

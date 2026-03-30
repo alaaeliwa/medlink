@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="images/favicon.ico" />
+
+    <title>User Settings - MedLink</title>
+    <!-- icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- globals -->
+    <link rel="stylesheet" href="css/global.css" />
+    <!-- specific styles -->
+    <link rel="stylesheet" href="css/citizen-dashboard.css" />
+    <style>
+      .settings-card { border: 1px solid var(--border); padding: 32px; border-radius: var(--radius-xl); background: white; margin-bottom: 24px; }
+      .avatar-upload { display: flex; align-items: center; gap: 24px; margin-bottom: 32px; }
+      .avatar-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); padding: 4px; background: white; }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="dashboard-header">
+      <div class="container flex-between">
+        <a href="index.html" class="logo-link">
+          <img src="images/logo.png" alt="MedLink logo" class="logo" />
+        </a>
+        <nav class="dashboard-nav">
+          <ul class="nav-links">
+            <li><a href="citizen-dashboard.html">Dashboard</a></li>
+            <li><a href="medicines.html">Medicines</a></li>
+            <li><a href="pharmacies.html">Pharmacies</a></li>
+            <li><a href="requests.html">My Requests</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <a href="favorites.html" class="icon-btn" title="Favorites">
+            <i class="far fa-heart"></i>
+          </a>
+          <div class="profile-dropdown">
+            <button class="profile-btn" id="profileToggle" title="Profile Details">
+              <img src="images/user.png" alt="Ahmed Ali" class="profile-img" />
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-header">
+                <strong>Ahmed Ali</strong>
+                <p class="text-sm text-muted mb-0">ahmed@example.com</p>
+              </div>
+              <hr class="dropdown-divider" />
+              <a href="settings.html" class="dropdown-item active"><i class="fas fa-cog"></i> Settings</a>
+              <a href="requests.html" class="dropdown-item"><i class="fas fa-clipboard-list"></i> My Requests</a>
+              <hr class="dropdown-divider" />
+              <a href="index.html" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+          <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main pb-100" style="background-color: var(--bg-main);">
+      <div class="container settings-wrapper" style="padding-top: 40px; max-width: 1000px;">
+        
+        <div class="settings-header" style="margin-bottom: 32px;">
+          <h1 style="color: var(--text-heading); font-size: 2.2rem; font-weight: 700;">Account Settings</h1>
+          <p class="text-muted">Manage your profile information and security preferences.</p>
+        </div>
+          <!-- Settings Content -->
+          <div class="settings-content">
+            
+            <!-- Profile Section -->
+            <section id="profile" class="settings-section">
+              <div class="settings-card modern-card" style="padding: 0; overflow: hidden;">
+                <div class="card-header" style="padding: 24px; border-bottom: 1px solid var(--border); background: white;">
+                  <h3 style="font-size: 1.25rem; font-weight: 600; font-family: 'Outfit', sans-serif;">Public Profile</h3>
+                </div>
+                
+                <div class="card-body" style="padding: 32px; background: white;">
+                  <!-- Avatar Upload with premium look -->
+                  <div class="premium-avatar-upload" style="display: flex; gap: 24px; align-items: flex-start; margin-bottom: 32px;">
+                    <div class="avatar-preview-wrapper" style="position: relative;">
+                      <img src="images/user.png" alt="Avatar" id="avatarPreview" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);" />
+                      <label for="avatarInput" class="avatar-edit-badge" style="position: absolute; bottom: 0; right: 0; background: var(--accent); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 2px solid white; box-shadow: var(--shadow-sm); transition: var(--transition);">
+                        <i class="fas fa-camera" style="font-size: 0.8rem;"></i>
+                      </label>
+                      <input type="file" id="avatarInput" hidden accept="image/*" />
+                    </div>
+                    <div style="padding-top: 12px;">
+                      <h4 style="font-size: 1rem; margin-bottom: 8px;">Profile Picture</h4>
+                      <p class="text-sm text-muted">A portrait helps people recognize you.<br>PNG or JPG under 2MB.</p>
+                    </div>
+                  </div>
+
+                  <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <div class="form-group">
+                      <label style="font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; display: block; color: var(--text-heading);">Full Name</label>
+                      <input type="text" id="settings-name" class="form-control premium-input" placeholder="Your full name" required />
+                    </div>
+                    <div class="form-group">
+                      <label style="font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; display: block; color: var(--text-heading);">Email Address</label>
+                      <input type="email" id="settings-email" class="form-control premium-input" placeholder="you@example.com" required />
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; display: block; color: var(--text-heading);">Phone Number</label>
+                    <input type="tel" id="settings-phone" class="form-control premium-input" value="+962 79 123 4567" placeholder="+962 7X XXX XXXX" />
+                  </div>
+                </div>
+                
+                <div class="card-footer" style="padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg-hover); display: flex; justify-content: flex-end; align-items: center;">
+                   <span id="profile-save-status" class="text-success text-sm" style="display: none; margin-right: 16px; font-weight: 500;"><i class="fas fa-check-circle"></i> Saved Successfully</span>
+                   <button id="btn-save-profile" class="btn btn-primary modern-btn" style="padding: 10px 24px; transition: all 0.2s ease;">Save Changes</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Security Section -->
+            <section id="security" class="settings-section" style="margin-top: 32px;">
+              <div class="settings-card modern-card" style="padding: 0; overflow: hidden;">
+                 <div class="card-header" style="padding: 24px; border-bottom: 1px solid var(--border); background: white;">
+                  <h3 style="font-size: 1.25rem; font-weight: 600; font-family: 'Outfit', sans-serif;">Change Password</h3>
+                </div>
+                <div class="card-body" style="padding: 32px; background: white;">
+                   <div class="form-group" style="margin-bottom: 24px; max-width: 400px;">
+                      <label style="font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; display: block; color: var(--text-heading);">Current Password</label>
+                      <input type="password" class="form-control premium-input" placeholder="Enter current password" />
+                    </div>
+                    <div class="form-group" style="margin-bottom: 24px; max-width: 400px;">
+                      <label style="font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; display: block; color: var(--text-heading);">New Password</label>
+                      <input type="password" class="form-control premium-input" placeholder="Create a new password" />
+                    </div>
+                </div>
+                <div class="card-footer" style="padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg-hover); display: flex; justify-content: flex-end;">
+                   <button class="btn btn-outline modern-btn-outline" style="padding: 10px 24px;">Update Password</button>
+                </div>
+              </div>
+            </section>
+            
+          </div>
+        </div>
+      
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/citizen-dashboard.js"></script>
+    <script>
+      // 1. Populate inputs securely on load
+      const nameInput = document.getElementById('settings-name');
+      const emailInput = document.getElementById('settings-email');
+      
+      const storedName = localStorage.getItem('medlink_userName');
+      const storedEmail = localStorage.getItem('medlink_userEmail');
+      
+      if(storedName && nameInput) nameInput.value = storedName;
+      if(storedEmail && emailInput) emailInput.value = storedEmail;
+
+      // 2. Avatar File Upload logic
+      const avatarInput = document.getElementById('avatarInput');
+      const avatarPreview = document.getElementById('avatarPreview');
+      const headerProfileImg = document.querySelector('.profile-btn img');
+
+      if (avatarInput) {
+        avatarInput.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const result = e.target.result;
+              avatarPreview.src = result;
+              if (headerProfileImg) {
+                headerProfileImg.src = result;
+              }
+            }
+            reader.readAsDataURL(e.target.files[0]);
+          }
+        });
+      }
+
+      // 3. Premium Saving Experience (No Alerts, DOM patching)
+      const saveBtn = document.getElementById('btn-save-profile');
+      const saveStatus = document.getElementById('profile-save-status');
+
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const btnContent = saveBtn.innerHTML;
+          
+          // Show spinner
+          saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+          saveBtn.disabled = true;
+
+          setTimeout(() => {
+            // Write to LocalStorage
+            if (nameInput && nameInput.value) {
+              localStorage.setItem('medlink_userName', nameInput.value);
+              localStorage.setItem('medlink_firstName', nameInput.value.split(' ')[0]);
+            }
+            if (emailInput && emailInput.value) {
+              localStorage.setItem('medlink_userEmail', emailInput.value);
+            }
+
+            // Sync Navbar DOM instantly without reloading page
+            const newName = localStorage.getItem('medlink_userName');
+            const newEmail = localStorage.getItem('medlink_userEmail');
+            
+            const profileNameEl = document.querySelector('.dropdown-header strong');
+            const profileEmailEl = document.querySelector('.dropdown-header p.text-muted');
+            if (profileNameEl) profileNameEl.textContent = newName;
+            if (profileEmailEl) profileEmailEl.textContent = newEmail;
+
+            // Revert button, show specific text
+            saveBtn.innerHTML = btnContent;
+            saveBtn.disabled = false;
+
+            if (saveStatus) {
+              saveStatus.style.display = 'inline-flex';
+              saveStatus.style.animation = 'fadeIn 0.3s ease';
+              
+              setTimeout(() => {
+                saveStatus.style.animation = 'fadeOut 0.3s ease forwards';
+                setTimeout(() => { saveStatus.style.display = 'none'; }, 300);
+              }, 4000);
+            }
+          }, 800);
+        });
+      }
+    </script>
+  </body>
+</html>
+</html>

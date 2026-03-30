@@ -20,11 +20,6 @@ header .container {
   width: 100%;
 }
 
-.logo {
-  height: 36px;
-  display: block;
-}
-
 .nav-links {
   display: flex;
   gap: 32px;

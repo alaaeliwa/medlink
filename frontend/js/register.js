@@ -149,14 +149,45 @@ document.addEventListener("DOMContentLoaded", () => {
       // Simulate submission
       const submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) {
+        // Determine selected role
+        const activeRoleBtn = document.querySelector('.tab-btn.active');
+        const role = activeRoleBtn ? activeRoleBtn.dataset.target : 'citizen';
+
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         submitBtn.disabled = true;
 
         setTimeout(() => {
-          alert("Account created successfully!");
-          window.location.href = "index.html";
-        }, 2000);
+          // Extract User Details and save to local storage
+          let nameInput, emailInput;
+          if (role === 'pharmacy') {
+            nameInput = document.querySelector('#pharmacy-fields input[type="text"]');
+            emailInput = document.querySelector('#pharmacy-fields input[type="email"]');
+          } else {
+            nameInput = document.querySelector('#citizen-fields input[type="text"]');
+            emailInput = document.querySelector('#citizen-fields input[type="email"]');
+          }
+          
+          if (nameInput && nameInput.value) {
+            localStorage.setItem('medlink_userName', nameInput.value);
+            localStorage.setItem('medlink_firstName', nameInput.value.split(' ')[0]);
+          } else {
+            localStorage.setItem('medlink_userName', 'Ahmed Ali');
+            localStorage.setItem('medlink_firstName', 'Ahmed');
+          }
+          if (emailInput && emailInput.value) {
+            localStorage.setItem('medlink_userEmail', emailInput.value);
+          } else {
+            localStorage.setItem('medlink_userEmail', 'ahmed@example.com');
+          }
+
+          // Dynamic Redirection based on Role
+          if (role === 'pharmacy') {
+            window.location.href = "pharmacy-dashboard.html";
+          } else {
+            window.location.href = "citizen-dashboard.html";
+          }
+        }, 1500);
       }
     });
   }
