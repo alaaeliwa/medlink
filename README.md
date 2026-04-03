@@ -69,10 +69,7 @@ To run the project locally without any installation requirements:
 
 ---
 
-## 🔮 Future Enhancements
-- [ ] Integration with a live Backend (Node.js/Python) and Database (SQL/NoSQL).
-- [ ] Interactive Map Integration (Google Maps API) for pharmacy locations.
-- [ ] Real-time push notifications for stock alerts and reservation status.
+
 
 ---
 
