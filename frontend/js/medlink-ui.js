@@ -139,7 +139,7 @@ window.mlConfirm = (title, text, confirmBtn, callback) => MedLinkUI.confirm(titl
 // 3. Global Graceful Logout Interceptor
 document.addEventListener('click', (e) => {
     const logoutLink = e.target.closest('a[href="index.html"]');
-    if (logoutLink && (logoutLink.textContent.includes('Logout') || logoutLink.textContent.includes('تسجيل الخروج'))) {
+    if (logoutLink && logoutLink.textContent.includes('Logout')) {
         e.preventDefault();
         
         mlConfirm(
