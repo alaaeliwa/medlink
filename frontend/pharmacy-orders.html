@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/favicon.ico" >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Customer Orders - MedLink Pharmacy</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet" >
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/pharmacy'sDashboard.css">
+  <style>
+    /* Premium Orders Layout */
+    .orders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .orders-filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 2.5rem;
+      overflow-x: auto;
+      padding: 4px;
+      scrollbar-width: none; /* Hide scrollbar Firefox */
+    }
+    
+    .orders-filter-bar::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+    
+    .filter-btn {
+      padding: 10px 24px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .filter-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+    
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(0, 169, 224, 0.25);
+    }
+
+    /* Modern Order Card */
+    .order-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    
+    .order-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-soft);
+    }
+
+    .order-top {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--bg-hover);
+    }
+
+    .customer-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: white;
+      text-transform: uppercase;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+
+    .customer-info {
+      flex: 1;
+    }
+
+    .customer-info strong {
+      display: block;
+      font-size: 1.1rem;
+      color: var(--text-heading);
+    }
+
+    .order-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .order-body {
+      padding: 1.5rem;
+      flex: 1;
+    }
+
+    .med-request-box {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border: 1px solid #f1f5f9;
+      position: relative;
+    }
+
+    .med-request-box::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 15%;
+      bottom: 15%;
+      width: 4px;
+      background: var(--primary);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .med-name {
+      display: block;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-heading);
+      margin-bottom: 0.4rem;
+      text-transform: capitalize;
+    }
+
+    .med-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .med-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .order-notes {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 0 0.5rem;
+      border-left: 2px solid #e2e8f0;
+      margin-left: 0.2rem;
+    }
+
+    .order-footer {
+      padding: 1.2rem 1.5rem;
+      background: #fbfdff;
+      border-top: 1px solid var(--bg-hover);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Polish Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-Pending { background: #e0f2fe; color: #0369a1; }
+    .status-Approved { background: #f0fdf4; color: #166534; }
+    .status-Ready { background: #eff6ff; color: #1d4ed8; }
+    .status-Cancelled { background: #fef2f2; color: #991b1b; }
+
+    .urgency-pill {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .urgency-standard { background: #f1f5f9; color: #64748b; }
+    .urgency-urgent { background: #fff7ed; color: #ea580c; }
+    .urgency-critical { background: #fef2f2; color: #dc2626; box-shadow: 0 0 10px rgba(220, 38, 38, 0.1); }
+
+    .order-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-action {
+      height: 40px;
+      padding: 0 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+    }
+
+    .btn-approve { background: var(--primary); color: white; }
+    .btn-ready { background: var(--success); color: white; }
+    .btn-decline { background: white; color: var(--danger); border: 1px solid #fee2e2; }
+
+    .btn-action:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    /* Empty state */
+    .empty-orders {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 6rem 2rem;
+      background: white;
+      border-radius: 20px;
+      border: 2px dashed #e2e8f0;
+    }
+
+    @media (max-width: 768px) {
+      .orders-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="main-header">
+    <div class="container header-container">
+      <div class="header-left">
+        <a href="index.html">
+          <img src="images/logo.png" alt="MedLink logo" class="logo">
+        </a>
+      </div>
+      
+      <div class="header-actions">
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileToggle" title="Profile Details">
+            <img src="images/PHAR.jpg" alt="Pharmacy Name" class="profile-img" id="headerProfileImg">
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu">
+            <div class="dropdown-header">
+              <strong id="dropdownPharmName">Care Pharmacy</strong>
+              <p class="text-sm text-muted mb-0" id="dropdownPharmEmail">contact@carepharma.com</p>
+            </div>
+            <hr class="dropdown-divider" />
+            <a href="pharmacy-dashboard.html" class="dropdown-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="pharmacy-orders.html" class="dropdown-item active"><i class="fas fa-clipboard-list"></i> Orders</a>
+            <a href="pharmacy-settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+            <hr class="dropdown-divider" />
+            <a href="index.html" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <a href="pharmacy-dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="pharmacy-orders.html" class="sidebar-link active"><i class="fas fa-clipboard-list"></i> Orders</a>
+      <a href="pharmacy-settings.html" class="sidebar-link"><i class="fas fa-cog"></i> Settings</a>
+      <a href="index.html" class="sidebar-link text-danger" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+
+    <main class="main-content">
+      <div class="welcome-section">
+        <div class="welcome-text">
+          <h1>Order Management</h1>
+          <p>Respond to medicine requests from your network.</p>
+        </div>
+      </div>
+
+      <div class="orders-filter-bar">
+        <button class="filter-btn active" data-filter="all">All Orders</button>
+        <button class="filter-btn" data-filter="Pending">Pending</button>
+        <button class="filter-btn" data-filter="Approved">Approved</button>
+        <button class="filter-btn" data-filter="Ready">Ready</button>
+        <button class="filter-btn" data-filter="Cancelled">Cancelled</button>
+      </div>
+
+      <div id="ordersList" class="orders-container">
+        <!-- Orders will be injected here -->
+      </div>
+    </main>
+  </div>
+
+  <script src="js/medlink-ui.js"></script>
+  <script src="js/pharmacy-orders.js"></script>
+</body>
+</html>

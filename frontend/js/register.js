@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const confirmPass = passwordInputs[1].value;
 
         if (pass !== confirmPass) {
-          if (errorText) errorText.classList.remove("hidden");
+          mlAlert('Passwords do not match!', 'error');
           passwordInputs[1].style.borderColor = "#ef4444";
           return;
         }

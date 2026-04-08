@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/favicon.ico" >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Pharmacy Settings - MedLink</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet" >
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/pharmacy'sDashboard.css">
+</head>
+
+<body>
+  <header class="main-header">
+    <div class="container header-container">
+      <div class="header-left">
+        <a href="index.html">
+          <img src="images/logo.png" alt="MedLink logo" class="logo">
+        </a>
+      </div>
+      
+      <div class="header-actions">
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileToggle" title="Profile Details">
+            <img src="images/PHAR.jpg" alt="Pharmacy Name" class="profile-img" id="headerProfileImg">
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu">
+            <div class="dropdown-header">
+              <strong id="dropdownPharmName">Care Pharmacy</strong>
+              <p class="text-sm text-muted mb-0" id="dropdownPharmEmail">contact@carepharma.com</p>
+            </div>
+            <hr class="dropdown-divider" />
+            <a href="pharmacy-dashboard.html" class="dropdown-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="pharmacy-orders.html" class="dropdown-item"><i class="fas fa-clipboard-list"></i> Orders</a>
+            <a href="pharmacy-settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+            <hr class="dropdown-divider" />
+            <a href="index.html" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <a href="pharmacy-dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="pharmacy-orders.html" class="sidebar-link"><i class="fas fa-clipboard-list"></i> Orders</a>
+      <a href="pharmacy-settings.html" class="sidebar-link active"><i class="fas fa-cog"></i> Settings</a>
+      <a href="index.html" class="sidebar-link text-danger" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+
+    <main class="main-content">
+      <div class="welcome-section">
+        <div class="welcome-text">
+          <h1>Pharmacy Profile Settings</h1>
+          <p>Update your public profile information that citizens see on MedLink.</p>
+        </div>
+      </div>
+
+      <div class="profile-hero">
+        <div class="cover-upload">
+          <img id="pharmacyCoverPreview" src="images/PHAR.jpg" alt="Pharmacy Cover">
+          <label for="pharmacyCoverInput" class="upload-overlay">
+            <i class="fas fa-camera"></i> Change Pharmacy Photo
+          </label>
+          <input type="file" id="pharmacyCoverInput" hidden accept="image/*">
+        </div>
+        
+        <div class="profile-details-grid">
+          <form id="pharmacySettingsForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="pharmacyName">Pharmacy Name</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-hospital"></i>
+                  <input type="text" id="pharmacyNameInput" placeholder="Enter pharmacy name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pharmacyOwner">Owner Name</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-user-tie"></i>
+                  <input type="text" id="pharmacyOwnerInput" placeholder="Owner full name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pharmacyPhone">Business Phone</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-phone"></i>
+                  <input type="tel" id="pharmacyPhoneInput" placeholder="+962 7X XXX XXXX">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pharmacyHours">Opening Hours</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-clock"></i>
+                  <input type="text" id="pharmacyHoursInput" placeholder="e.g. 8:00 AM - 11:30 PM">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pharmacyDelivery">Delivery Service</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-truck"></i>
+                  <select id="pharmacyDeliveryInput">
+                    <option value="Available">Available</option>
+                    <option value="Not Available">Not Available</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pharmacyEmail">Business Email</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-envelope"></i>
+                  <input type="email" id="pharmacyEmailInput" placeholder="contact@pharmacy.com">
+                </div>
+              </div>
+              <div class="form-group full-width">
+                <label for="pharmacyLocation">Location / Address</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-map-marked-alt"></i>
+                  <input type="text" id="pharmacyLocationInput" placeholder="Enter full business address">
+                </div>
+              </div>
+            </div>
+            <div class="form-footer">
+              <button type="button" class="btn btn-primary" id="btnSaveSettings">
+                <i class="fas fa-save"></i> Save Profile Updates
+              </button>
+              <span id="settingsSaveStatus" class="save-status hidden"><i class="fas fa-check"></i> Profile Updated!</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/medlink-ui.js"></script>
+  <script src="js/pharmacy-settings.js"></script>
+</body>
+</html>

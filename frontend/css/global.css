@@ -304,3 +304,204 @@ ul {
     font-size: 0.9rem;
   }
 }
+/* ============================================= */
+/* MODERN NOTIFICATIONS & MODALS (REVAMPED) */
+/* ============================================= */
+.ml-toast-container {
+  position: fixed;
+  top: 32px;
+  right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+.ml-toast {
+  position: relative;
+  min-width: 320px;
+  max-width: 420px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  pointer-events: auto;
+  overflow: hidden;
+  direction: ltr; /* Default */
+  animation: toastBounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  transition: all 0.3s ease;
+}
+
+.ml-toast:has(span:dir(rtl)),
+.ml-toast[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+.ml-toast i {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.ml-toast span {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-heading);
+  letter-spacing: -0.01em;
+}
+
+/* Toast Variants with Soft Gloom */
+.ml-toast.success { border-bottom: 3px solid var(--success); }
+.ml-toast.success i { color: var(--success); }
+.ml-toast.success::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(34, 197, 94, 0.05), transparent); pointer-events: none; }
+
+.ml-toast.error { border-bottom: 3px solid var(--danger); }
+.ml-toast.error i { color: var(--danger); }
+
+.ml-toast.info { border-bottom: 3px solid var(--accent); }
+.ml-toast.info i { color: var(--accent); }
+
+/* Progress Bar */
+.ml-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: rgba(0,0,0,0.05);
+}
+
+.ml-toast-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.6;
+  transform-origin: left;
+  animation: toastProgress linear forwards;
+}
+
+.ml-toast.success .ml-toast-progress-bar { color: var(--success); }
+.ml-toast.error .ml-toast-progress-bar { color: var(--danger); }
+.ml-toast.info .ml-toast-progress-bar { color: var(--accent); }
+
+@keyframes toastBounceIn {
+  0% { opacity: 0; transform: translateX(100px) scale(0.9); }
+  70% { transform: translateX(-10px) scale(1.02); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toastFadeOut {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px) scale(0.95); }
+}
+
+@keyframes toastProgress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* Custom Modal Revamp */
+.ml-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 44, 84, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ml-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ml-modal {
+  background: white;
+  width: 90%;
+  max-width: 440px;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  transform: scale(0.9) translateY(20px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ml-modal-overlay.open .ml-modal {
+  transform: scale(1) translateY(0);
+}
+
+.ml-modal-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 24px auto;
+  font-size: 2rem;
+  transition: transform 0.3s ease;
+}
+
+.ml-modal:hover .ml-modal-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.ml-modal-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 12px;
+}
+
+.ml-modal-text {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 32px;
+  font-size: 1.05rem;
+}
+
+.ml-modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.ml-modal-actions .btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+  .ml-toast-container {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+  }
+  .ml-toast {
+    min-width: 0;
+    width: 100%;
+  }
+  .ml-modal {
+    padding: 32px 24px;
+  }
+}

@@ -159,8 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const medName = document.getElementById('req-medicine-name').value;
       
       // In a real system, send this to backend.
-      // For now, simply alert user and close modal to simulate success.
-      alert(`Your request for "${medName}" has been submitted successfully! We will notify you when it becomes available.`);
+      // For now, simply toast user and close modal to simulate success.
+      mlAlert(`Your request for "${medName}" has been submitted successfully!`, 'success');
       
       // Clean up UI
       modalOverlay.classList.remove('active');

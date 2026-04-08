@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/favicon.ico" >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+  <title>pharmacy's Dashboard</title>
+  <!-- icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" >
+  <!-- font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet" >
+  <!-- globals -->
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/citizen-dashboard.css">
+  <!-- specific styles -->
+  <link rel="stylesheet" href="./css/pharmacy'sDashboard.css">
+</head>
+<body>
+  <!-- header -->
+  <header class="main-header">
+    <div class="container header-container">
+      <div class="header-left">
+        <a href="index.html">
+          <img src="images/logo.png" alt="MedLink logo" class="logo">
+        </a>
+      </div>
+      
+      <div class="header-search">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input 
+            type="text" 
+            placeholder="Search inventory..." 
+            id="medicineNameSearch"
+            onkeyup="search(this.value)"
+          >
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="profile-dropdown">
+          <button class="profile-btn" id="profileToggle" title="Profile Details">
+            <img src="images/PHAR.jpg" alt="Pharmacy Name" class="profile-img" id="headerProfileImg">
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu">
+            <div class="dropdown-header">
+              <strong id="dropdownPharmName">Care Pharmacy</strong>
+              <p class="text-sm text-muted mb-0" id="dropdownPharmEmail">contact@carepharma.com</p>
+            </div>
+            <hr class="dropdown-divider" />
+            <a href="pharmacy-dashboard.html" class="dropdown-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="pharmacy-orders.html" class="dropdown-item"><i class="fas fa-clipboard-list"></i> Orders</a>
+            <a href="pharmacy-settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+            <hr class="dropdown-divider" />
+            <a href="index.html" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <a href="pharmacy-dashboard.html" class="sidebar-link active"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="pharmacy-orders.html" class="sidebar-link"><i class="fas fa-clipboard-list"></i> Orders</a>
+      <a href="pharmacy-settings.html" class="sidebar-link"><i class="fas fa-cog"></i> Settings</a>
+      <a href="index.html" class="sidebar-link text-danger" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+
+    <main class="main-content">
+      <div class="welcome-section">
+        <div class="welcome-text">
+          <h1>Welcome back, Care Pharmacy!</h1>
+          <p>Manage your inventory and track medicine levels in real-time.</p>
+        </div>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-pills"></i></div>
+          <div class="stat-content">
+            <h3>Total Medicines</h3>
+            <p id="totalMedicines" class="stat-number">0</p>
+          </div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div>
+          <div class="stat-content">
+            <h3>Low Stock</h3>
+            <p id="runOut" class="stat-number">0</p>
+          </div>
+        </div>
+        <a href="pharmacy-orders.html" style="text-decoration: none; color: inherit;">
+          <div class="stat-card info">
+            <div class="stat-icon"><i class="fas fa-truck-loading"></i></div>
+            <div class="stat-content">
+              <h3>Pending Orders</h3>
+              <p id="order" class="stat-number">0</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <section class="action-section">
+        <div class="add-medicine-card">
+          <div class="card-header">
+            <h2><i class="fas fa-plus-circle"></i> Add New Medicine</h2>
+          </div>
+          <form id="addMedicineForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="medicineName">Medicine Name</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-tag"></i>
+                  <input type="text" placeholder="e.g. Panadol Extra" id="medicineName">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="medicineStrength">Strength / Dosage</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-vial"></i>
+                  <input type="text" placeholder="e.g. 500mg, 10ml" id="medicineStrength">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="medicineCategory">Category</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-filter"></i>
+                  <select id="medicineCategory">
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Pain Relief">Pain Relief</option>
+                    <option value="Antibiotics">Antibiotics</option>
+                    <option value="Vitamins">Vitamins</option>
+                    <option value="Chronic Diseases">Chronic Diseases</option>
+                    <option value="Allergy">Allergy</option>
+                    <option value="Cold & Flu">Cold & Flu</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="medicinePrice">Price ($)</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-dollar-sign"></i>
+                  <input type="number" placeholder="0.00" id="medicinePrice">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="medicineAmount">Quantity</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-layer-group"></i>
+                  <input type="number" placeholder="0" id="medicineAmount">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="medicineImage">Medicine Photo</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-upload"></i>
+                  <input type="file" id="medicineImageInput" accept="image/*">
+                </div>
+                <div id="medicineImagePreviewContainer" style="margin-top: 10px; display: none;">
+                  <img id="medicineImagePreview" src="" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border);">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="medicinePrescription">Prescription Type</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-prescription"></i>
+                  <select id="medicinePrescription">
+                    <option value="OTC">OTC (No Prescription)</option>
+                    <option value="Required">Prescription Required</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="medicineDescription">Medicine Description & Usage</label>
+                <textarea id="medicineDescription" placeholder="Describe the medicine and its usage instructions..." rows="3"></textarea>
+              </div>
+            </div>
+            
+            <div class="form-footer">
+              <button type="button" class="btn btn-primary" id="btnAdd">
+                <i class="fa-solid fa-plus"></i> Add to Inventory
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <div class="inventory-section">
+        <div class="inventory-header">
+          <div class="header-title">
+            <i class="fas fa-boxes"></i>
+            <h2>Medicine Inventory</h2>
+          </div>
+          <div id="deleteAll"></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Medicine's name</th>
+              <th>Price</th>
+              <th>Amount</th>
+              <th>Update</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+              <!-- Content injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <!-- Scripts -->
+  <script src="js/medlink-ui.js"></script>
+  <script src="js/pharmacy'Dashboard.js"></script>
+</body>
+
+</html>

@@ -569,6 +569,7 @@
       </div>
     </main>
 
+    <script src="js/medlink-ui.js"></script>
     <script src="js/citizen-dashboard.js"></script>
     <script>
       // Simulate modern form submission with no alerts
@@ -585,18 +586,13 @@
           submitBtn.disabled = true;
 
           setTimeout(() => {
-            submitBtn.innerHTML =
-              '<i class="fas fa-check"></i> Broadcast Successful!';
-            submitBtn.style.backgroundColor = "var(--success)";
-            submitBtn.style.borderColor = "var(--success)";
-
-            setTimeout(() => {
-              submitBtn.innerHTML = btnContent;
-              submitBtn.style.backgroundColor = "";
-              submitBtn.style.borderColor = "";
-              submitBtn.disabled = false;
-              form.reset();
-            }, 3000);
+            submitBtn.innerHTML = btnContent;
+            submitBtn.disabled = false;
+            
+            // Premium notification instead of just color change
+            mlAlert(`Broadcast for "${document.getElementById('med-name').value}" successful!`, 'success');
+            
+            form.reset();
           }, 1200);
         });
       }

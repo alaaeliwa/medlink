@@ -145,6 +145,7 @@
     </main>
 
     <!-- Scripts -->
+    <script src="js/medlink-ui.js"></script>
     <script src="js/citizen-dashboard.js"></script>
     <script>
       // 1. Populate inputs securely on load
@@ -210,19 +211,12 @@
             if (profileNameEl) profileNameEl.textContent = newName;
             if (profileEmailEl) profileEmailEl.textContent = newEmail;
 
-            // Revert button, show specific text
+            // Revert button
             saveBtn.innerHTML = btnContent;
             saveBtn.disabled = false;
 
-            if (saveStatus) {
-              saveStatus.style.display = 'inline-flex';
-              saveStatus.style.animation = 'fadeIn 0.3s ease';
-              
-              setTimeout(() => {
-                saveStatus.style.animation = 'fadeOut 0.3s ease forwards';
-                setTimeout(() => { saveStatus.style.display = 'none'; }, 300);
-              }, 4000);
-            }
+            // Premium Notification
+            mlAlert('Profile settings updated successfully!', 'success');
           }, 800);
         });
       }
