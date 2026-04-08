@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setTimeout(() => {
           // Direct users to the unified Citizen Dashboard
-          window.location.href = "citizen-dashboard.html";
+          window.location.href = "../citizen/citizen-dashboard.html";
         }, 1500);
       }
     });

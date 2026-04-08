@@ -183,9 +183,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Dynamic Redirection based on Role
           if (role === 'pharmacy') {
-            window.location.href = "pharmacy-dashboard.html";
+            window.location.href = "../pharmacy/pharmacy-dashboard.html";
           } else {
-            window.location.href = "citizen-dashboard.html";
+            window.location.href = "../citizen/citizen-dashboard.html";
           }
         }, 1500);
       }

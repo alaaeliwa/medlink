@@ -138,8 +138,13 @@ window.mlConfirm = (title, text, confirmBtn, callback) => MedLinkUI.confirm(titl
 
 // 3. Global Graceful Logout Interceptor
 document.addEventListener('click', (e) => {
-    const logoutLink = e.target.closest('a[href="index.html"]');
-    if (logoutLink && logoutLink.textContent.includes('Logout')) {
+    // Match any link that ends with 'index.html' AND contains the word 'Logout'
+    const logoutLink = e.target.closest('a');
+    
+    if (logoutLink && 
+        logoutLink.href.toLowerCase().endsWith('index.html') && 
+        logoutLink.textContent.includes('Logout')) {
+        
         e.preventDefault();
         
         mlConfirm(
@@ -147,7 +152,8 @@ document.addEventListener('click', (e) => {
             'Are you sure you want to sign out? Your session will be closed.',
             'Logout',
             () => {
-                window.location.href = 'index.html';
+                // Use the exact href from the link (handles ../ index.html etc automatically)
+                window.location.href = logoutLink.href;
             }
         );
     }
