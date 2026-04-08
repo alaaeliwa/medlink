@@ -45,19 +45,6 @@
       }
 
       /* Animated Blobs */
-      .blob {
-        position: absolute;
-        width: 300px;
-        height: 300px;
-        background: var(--error-primary);
-        filter: blur(80px);
-        opacity: 0.15;
-        border-radius: 50%;
-        z-index: -1;
-      }
-      .blob-1 { top: -100px; left: -100px; animation: float 8s infinite ease-in-out; }
-      .blob-2 { bottom: -100px; right: -100px; background: var(--error-secondary); animation: float 10s infinite ease-in-out reverse; }
-
       @keyframes float {
         0%, 100% { transform: translate(0, 0) scale(1); }
         33% { transform: translate(30px, -50px) scale(1.1); }
@@ -186,7 +173,9 @@
   </head>
   <body>
 
-     <div class="error-container">
+
+
+    <div class="error-container">
       <div class="error-card">
         <div class="search-box">
            <i class="fas fa-search"></i>
