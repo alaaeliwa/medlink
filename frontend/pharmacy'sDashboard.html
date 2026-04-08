@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/favicon.ico" >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+  <title>pharmacy's Dashboard</title>
+  <!-- icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" >
+  <!-- font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet" >
+  <!-- globals -->
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/citizen-dashboard.css">
+  <!-- specific styles -->
+  <link rel="stylesheet" href="./css/pharmacy'sDashboard.css">
+</head>
+<body>
+  <!-- header -->
+  <header class="dashboard-header">
+    <a href="index.html">
+      <img src="images/logo.png" alt="MedLink logo" class="logo">
+    </a>
+    <p>Pharmacy Dashboard</p>
+  </header>
+
+
+  <main class="container">
+    <div class="welcome">
+      <h1><i class="fa-solid fa-pills"></i> Welcome to Your Pharmacy Dashboard</h1>
+      <p>Manage your pharmacy medicines</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h2>Total Medicines</h2>
+        <p id="totalMedicines" class="totalMedicines"></p>
+      </div>
+      <div class="card">
+        <h2>About to run out </h2>
+        <p id="runOut" class="runOut"></p>
+      </div>
+      <div class="card">
+        <h2>Orders </h2>
+        <p id="order" class="order"></p>
+      </div>
+    </div>
+
+    <section class="form-container">
+      <h2><i class="fa-solid fa-pills"></i>Add Medicine</h2>
+      <form>
+        <div class="form">
+        <div class="form-group">
+          <label for="medicineName">Medicine Name</label>
+          <input type="text" placeholder="Enter medicine name" id="medicineName">
+        </div>
+
+        <div class="form-group">
+          <label for="medicinePrice">Price</label>
+          <input type="number" placeholder="Enter price" id="medicinePrice">
+          
+        </div>
+
+        <div class="form-group">
+          <label for="medicineAmount">Amount</label>
+          <input type="number" placeholder="Enter Amount" id="medicineAmount">
+        </div>
+      </div>
+      <div class="buttons">
+        <button type="button" class="btn-form" id="btnAdd">
+          <i class="fa-solid fa-plus"></i>
+          Add Medicine
+        </button>
+        
+      </div>
+      
+      </form>
+      
+    </section>
+
+<!-- test -->
+<section class="form-container">
+
+<form>
+  <div class="form">
+    <div class="form-group">
+      <input onkeyup="search(this.value)" type="text" placeholder="Enter medicine name for search" id="medicineNameSearch">
+    </div>
+
+  </div>
+  <div class="buttons">
+    <button class="btn-form" id="btnSearch" type="button">
+      <i class="fa-brands fa-sistrix"></i>
+      search by name
+    </button>
+  </div>
+
+</form>
+
+</section>
+<!-- test -->
+
+
+
+
+    
+
+<div id="deleteAll"></div>
+
+    <table >
+
+      <tr>
+        <th>ID</th>
+        <th>Medicine's name</th>
+        <th>Price</th>
+        <th>Amount</th>
+        <th>Update</th>
+        <th>Remove</th>
+        </tr>
+        <tbody id = "tbody">
+          
+        </tbody>
+    </table>
+  </main>
+  <!-- Scripts -->
+  <script src="js/pharmacy'Dashboard.js"></script>
+</body>
+
+</html>
