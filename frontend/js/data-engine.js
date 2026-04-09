@@ -22,14 +22,14 @@ const ALL_MEDICINES = [
 ];
 
 const ALL_PHARMACIES = [
-  { id: 1, name: 'Al Shifa Pharmacy', area: 'Downtown', rating: 4.9, reviews: 120, distance: 1.2, status: 'Open Now', img: 'images/PHAR.jpg' },
-  { id: 2, name: 'CarePlus Pharmacy', area: 'Downtown', rating: 4.7, reviews: 85, distance: 2.5, status: 'Open 24/7', img: 'images/PHAR.jpg' },
-  { id: 3, name: 'LifeStyle Pharmacy', area: 'West End', rating: 4.5, reviews: 64, distance: 3.8, status: 'Closed', img: 'images/PHAR.jpg' },
-  { id: 4, name: 'Medix Care Store', area: 'North District', rating: 4.8, reviews: 210, distance: 4.1, status: 'Open Now', img: 'images/PHAR.jpg' },
-  { id: 5, name: 'QuickMeds Pharmacy', area: 'North District', rating: 4.2, reviews: 45, distance: 7.5, status: 'Open 24/7', img: 'images/PHAR.jpg' },
-  { id: 6, name: 'Trust Pharmacy Center', area: 'East Side', rating: 4.6, reviews: 92, distance: 8.0, status: 'Closed', img: 'images/PHAR.jpg' },
-  { id: 7, name: 'City Central Pharma', area: 'Downtown', rating: 4.4, reviews: 150, distance: 0.8, status: 'Open Now', img: 'images/PHAR.jpg' },
-  { id: 8, name: 'Wellness Hub', area: 'West End', rating: 4.9, reviews: 300, distance: 5.2, status: 'Open 24/7', img: 'images/PHAR.jpg' }
+  { id: 1, name: 'Al Shifa Pharmacy', area: 'Downtown', rating: 4.9, reviews: 120, status: 'Open Now', img: 'images/PHAR.jpg' },
+  { id: 2, name: 'CarePlus Pharmacy', area: 'Downtown', rating: 4.7, reviews: 85, status: 'Open 24/7', img: 'images/PHAR.jpg' },
+  { id: 3, name: 'LifeStyle Pharmacy', area: 'West End', rating: 4.5, reviews: 64,  status: 'Closed', img: 'images/PHAR.jpg' },
+  { id: 4, name: 'Medix Care Store', area: 'North District', rating: 4.8, reviews: 210,  status: 'Open Now', img: 'images/PHAR.jpg' },
+  { id: 5, name: 'QuickMeds Pharmacy', area: 'North District', rating: 4.2, reviews: 45,  status: 'Open 24/7', img: 'images/PHAR.jpg' },
+  { id: 6, name: 'Trust Pharmacy Center', area: 'East Side', rating: 4.6, reviews: 92, status: 'Closed', img: 'images/PHAR.jpg' },
+  { id: 7, name: 'City Central Pharma', area: 'Downtown', rating: 4.4, reviews: 150, status: 'Open Now', img: 'images/PHAR.jpg' },
+  { id: 8, name: 'Wellness Hub', area: 'West End', rating: 4.9, reviews: 300, status: 'Open 24/7', img: 'images/PHAR.jpg' }
 ];
 
 // --- 2. STATE ---
@@ -202,7 +202,6 @@ function renderData() {
             <p class="pharmacy-address"><i class="fas fa-map-marker-alt text-accent"></i> ${item.area}</p>
             <div class="pharmacy-stats">
               <span class="rating"><i class="fas fa-star text-warning"></i> ${item.rating} (${item.reviews})</span>
-              <span class="distance"><i class="fas fa-location-arrow text-muted"></i> ${item.distance} km</span>
             </div>
             <a href="pharmacy-details.html" class="btn btn-outline w-full modern-btn-outline pharmacy-btn" style="text-align: center;">View Pharmacy</a>
           </div>

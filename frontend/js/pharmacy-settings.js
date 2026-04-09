@@ -23,7 +23,7 @@ let pharmacyProfile = localStorage.getItem('pharmacy_profile') ? JSON.parse(loca
     name: 'Care Pharmacy',
     owner: 'Pharmacist Sarah',
     phone: '+962 79 000 0000',
-    location: 'Amman, Jordan',
+    location: 'Gaza',
     email: 'contact@carepharma.com',
     hours: '8:00 AM - 11:30 PM',
     delivery: 'Available',
