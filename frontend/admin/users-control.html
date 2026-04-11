@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Admin Dashboard</title>
+  <!-- icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <!-- globals -->
+  <link rel="stylesheet" href="../css/global.css">
+  <!-- specific styles -->
+  <link rel="stylesheet" href="../css/usere-control.css">
+</head>
+
+<body>
+
+  <main class="app-container">
+
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="../images/logo.png" alt="MedLink Logo">
+      </div>
+
+      <nav class="menu-section">
+        <p class="section-title">MAIN MENU</p>
+        <ul>
+          <li ><a href="./admin-dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+          </li>
+
+          <li class="active"><a href="./users-control.html"><i class="fa-solid fa-user-group"></i> Users Control</a></li>
+
+          <li class="has-badge"><a href="./pharmacies.html">
+              <i class="fa-solid fa-house-chimney-medical"></i> Pharmacies
+              <span class="badge">3</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <nav class="menu-section">
+        <p class="section-title">OPERATIONS</p>
+        <ul>
+          <li><a href="./medicine-catalog.html"><i class="fa-solid fa-book-medical"></i> Medicine Catalog</a></li>
+
+          <li><a href="./reports.html"><i class="fa-solid fa-flag"></i> Reports & Monitoring</a></li>
+        </ul>
+      </nav>
+
+      <div class="logout"><a href="../index.html">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </aside>
+    </aside>
+<section class="main-content">
+
+
+
+  <header class="users-header">
+    <div class="page-title">
+      <h1><i class="fa-solid fa-users"  style="color: rgb(116, 192, 252);"></i> Users Control</h1>
+      <p>Manage all registered citizens on the MedLink platform.</p>
+    </div>
+  
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Search by name or email...">
+    </div>
+  
+    <div class="filter-tabs">
+      <button class="tab active">All Users</button>
+      <button class="tab">Active</button>
+      <button class="tab">Frozen</button>
+    </div>
+  </header>
+
+<section class="users-table-container">
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>USER</th>
+        <th>REGISTERED</th>
+        <th>STATUS</th>
+        <th>ACTIONS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="user-info">
+            <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="user-details">
+              <span class="user-name">Ahmed Ali</span>
+              <span class="user-email">ahmed@example.com</span>
+            </div>
+          </div>
+        </td>
+        <td>Jan 15, 2026</td>
+        <td><span class="status-badge active-bg">Active</span></td>
+        <td>
+          <button class="action-btn freeze-btn">
+            <i class="fa-solid fa-ban"></i> Freeze
+          </button>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <div class="user-info">
+            <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="user-details">
+              <span class="user-name">Khaled Yassin</span>
+              <span class="user-email">khaled@example.com</span>
+            </div>
+          </div>
+        </td>
+        <td>Mar 1, 2026</td>
+        <td><span class="status-badge frozen-bg">Frozen</span></td>
+        <td>
+          <button class="action-btn activate-btn">
+            <i class="fa-solid fa-check"></i> Activate
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+
+</section>
+  
+
+
+  </main>
+
+
+
+</body>
+
+</html>
