@@ -1,0 +1,301 @@
+:root {
+  --primary-blue: #003a8c;
+  --text-gray: #7d8592;
+  --bg-white: #ffffff;
+  --active-text: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 20rem;
+  min-width: 26rem;
+  background-color: #fff;
+  border-right: 0.1rem solid #f0f0f0;
+}
+
+.main-content {
+  flex-grow: 1;
+  background-color: #f8faff;
+  overflow-y: auto;
+  padding: 3rem 4rem;
+}
+
+.sidebar {
+  width: 20rem;
+  height: 100%;
+  background-color: var(--bg-white);
+  padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #f0f0f0;
+}
+
+.logo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.logo img {
+  max-width: 10rem;
+  height: auto;
+}
+
+.section-title {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.menu-section ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 3rem;
+}
+
+.menu-section li {
+  padding: 1.2rem 1.6rem;
+  color: var(--text-gray);
+  border-radius: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-size: 1.2rem;
+  transition: 0.3s;
+  position: relative;
+}
+
+.menu-section li.active {
+  background-color: var(--primary-blue);
+  color: var(--bg-card);
+}
+
+.menu-section li:hover:not(.active) {
+  background-color: #f5f7fa;
+}
+
+
+
+
+.badge {
+  background-color: #093e4e;
+  color: var(--bg-card);
+  font-size: 1rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 50%;
+  position: absolute;
+  right: 1.5rem;
+}
+
+.logout {
+  margin-top: auto;
+  padding: 1.2rem 1.6rem;
+  color: var(--text-gray);
+  cursor: pointer;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  border-top: 1px solid #f0f2f5;
+}
+
+.main-content {
+  flex: 1;
+  padding: 4rem;
+  overflow-y: auto;
+}
+
+.page-title h1 {
+  font-size: 2.4rem;
+  color: #002d62;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.page-title p {
+  color: #a0aec0;
+  font-size: 1.4rem;
+  margin-bottom: 2.5rem;
+}
+
+.search-bar {
+  position: relative;
+  max-width: 100%;
+  margin-bottom: 2.5rem;
+}
+
+.search-bar i {
+  position: absolute;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #cbd5e0;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 1.5rem 3.125rem;
+  border: 1px solid #edf2f7;
+  border-radius: 1.875rem;
+  background: #fff;
+  outline: none;
+  font-size: 1.4rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 3rem;
+}
+
+.tab {
+  padding: 0.5rem 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid #edf2f7;
+  background: #fff;
+  color: #7d8592;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab.active {
+  background-color: #003a8c;
+  color: #fff;
+  border-color: #003a8c;
+}
+
+.table-card {
+  background: #fff;
+  border-radius: 1.6rem;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.pharmacy-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pharmacy-table th {
+  text-align: left;
+  padding: 1.125rem 1.25rem;
+  font-size: 0.6875rem;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #f8faff;
+}
+
+.pharmacy-table td {
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid #f8faff;
+  font-size: 1.4rem;
+  color: #4a5568;
+  vertical-align: middle;
+}
+
+.pharmacy-info {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.pharm-img {
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 0.8rem;
+  object-fit: cover;
+}
+
+.pharm-meta .name {
+  display: block;
+  font-weight: 700;
+  color: #002d62;
+}
+
+.pharm-meta .email {
+  font-size: 1.2rem;
+  color: #a0aec0;
+}
+
+.badge-status {
+  padding: 5px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.approved {
+  background-color: #e6f9f0;
+  color: #00b074;
+}
+
+.pending {
+  background-color: #fff9e6;
+  color: #ffb800;
+}
+
+.rejected {
+  background-color: #fff5f5;
+  color: #ff4d4f;
+}
+
+.action-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-action {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.revoke,
+.reject-inline {
+  background-color: #fff5f5;
+  color: #ff4d4f;
+}
+
+.approve-inline {
+  background-color: #e6f9f0;
+  color: #00b074;
+}
+
+.btn-action:hover {
+  opacity: 0.8;
+}
