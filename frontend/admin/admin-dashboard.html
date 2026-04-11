@@ -1,11 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <title>Admin Dashboard</title>
+  <!-- icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <!-- globals -->
+  <link rel="stylesheet" href="../css/global.css">
+  <!-- specific styles -->
+  <link rel="stylesheet" href="../css/admin-dashboard.css">
 </head>
+
 <body>
-  <h1>admin</h1>
+  
+<main class="app-container">
+  
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="../images/logo.png" alt="MedLink Logo">
+    </div>
+  
+    <nav class="menu-section">
+      <p class="section-title">MAIN MENU</p>
+      <ul>
+        <li class="active"><i class="fa-solid fa-table-columns"></i> Dashboard</li>
+    
+        <li><i class="fa-solid fa-user-group"></i> Users Control</li>
+    
+        <li class="has-badge">
+          <i class="fa-solid fa-house-chimney-medical"></i> Pharmacies
+          <span class="badge">3</span>
+        </li>
+      </ul>
+    </nav>
+    
+    <nav class="menu-section">
+      <p class="section-title">OPERATIONS</p>
+      <ul>
+        <li><i class="fa-solid fa-book-medical"></i> Medicine Catalog</li>
+    
+        <li><i class="fa-solid fa-flag"></i> Reports & Monitoring</li>
+      </ul>
+    </nav>
+    
+    <div class="logout">
+      <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </div>    
+  </aside>
+
+<section class="main-content">
+  <header class="page-header">
+    <div class="welcome-text">
+      <h1>Welcome Back, Admin</h1>
+      <p>Here's what's happening with MedLink today.</p>
+    </div>
+
+    <div class="date-display">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span id="current-date">APRIL 11, 2026</span>
+    </div>
+  </header>
+<section class="cards-container">
+  <div class="stat-card">
+    <div class="card-icon icon-blue">
+      <i class="fa-solid fa-user-group"></i>
+    </div>
+    <div class="card-info">
+      <h3>1,284</h3>
+      <p>Total Users</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="card-icon icon-green">
+      <i class="fa-solid fa-shop"></i>
+    </div>
+    <div class="card-info">
+      <h3>156</h3>
+      <p>Registered Pharmacies</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="card-icon icon-yellow">
+      <i class="fa-solid fa-capsules"></i>
+    </div>
+    <div class="card-info">
+      <h3>42</h3>
+      <p>Missing Medicine Requests</p>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="charts-row">
+  <div class="chart-container main-chart">
+    <div class="chart-header">
+      <h3>Platform Activity</h3>
+      <select>
+        <option>Last 7 Days</option>
+      </select>
+    </div>
+    <div class="chart-placeholder">
+      <canvas id="activityChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-container side-chart">
+    <div class="chart-header">
+      <h3>Request Categories</h3>
+    </div>
+    <div class="chart-placeholder">
+      <canvas id="categoryChart"></canvas>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+<!-- table -->
+
+
+<section class="table-container">
+  <div class="table-header">
+    <h3><i class="fa-regular fa-clock"></i> Recent Missing Medicine Requests</h3>
+    <a href="#" class="view-all">View All <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <table class="med-table">
+    <thead>
+      <tr>
+        <th>MEDICINE NAME</th>
+        <th>REQUESTED BY</th>
+        <th>DATE</th>
+        <th>STATUS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Glucophage 850mg</td>
+        <td>
+          <div class="user-cell"><img src="avatar1.png"> Ahmed Ali</div>
+        </td>
+        <td>Apr 08, 2026</td>
+        <td><span class="status pending">Pending</span></td>
+      </tr>
+      <tr>
+        <td>Insulin Lantus</td>
+        <td>
+          <div class="user-cell"><img src="avatar2.png"> Sara Mohamed</div>
+        </td>
+        <td>Apr 07, 2026</td>
+        <td><span class="status pending">Pending</span></td>
+      </tr>
+      <tr>
+        <td>Metformin 500mg</td>
+        <td>
+          <div class="user-cell"><img src="avatar3.png"> Khaled Yassin</div>
+        </td>
+        <td>Apr 06, 2026</td>
+        <td><span class="status completed">Completed</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</section>
+
+
+
+</main>
+
+
+
 </body>
+
 </html>
