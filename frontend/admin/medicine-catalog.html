@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Admin Dashboard</title>
+  <!-- icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <!-- globals -->
+  <link rel="stylesheet" href="../css/global.css">
+  <!-- specific styles -->
+  <link rel="stylesheet" href="../css/medicine-catalog.css">
+</head>
+
+<body>
+
+  <main class="app-container">
+
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="../images/logo.png" alt="MedLink Logo">
+      </div>
+
+      <nav class="menu-section">
+        <p class="section-title">MAIN MENU</p>
+        <ul>
+          <li><a href="./admin-dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+          </li>
+
+          <li><a href="./users-control.html"><i class="fa-solid fa-user-group"></i> Users Control</a>
+          </li>
+
+          <li class="has-badge"><a href="./pharmacies.html">
+              <i class="fa-solid fa-house-chimney-medical"></i> Pharmacies
+              <span class="badge">3</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <nav class="menu-section">
+        <p class="section-title">OPERATIONS</p>
+        <ul>
+          <li class="active"><a href="./medicine-catalog.html"><i class="fa-solid fa-book-medical"></i> Medicine Catalog</a></li>
+
+          <li><a href="./reports.html"><i class="fa-solid fa-flag"></i> Reports & Monitoring</a></li>
+        </ul>
+      </nav>
+
+      <div class="logout"><a href="../index.html">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </aside>
+    </aside>
+
+
+  <section class="portal-content">
+    <header class="catalog-top-bar">
+      <div class="header-info">
+        <h1 class="header-title">
+          <span class="icon-wrap"><i class="fa-solid fa-capsules"></i></span>
+          Medicine Catalog
+        </h1>
+        <p class="header-subtitle">Manage the global medicine database. Pharmacies pick from this catalog.</p>
+      </div>
+    </header>
+  
+    <div class="entry-card shadow-sm">
+      <h3 class="card-label"><i class="fa-solid fa-plus-circle"></i> Add New Medicine</h3>
+      <form class="entry-form">
+        <div class="field-box">
+          <label class="field-label">Medicine Name</label>
+          <input type="text" class="field-input" placeholder="e.g. Panadol Extra">
+        </div>
+        <div class="field-box">
+          <label class="field-label">Category</label>
+          <select class="field-select">
+            <option selected disabled>Select category...</option>
+            <option>Pain Relief</option>
+            <option>Antibiotics</option>
+            <option>Cardiology</option>
+          </select>
+        </div>
+        <div class="field-box">
+          <label class="field-label">Active Ingredient</label>
+          <input type="text" class="field-input" placeholder="e.g. Paracetamol">
+        </div>
+        <div class="field-box">
+          <label class="field-label">Dosage</label>
+          <input type="text" class="field-input" placeholder="e.g. 500mg">
+        </div>
+        <button type="submit" class="primary-action-btn">
+          <i class="fa-solid fa-plus"></i> Add Medicine
+        </button>
+      </form>
+    </div>
+  
+    <div class="filter-wrapper">
+      <div class="search-box-inner">
+        <input type="text" class="search-input-field" placeholder="Search medicines by name or category...">
+      </div>
+    </div>
+  
+    <div class="data-display-card shadow-sm">
+      <div class="data-header">
+        <h3 class="data-title"><i class="fa-solid fa-list-check"></i> All Medicines</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="custom-data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Active Ingredient</th>
+              <th>Dosage</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="med-bold">Panadol Extra</span></td>
+              <td><span class="tag-pill blue-tag">Pain Relief</span></td>
+              <td>Paracetamol + Caffeine</td>
+              <td>500mg</td>
+              <td>
+                <div class="control-btns">
+                  <button class="btn-edit"><i class="fa-solid fa-pen"></i></button>
+                  <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+
+
+
+  </main>
+
+
+
+</body>
+
+</html>
