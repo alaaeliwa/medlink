@@ -129,12 +129,43 @@ const MedLinkUI = {
         overlay.onclick = (e) => {
             if (e.target === overlay) closeModal();
         };
+    },
+
+    // 4. Initial Avatars & Dynamic Colors
+    stringToColor: function(str) {
+        if (!str) return '#074799';
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+        return "#" + "00000".substring(0, 6 - c.length) + c;
+    },
+
+    getInitials: function(name) {
+        if (!name) return '??';
+        const parts = name.trim().split(/\s+/);
+        if (parts.length === 0) return '??';
+        if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+    },
+
+    getAvatarHTML: function(name, image, className = 'cell-avatar') {
+        if (image && image.trim() !== '') {
+            return `<img src="${image}" alt="${name}" class="${className}" onerror="this.outerHTML=MedLinkUI.getAvatarHTML('${name}', null, '${className}')" />`;
+        }
+        const initials = this.getInitials(name);
+        const color = this.stringToColor(name);
+        return `<div class="${className}" style="background-color: ${color}; overflow: hidden;">
+            <div class="ml-avatar-placeholder">${initials}</div>
+        </div>`;
     }
 };
 
 // Global shorthand for easy usage
 window.mlAlert = (msg, type) => MedLinkUI.toast(msg, type);
 window.mlConfirm = (title, text, confirmBtn, callback) => MedLinkUI.confirm(title, text, confirmBtn, callback);
+window.mlAvatar = (name, img, cls) => MedLinkUI.getAvatarHTML(name, img, cls);
 
 // 3. Global Graceful Logout Interceptor
 document.addEventListener('click', (e) => {
