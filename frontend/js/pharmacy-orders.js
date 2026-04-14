@@ -15,59 +15,20 @@ let pharmacyProfile = localStorage.getItem('pharmacy_profile') ? JSON.parse(loca
     image: 'images/PHAR.jpg'
 };
 
-// Helper for unique user colors
-function stringToColor(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hue = Math.abs(hash % 360);
-    return `hsl(${hue}, 65%, 45%)`;
+// Get Orders from OrdersEngine
+function getOrders() {
+    if(!window.OrdersEngine) return [];
+    
+    const allOrders = window.OrdersEngine.getOrders();
+    // Filter: Show orders specifically for this pharmacy OR broadcasted to General Network
+    return allOrders.filter(o => 
+        o.pharmacyName === pharmacyProfile.name || 
+        o.pharmacyName === "General Network" ||
+        o.pharmacyName === "Local Pharmacy" // fallback
+    );
 }
 
-// Dummy Orders for Demo
-let medlinkOrders = localStorage.getItem('medlink_orders') ? JSON.parse(localStorage.medlink_orders) : [
-    {
-        id: "ORD-7721",
-        customerName: "Ahmed Ali",
-        medicineName: "Panadol Extra 500mg",
-        quantity: 2,
-        urgency: "urgent",
-        notes: "I need it as soon as possible for high fever. Please confirm if delivery is possible.",
-        timestamp: "10 mins ago",
-        status: "Pending"
-    },
-    {
-        id: "ORD-8832",
-        customerName: "Sami Mansour",
-        medicineName: "Augmentin 1g",
-        quantity: 1,
-        urgency: "standard",
-        notes: "Subscription renewal. I'll pick it up in the evening.",
-        timestamp: "2 hours ago",
-        status: "Approved"
-    },
-    {
-        id: "ORD-9910",
-        customerName: "Laila H.",
-        medicineName: "Euthyrox 50mcg",
-        quantity: 3,
-        urgency: "critical",
-        notes: "Urgent! Chronic medicine, running out tonight. Please prioritize.",
-        timestamp: "Just now",
-        status: "Pending"
-    },
-    {
-        id: "ORD-4412",
-        customerName: "Noor J.",
-        medicineName: "Ventolin Inhaler",
-        quantity: 1,
-        urgency: "urgent",
-        notes: "Asthma flare-up. Please prepare it for immediate pickup.",
-        timestamp: "1 hour ago",
-        status: "Pending"
-    }
-];
+let medlinkOrders = getOrders();
 
 // 1. Load Header Info
 function loadHeader() {
@@ -109,28 +70,30 @@ function renderOrders(filter = 'all') {
     }
 
     filteredOrders.forEach((order) => {
-        const initials = order.customerName.split(' ').map(n => n[0]).join('').toUpperCase();
-        const avatarColor = stringToColor(order.customerName);
-        const realIndex = medlinkOrders.findIndex(o => o.id === order.id);
+        const initials = (order.customerName || "Customer").split(' ').map(n => n[0]).join('').toUpperCase();
+        const avatarColor = stringToColor(order.customerName || "Customer");
+        const orderId = order.id;
+        const timestamp = order.time ? `${order.date}, ${order.time}` : (order.timestamp || "Recently");
+        const urgency = order.urgency || "standard";
 
         let footerActions = "";
         if (order.status === "Pending") {
             footerActions = `
-                <button class="btn-action btn-approve" onclick="updateOrderStatus(${realIndex}, 'Approved')">
+                <button class="btn-action btn-approve" onclick="updateOrderStatus('${orderId}', 'Approved')">
                     <i class="fas fa-check"></i> Approve
                 </button>
-                <button class="btn-action btn-decline" onclick="updateOrderStatus(${realIndex}, 'Cancelled')">
+                <button class="btn-action btn-decline" onclick="updateOrderStatus('${orderId}', 'Rejected')">
                     <i class="fas fa-times"></i> Decline
                 </button>
             `;
         } else if (order.status === "Approved") {
             footerActions = `
-                <button class="btn-action btn-ready" onclick="updateOrderStatus(${realIndex}, 'Ready')">
+                <button class="btn-action btn-ready" onclick="updateOrderStatus('${orderId}', 'Ready')">
                     <i class="fas fa-box"></i> Mark as Ready
                 </button>
             `;
         } else {
-            footerActions = `<span class="status-badge status-${order.status}"><i class="fas fa-info-circle"></i> ${order.status}</span>`;
+            footerActions = `<span class="status-badge status-${order.status.toLowerCase()}"><i class="fas fa-info-circle"></i> ${order.status}</span>`;
         }
 
         ordersListEl.innerHTML += `
@@ -141,7 +104,7 @@ function renderOrders(filter = 'all') {
                     <div class="customer-avatar" style="background: ${avatarColor}">${initials}</div>
                     <div class="customer-info">
                         <strong>${order.customerName}</strong>
-                        <span class="order-time"><i class="far fa-clock"></i> ${order.timestamp}</span>
+                        <span class="order-time"><i class="far fa-clock"></i> ${timestamp}</span>
                     </div>
                 </div>
 
@@ -158,7 +121,7 @@ function renderOrders(filter = 'all') {
 
                 <div class="order-footer">
                    ${order.status === 'Pending' || order.status === 'Approved' 
-                     ? `<span class="status-badge status-${order.status}">${order.status}</span>` 
+                     ? `<span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span>` 
                      : ''}
                    <div class="order-actions" style="${order.status !== 'Pending' && order.status !== 'Approved' ? 'width: 100%; justify-content: center;' : ''}">
                         ${footerActions}
@@ -170,24 +133,24 @@ function renderOrders(filter = 'all') {
 }
 
 // 4. Update Order Status
-function updateOrderStatus(index, newStatus) {
-    // Add a tiny delay for "feel"
-    const cards = document.querySelectorAll('.order-card');
-    // Find the card being updated (in theory we should use IDs, but index is okay for this demo)
+function updateOrderStatus(id, newStatus) {
+    if(!window.OrdersEngine) return;
     
-    medlinkOrders[index].status = newStatus;
-    localStorage.setItem('medlink_orders', JSON.stringify(medlinkOrders));
+    const success = window.OrdersEngine.updateStatus(id, newStatus);
     
-    // Modern Notification
-    let type = 'success';
-    if (newStatus === 'Cancelled') type = 'error';
-    if (newStatus === 'Ready') type = 'info';
-    
-    mlAlert(`Order ${newStatus} Successfully!`, type);
+    if (success) {
+        // Modern Notification
+        let type = 'success';
+        if (newStatus === 'Rejected' || newStatus === 'Cancelled') type = 'error';
+        if (newStatus === 'Ready') type = 'info';
+        
+        mlAlert(`Order ${newStatus} Successfully!`, type);
 
-    // Refresh current view
-    const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
-    renderOrders(activeFilter);
+        // Refresh data and render
+        medlinkOrders = getOrders();
+        const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+        renderOrders(activeFilter);
+    }
 }
 
 // 5. Filter Logic
@@ -204,7 +167,14 @@ window.updateOrderStatus = updateOrderStatus;
 
 // Initial calls
 loadHeader();
+medlinkOrders = getOrders();
 renderOrders();
-if (!localStorage.getItem('medlink_orders')) {
-    localStorage.setItem('medlink_orders', JSON.stringify(medlinkOrders));
+
+function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const hue = Math.abs(hash % 360);
+    return `hsl(${hue}, 65%, 45%)`;
 }

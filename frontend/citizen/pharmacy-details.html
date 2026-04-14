@@ -90,8 +90,9 @@
                </div>
              </div>
           </div>
-          <div class="pharmacy-info-actions">
+          <div class="pharmacy-info-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
              <button class="btn btn-primary modern-btn" style="padding: 12px 24px;"><i class="fas fa-phone"></i> Call Now</button>
+             <button class="btn btn-outline modern-btn-outline" id="btn-open-complaint" style="padding: 12px 24px; border-color: var(--danger); color: var(--danger);"><i class="fas fa-exclamation-circle"></i> File Complaint</button>
           </div>
         </div>
 
@@ -130,7 +131,10 @@
                   <div class="meta-item"><i class="fas fa-boxes text-success"></i> <span class="font-bold">In Stock (15)</span></div>
                   <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>$5.00</span></div>
                 </div>
-                <a href="medicine-details.html" class="btn btn-primary w-full modern-btn-outline" style="text-align: center;">View Details</a>
+                <div class="flex-btn-group">
+                  <a href="medicine-details.html" class="btn btn-outline modern-btn-outline" style="flex: 1; text-align: center; font-size: 0.9rem; padding: 10px;">Details</a>
+                  <button class="btn btn-primary modern-btn btn-request" data-medicine="Panadol Extra" data-price="5.00" style="flex: 1; font-size: 0.9rem; padding: 10px;">Request</button>
+                </div>
               </div>
             </div>
             
@@ -146,7 +150,10 @@
                   <div class="meta-item"><i class="fas fa-boxes text-success"></i> <span class="font-bold">In Stock (2)</span></div>
                   <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>$18.50</span></div>
                 </div>
-                <a href="medicine-details.html" class="btn btn-primary w-full modern-btn-outline" style="text-align: center;">View Details</a>
+                <div class="flex-btn-group">
+                  <a href="medicine-details.html" class="btn btn-outline modern-btn-outline" style="flex: 1; text-align: center; font-size: 0.9rem; padding: 10px;">Details</a>
+                  <button class="btn btn-primary modern-btn btn-request" data-medicine="Augmentin 1g" data-price="18.50" style="flex: 1; font-size: 0.9rem; padding: 10px;">Request</button>
+                </div>
               </div>
             </div>
           </div>
@@ -154,8 +161,44 @@
       </div>
     </main>
 
+    <!-- Complaint Modal -->
+    <div class="ml-modal-overlay" id="complaint-modal">
+        <div class="ml-modal" style="max-width: 500px; text-align: left;">
+            <div class="ml-modal-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); margin: 0 0 24px 0;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="ml-modal-title">File a Complaint</h2>
+            <p class="ml-modal-text">Report price manipulation or expired medication at this pharmacy. Our team will investigate immediately.</p>
+            
+            <form id="complaint-form" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 8px; display: block; font-size: 0.9rem;">Issue Category</label>
+                    <select id="complaint-category" class="form-control" style="width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 12px; outline: none; background: white;" required>
+                        <option value="">Select a category...</option>
+                        <option value="Expired Medication">Expired Medication</option>
+                        <option value="Price Manipulation">Price Manipulation</option>
+                        <option value="Poor Service">Poor Service / Behavior</option>
+                        <option value="Incorrect Prescription">Incorrect Prescription Dispensed</option>
+                        <option value="Other">Other Issues</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 8px; display: block; font-size: 0.9rem;">Detailed Description</label>
+                    <textarea id="complaint-details" rows="4" class="form-control" style="width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 12px; outline: none; background: white;" placeholder="Tell us exactly what happened..." required></textarea>
+                </div>
+
+                <div class="ml-modal-actions" style="margin-top: 8px;">
+                    <button type="button" class="btn btn-outline" id="btn-close-complaint" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2; background: var(--danger);">Submit Complaint</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="../js/medlink-ui.js"></script>
+    <script src="../js/orders-engine.js"></script>
     <script src="../js/citizen-dashboard.js"></script>
   </body>
 </html>

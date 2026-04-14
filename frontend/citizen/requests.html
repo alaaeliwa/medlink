@@ -112,6 +112,7 @@
 
           <form
             id="standalone-request-form"
+            class="orders-form-logic"
             style="display: flex; flex-direction: column; gap: 24px"
           >
             <div
@@ -259,158 +260,127 @@
             <h2 style="font-size: 1.5rem">Recent Requests</h2>
           </div>
 
-          <div class="tracking-grid">
-            <!-- Item 1: Success -->
-            <div class="tracking-card status-available">
-              <div class="tracking-icon"><i class="fas fa-check"></i></div>
-              <div class="tracking-content">
-                <h3 class="tracking-title">Novolog FlexPen 100U/mL</h3>
-                <div class="tracking-meta">
-                  <span
-                    ><i class="far fa-calendar text-muted"></i> Today, 9:00
-                    AM</span
-                  >
-                  <span><i class="fas fa-box text-muted"></i> 2 Items</span>
-                </div>
-              </div>
-              <div class="tracking-actions">
-                <span class="tracking-pill"
-                  ><i class="fas fa-check-circle"></i> Available Now</span
-                >
-                <p
-                  style="margin: 0; font-size: 0.9rem; color: var(--text-main)"
-                >
-                  Located at <strong>Al Shifa Pharmacy</strong> (1.2 km)
-                </p>
-                <a
-                  href="pharmacy-details.html"
-                  style="
-                    font-size: 0.85rem;
-                    color: var(--success);
-                    font-weight: 600;
-                    text-decoration: none;
-                    margin-top: 6px;
-                    display: inline-block;
-                  "
-                  >View Pharmacy <i class="fas fa-chevron-right text-xs"></i
-                ></a>
-              </div>
-            </div>
-
-            <!-- Item 2: Broadcasting -->
-            <div class="tracking-card status-pending">
-              <div class="tracking-icon">
-                <i class="fas fa-satellite-dish"></i>
-              </div>
-              <div class="tracking-content">
-                <h3 class="tracking-title">Ozempic 0.5mg Pen</h3>
-                <div class="tracking-meta">
-                  <span
-                    ><i class="far fa-calendar text-muted"></i> 10 mins
-                    ago</span
-                  >
-                  <span><i class="fas fa-box text-muted"></i> 1 Item</span>
-                  <span class="text-danger"
-                    ><i class="fas fa-ambulance"></i> Critical</span
-                  >
-                </div>
-              </div>
-              <div class="tracking-actions">
-                <span class="tracking-pill"
-                  ><i class="fas fa-broadcast-tower"></i> Searching...</span
-                >
-                <p
-                  style="margin: 0; font-size: 0.9rem; color: var(--text-muted)"
-                >
-                  Waiting for pharmacies to respond.
-                </p>
-              </div>
-            </div>
-
-            <!-- Item 3: Delayed -->
-            <div class="tracking-card status-delayed">
-              <div class="tracking-icon"><i class="fas fa-truck"></i></div>
-              <div class="tracking-content">
-                <h3 class="tracking-title">Euthyrox 50mcg</h3>
-                <div class="tracking-meta">
-                  <span
-                    ><i class="far fa-calendar text-muted"></i> Yesterday</span
-                  >
-                  <span><i class="fas fa-box text-muted"></i> 3 Items</span>
-                </div>
-              </div>
-              <div class="tracking-actions">
-                <span class="tracking-pill"
-                  ><i class="fas fa-clock"></i> Arriving Tomorrow</span
-                >
-                <p
-                  style="margin: 0; font-size: 0.9rem; color: var(--text-muted)"
-                >
-                  Supplier shipment bound for CarePlus Pharmacy.
-                </p>
-              </div>
-            </div>
-
-            <!-- Item 4: Unavailable -->
-            <div class="tracking-card status-unavailable">
-              <div class="tracking-icon"><i class="fas fa-times"></i></div>
-              <div class="tracking-content">
-                <h3
-                  class="tracking-title"
-                  style="text-decoration: line-through"
-                >
-                  Specialized Topical Cream 4%
-                </h3>
-                <div class="tracking-meta">
-                  <span
-                    ><i class="far fa-calendar text-muted"></i> Last Week</span
-                  >
-                  <span><i class="fas fa-box text-muted"></i> 1 Item</span>
-                </div>
-              </div>
-              <div class="tracking-actions">
-                <span class="tracking-pill"
-                  ><i class="fas fa-ban"></i> Not Available</span
-                >
-                <p
-                  style="margin: 0; font-size: 0.9rem; color: var(--text-muted)"
-                >
-                  No pharmacies reported stock in network.
-                </p>
-              </div>
-            </div>
+          <div class="tracking-grid" id="requests-history-container">
+             <!-- Dynamic Content Here -->
+             <div class="empty-state-placeholder" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                 <i class="fas fa-clipboard-list" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;"></i>
+                 <p>No requests found. Your submitted requests will appear here.</p>
+             </div>
           </div>
         </div>
       </div>
     </main>
 
     <script src="../js/medlink-ui.js"></script>
+    <script src="../js/orders-engine.js"></script>
     <script src="../js/citizen-dashboard.js"></script>
     <script>
-      // Simulate modern form submission with no alerts
-      const submitBtn = document.getElementById("btn-submit-request");
-      const form = document.getElementById("standalone-request-form");
+      document.addEventListener('DOMContentLoaded', () => {
+        const historyContainer = document.getElementById('requests-history-container');
+        const submitBtn = document.getElementById("btn-submit-request");
+        const form = document.getElementById("standalone-request-form");
 
-      if (form && submitBtn) {
-        form.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const btnContent = submitBtn.innerHTML;
-
-          submitBtn.innerHTML =
-            '<i class="fas fa-spinner fa-spin"></i> Broadcasting...';
-          submitBtn.disabled = true;
-
-          setTimeout(() => {
-            submitBtn.innerHTML = btnContent;
-            submitBtn.disabled = false;
+        function renderRequests() {
+            if(!window.OrdersEngine || !historyContainer) return;
+            const orders = window.OrdersEngine.getOrders();
             
-            // Premium notification instead of just color change
-            mlAlert(`Broadcast for "${document.getElementById('med-name').value}" successful!`, 'success');
-            
-            form.reset();
-          }, 1200);
-        });
-      }
+            if(orders.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="empty-state-placeholder" style="grid-column: 1/-1; text-align: center; padding: 60px 40px; color: var(--text-muted);">
+                        <div style="background: var(--bg-soft); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                            <i class="fas fa-clipboard-list" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        </div>
+                        <h4 style="color: var(--text-main); margin-bottom: 8px;">No requests found</h4>
+                        <p>Your submitted requests will appear here for tracking.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            historyContainer.innerHTML = '';
+            orders.forEach(order => {
+                let statusClass = 'status-pending';
+                let icon = 'fa-satellite-dish';
+                let pillText = 'Searching...';
+                let subText = `Waiting for response from ${order.pharmacyName}`;
+
+                if(order.status === 'Approved') {
+                    statusClass = 'status-available';
+                    icon = 'fa-check';
+                    pillText = 'Available Now';
+                    subText = `Reserved at <strong>${order.pharmacyName}</strong>`;
+                } else if(order.status === 'Rejected') {
+                    statusClass = 'status-unavailable';
+                    icon = 'fa-times';
+                    pillText = 'Unavailable';
+                    subText = `${order.pharmacyName} reported out of stock.`;
+                } else if(order.status === 'Responded') {
+                    statusClass = 'status-info'; // Blue/Information color
+                    icon = 'fa-comment-medical';
+                    pillText = 'Admin Feedback';
+                    subText = `An administrator has provided helpful info.`;
+                }
+
+                let responseBox = '';
+                if (order.adminResponse) {
+                    responseBox = `
+                        <div class="admin-feedback-box" style="margin-top: 15px; background: #f0f9ff; border-left: 4px solid var(--accent); padding: 12px; border-radius: 8px;">
+                            <strong style="display: block; font-size: 0.85rem; color: var(--accent); margin-bottom: 4px;"><i class="fas fa-user-shield"></i> Admin Assistance:</strong>
+                            <p style="margin: 0; font-size: 0.95rem; line-height: 1.5; color: var(--text-heading); font-style: italic;">"${order.adminResponse}"</p>
+                        </div>
+                    `;
+                }
+
+                const card = `
+                    <div class="tracking-card ${statusClass}">
+                      <div class="tracking-icon"><i class="fas ${icon}"></i></div>
+                      <div class="tracking-content">
+                        <h3 class="tracking-title">${order.medicineName}</h3>
+                        <div class="tracking-meta">
+                          <span><i class="far fa-calendar text-muted"></i> ${order.date}, ${order.time}</span>
+                          <span><i class="fas fa-store text-muted"></i> ${order.pharmacyName}</span>
+                        </div>
+                        ${responseBox}
+                      </div>
+                      <div class="tracking-actions">
+                        <span class="tracking-pill">${pillText}</span>
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted)">${subText}</p>
+                      </div>
+                    </div>
+                `;
+                historyContainer.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        // Initialize Render
+        renderRequests();
+
+        // Form Logic
+        if (form && submitBtn) {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const medName = document.getElementById('med-name').value;
+                const medQty = document.getElementById('med-qty').value;
+                const urgency = document.querySelector('input[name="urgency"]:checked').value;
+                const notes = document.getElementById('med-notes').value;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Broadcasting...';
+                submitBtn.disabled = true;
+
+                setTimeout(() => {
+                    if(window.OrdersEngine) {
+                        window.OrdersEngine.submitOrder("General Network", medName, 0, medQty, urgency, notes);
+                        renderRequests();
+                    }
+                    
+                    submitBtn.innerHTML = 'Request';
+                    submitBtn.disabled = false;
+                    mlAlert(`Broadcast for "${medName}" successful!`, 'success');
+                    form.reset();
+                }, 1000);
+            });
+        }
+      });
     </script>
   </body>
 </html>

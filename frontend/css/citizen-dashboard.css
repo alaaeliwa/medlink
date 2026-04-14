@@ -948,9 +948,57 @@ body {
         color: var(--success);
       }
       .status-available .tracking-pill {
-        background: var(--success);
-        color: #fff;
+        background-color: var(--success);
+        color: white;
       }
+      
+      .status-info {
+        border-left-color: var(--accent);
+      }
+      .status-info .tracking-icon {
+        background: #e0f2fe;
+        color: var(--accent);
+      }
+      .status-info .tracking-pill {
+        background-color: var(--accent);
+        color: white;
+      }
+
+      .status-pending {
+        border-left-color: var(--warning);
+      }
+      .status-pending .tracking-icon {
+        background: #fef9c3;
+        color: var(--warning);
+      }
+      .status-pending .tracking-pill {
+        background-color: var(--warning);
+        color: #854d0e;
+      }
+      
+      .status-unavailable {
+        border-left-color: var(--danger);
+      }
+      .status-unavailable .tracking-icon {
+        background: #fee2e2;
+        color: var(--danger);
+      }
+      .status-unavailable .tracking-pill {
+        background-color: var(--danger);
+        color: white;
+      }
+
+      .tracking-pill {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: var(--radius-full);
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
 
       .status-pending {
         border-left-color: var(--accent);

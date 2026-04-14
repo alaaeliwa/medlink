@@ -17,10 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Form Submission
+  // Form Submission with Automatic Role Detection
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      // Extract email to simulate role checking
+      const emailInput = loginForm.querySelector('input[type="email"]');
+      const email = emailInput ? emailInput.value.toLowerCase() : '';
 
       const submitBtn = loginForm.querySelector('button[type="submit"]');
       if (submitBtn) {
@@ -28,8 +32,24 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.disabled = true;
 
         setTimeout(() => {
-          // Direct users to the unified Citizen Dashboard
-          window.location.href = "../citizen/citizen-dashboard.html";
+          // Determine role based on email input (Mocking Backend Response)
+          // If the email contains 'pharmacy', treat it as a pharmacy account.
+          let detectedRole = 'citizen';
+          if (email.includes('pharmacy')) {
+            detectedRole = 'pharmacy';
+          }
+
+          // Optional: Store the user details for future use across the app
+          localStorage.setItem('medlink_user_role', detectedRole);
+          localStorage.setItem('medlink_user_email', email);
+
+          // Route to the appropriate dashboard
+          const routes = {
+            citizen: '../citizen/citizen-dashboard.html',
+            pharmacy: '../pharmacy/pharmacy-dashboard.html',
+          };
+
+          window.location.href = routes[detectedRole] || routes.citizen;
         }, 1500);
       }
     });

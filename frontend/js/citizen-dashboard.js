@@ -26,6 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsEmailInput = document.getElementById('settings-email');
     if (settingsNameInput) settingsNameInput.value = storedName;
     if (settingsEmailInput) settingsEmailInput.value = storedEmail;
+
+    // 4. Update Profile Image dynamically across the dashboard
+    const profileImgEl = document.querySelector('.profile-img');
+    const userImage = localStorage.getItem('medlink_userImage');
+    if (profileImgEl && window.mlAvatar) {
+      const avatarHTML = window.mlAvatar(storedName, userImage, 'profile-img');
+      // If no custom image, replace the default img with dynamic initial-based placeholder
+      if (!userImage || userImage.includes('user.png')) {
+          profileImgEl.outerHTML = avatarHTML;
+      }
+    }
   }
 
   // --- Dynamic Layout Configuration ---
@@ -154,21 +165,62 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle Form Submit
   if (requestForm) {
     requestForm.addEventListener('submit', (e) => {
-      e.preventDefault(); // Prevent page reload
+      e.preventDefault(); 
       
       const medName = document.getElementById('req-medicine-name').value;
+      const pharmacyName = "General Network"; // For out of stock requests
       
-      // In a real system, send this to backend.
-      // For now, simply toast user and close modal to simulate success.
-      mlAlert(`Your request for "${medName}" has been submitted successfully!`, 'success');
+      // Save to OrdersEngine
+      if(window.OrdersEngine) {
+        window.OrdersEngine.submitOrder(pharmacyName, medName, 0);
+      }
+      
+      mlAlert(`Your request for "${medName}" has been submitted to the network!`, 'success');
       
       // Clean up UI
-      modalOverlay.classList.remove('active');
-      searchInput.value = '';
-      searchResultsContainer.style.display = 'none';
+      if(modalOverlay) modalOverlay.classList.remove('active');
+      if(searchInput) searchInput.value = '';
+      if(searchResultsContainer) searchResultsContainer.style.display = 'none';
       requestForm.reset();
     });
   }
+
+  // --- NEW: Global Listener for Request Buttons ---
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-request');
+    if (btn) {
+      e.preventDefault();
+      
+      // 1. Extract Data
+      const medName = btn.dataset.medicine || "Unknown Medicine";
+      const price = parseFloat(btn.dataset.price) || 0;
+      
+      // If pharmacy is not in dataset, try to find it from page context
+      let pharmacyName = btn.dataset.pharmacy;
+      if (!pharmacyName) {
+          const heroTitle = document.querySelector('.pharmacy-hero-title');
+          pharmacyName = heroTitle ? heroTitle.textContent.trim() : "Local Pharmacy";
+      }
+
+      // 2. Confirmation
+      window.mlConfirm(
+        'Confirm Request',
+        `Are you sure you want to request "${medName}" from ${pharmacyName}?`,
+        'Request',
+        () => {
+            if(window.OrdersEngine) {
+                window.OrdersEngine.submitOrder(pharmacyName, medName, price);
+                window.mlAlert(`Request for ${medName} sent successfully!`, 'success');
+                
+                // Optional: visual feedback on button
+                btn.innerHTML = '<i class="fas fa-check"></i> Requested';
+                btn.classList.add('btn-success');
+                btn.disabled = true;
+            }
+        }
+      );
+    }
+  });
 
   // --- Interactive Star Rating Widget ---
   const starWidgets = document.querySelectorAll('.star-rating-widget');
@@ -219,5 +271,53 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+
+  // --- Complaint Modal Logic ---
+  const complaintModal = document.getElementById('complaint-modal');
+  const btnOpenComplaint = document.getElementById('btn-open-complaint');
+  const btnCloseComplaint = document.getElementById('btn-close-complaint');
+  const complaintForm = document.getElementById('complaint-form');
+
+  if (btnOpenComplaint && complaintModal) {
+    btnOpenComplaint.addEventListener('click', () => {
+      complaintModal.classList.add('open');
+    });
+  }
+
+  if (btnCloseComplaint && complaintModal) {
+    btnCloseComplaint.addEventListener('click', () => {
+      complaintModal.classList.remove('open');
+    });
+  }
+
+  if (complaintModal) {
+    complaintModal.addEventListener('click', (e) => {
+      if (e.target === complaintModal) {
+        complaintModal.classList.remove('open');
+      }
+    });
+  }
+
+  if (complaintForm) {
+    complaintForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const category = document.getElementById('complaint-category').value;
+      const details = document.getElementById('complaint-details').value;
+      const heroTitle = document.querySelector('.pharmacy-hero-title');
+      const pharmacyName = heroTitle ? heroTitle.textContent.trim() : "Local Pharmacy";
+
+      if (window.OrdersEngine) {
+        window.OrdersEngine.submitComplaint(pharmacyName, category, details);
+        
+        // Premium feedback
+        mlAlert(`Complaint submitted regarding ${pharmacyName}. Our team will review it.`, 'info');
+        
+        // Close and Reset
+        complaintModal.classList.remove('open');
+        complaintForm.reset();
+      }
+    });
+  }
 
 });
