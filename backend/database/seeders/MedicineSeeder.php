@@ -4,13 +4,12 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Medicine;
-use App\Models\medicines;
 
 class MedicineSeeder extends Seeder
 {
     public function run(): void
     {
-        medicines::insert([
+        Medicine::insert([
             [
                 'id' => 1,
                 'name' => 'Aspirin 500mg',

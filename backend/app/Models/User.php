@@ -55,8 +55,9 @@ class User extends Authenticatable
         return $this->hasMany(orders::class, 'pharmacy_id');
     }
 
-    public function inventory()
+    /** ملف الصيدلية المرتبط بحساب المستخدم (إن كان role = pharmacy) */
+    public function pharmacyProfile()
     {
-        return $this->hasMany(InventoryItems::class, 'pharmacy_id');
+        return $this->hasOne(Pharmacy::class);
     }
 }
