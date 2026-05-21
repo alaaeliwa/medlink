@@ -48,7 +48,6 @@ class InventoryItemController extends Controller
 
         return $this->created(new InventoryItemResource($item->load(['pharmacy', 'medicine'])));
     }
-
     public function update(UpdateInventoryItemRequest $request, int $inventory_item): JsonResponse
     {
         $model = $this->inventory->findOrFail($inventory_item);

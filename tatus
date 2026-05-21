@@ -1,0 +1,33 @@
+[33mcommit 2104481ac57fe5e5ed385f87b8485ef3d2896315[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Neveen Zidiah <nzidiah@gmail.com>
+Date:   Wed May 20 15:14:27 2026 +0300
+
+    Week 10: Implementation of CRUD APIs, Services, and Frontend assets
+
+backend/app/Http/Controllers/Api/InventoryItemController.php
+backend/app/Services/PharmacyService.php
+backend/public/css/admin-dashboard.css
+backend/public/css/citizen-dashboard.css
+backend/public/css/global.css
+backend/public/css/home.css
+backend/public/css/login.css
+backend/public/css/pharmacy'sDashboard.css
+backend/public/css/register.css
+backend/public/images/MID.webp
+backend/public/images/PHAR.jpg
+backend/public/images/favicon.ico
+backend/public/images/hero-machine.png
+backend/public/images/logo.png
+backend/public/images/user.png
+backend/public/js/admin-dashboard.js
+backend/public/js/citizen-dashboard.js
+backend/public/js/data-engine.js
+backend/public/js/home.js
+backend/public/js/login.js
+backend/public/js/medlink-ui.js
+backend/public/js/orders-engine.js
+backend/public/js/pharmacy'Dashboard.js
+backend/public/js/pharmacy-orders.js
+backend/public/js/pharmacy-settings.js
+backend/public/js/register.js
+backend/resources/views/admin/layout.blade.php
