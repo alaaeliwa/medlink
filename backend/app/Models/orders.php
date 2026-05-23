@@ -2,43 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class orders extends Model
+class Order extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'id',
-        'citizen_id',
-        'pharmacy_id',
-        'medicines',
-        'total_price',
-        'urgency',
-        'notes',
-        'status',
-        'status_timeline',
-        'pharmacy_response',
-        'response_date',
-        'order_date',
-        'expected_delivery',
-        'completed_at',
+        'citizen_id', 'pharmacy_id', 'inventory_item_id',
+        'quantity', 'total_price', 'status', 'notes',
     ];
 
-    protected $casts = [
-        'medicines' => 'array',
-        'status_timeline' => 'array',
-        'total_price' => 'decimal:2',
-        'order_date' => 'datetime',
-        'response_date' => 'datetime',
-        'expected_delivery' => 'datetime',
-        'completed_at' => 'datetime',
-    ];
-
-    public $incrementing = false;
-    protected $keyType = 'string';
-
+    // status: pending | approved | ready | cancelled
     public function citizen()
     {
         return $this->belongsTo(User::class, 'citizen_id');
@@ -46,6 +19,11 @@ class orders extends Model
 
     public function pharmacy()
     {
-        return $this->belongsTo(User::class, 'pharmacy_id');
+        return $this->belongsTo(Pharmacy::class);
+    }
+
+    public function inventoryItem()
+    {
+        return $this->belongsTo(InventoryItem::class);
     }
 }
