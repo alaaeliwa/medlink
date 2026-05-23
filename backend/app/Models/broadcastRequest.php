@@ -2,43 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class broadcastRequest extends Model
+class BroadcastRequest extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'id',
-        'citizen_id',
-        'medicine_name',
-        'quantity',
-        'notes',
-        'urgency',
-        'status',
-        'responses',
-        'accepted_pharmacy_id',
-        'expires_at',
-        'closed_at',
+        'citizen_id', 'medicine_id', 'notes', 'status',
+        'responding_pharmacy_id', 'pharmacy_notes',
     ];
 
-    protected $casts = [
-        'responses' => 'array',
-        'expires_at' => 'datetime',
-        'closed_at' => 'datetime',
-    ];
-
-    public $incrementing = false;
-    protected $keyType = 'string';
-
+    // status: open | responded | accepted | closed
     public function citizen()
     {
         return $this->belongsTo(User::class, 'citizen_id');
     }
 
-    public function acceptedPharmacy()
+    public function medicine()
     {
-        return $this->belongsTo(User::class, 'accepted_pharmacy_id');
+        return $this->belongsTo(medicines::class);
+    }
+
+    public function respondingPharmacy()
+    {
+        return $this->belongsTo(Pharmacy::class, 'responding_pharmacy_id');
     }
 }
