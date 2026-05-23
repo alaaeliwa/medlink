@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Pharmacy;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class PharmacyController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = Pharmacy::with('user')->where('is_verified', true)->where('is_active', true);
+
+        if ($area = $request->query('area')) {
+            $query->where('area', $area);
+        }
+
+        if ($delivery = $request->query('has_delivery')) {
+            $query->where('has_delivery', filter_var($delivery, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        return $this->success('Pharmacies.', $query->paginate(20));
+    }
+
+    public function show(int $id)
+    {
+        $pharmacy = Pharmacy::with(['user', 'reviews.citizen'])
+            ->where('is_verified', true)
+            ->findOrFail($id);
+
+        return $this->success('Pharmacy details.', $pharmacy);
+    }
+
+    public function areas()
+    {
+        $areas = Pharmacy::where('is_verified', true)
+            ->distinct()
+            ->pluck('area');
+
+        return $this->success('Available areas.', $areas);
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $pharmacy = auth('api')->user()->pharmacy;
+
+        if (!$pharmacy) {
+            return $this->error('Pharmacy profile not found.', [], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name'          => 'sometimes|string|max:255',
+            'address'       => 'sometimes|string',
+            'area'          => 'sometimes|string',
+            'phone'         => 'sometimes|string|max:20',
+            'description'   => 'nullable|string',
+            'has_delivery'  => 'boolean',
+            'opening_hours' => 'nullable|string',
+            'closing_hours' => 'nullable|string',
+            'latitude'      => 'nullable|numeric',
+            'longitude'     => 'nullable|numeric',
+            'logo'          => 'nullable|image|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error('Validation failed.', $validator->errors(), 422);
+        }
+
+        $data = $request->only([
+            'name', 'address', 'area', 'phone', 'description',
+            'has_delivery', 'opening_hours', 'closing_hours',
+            'latitude', 'longitude',
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $data['logo'] = $request->file('logo')->store('pharmacy-logos', 'public');
+        }
+
+        $pharmacy->update($data);
+
+        return $this->success('Settings updated.', $pharmacy);
+    }
+}
