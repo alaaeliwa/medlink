@@ -2,21 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
-    use HasFactory;
+    protected $fillable = ['name', 'description', 'icon'];
 
-    protected $fillable = [
-        'name',
-        'description',
-    ];
-
-    public function medicines(): HasMany
+    public function medicines()
     {
-        return $this->hasMany(Medicine::class);
+        return $this->hasMany(medicines::class);
     }
 }
