@@ -3,61 +3,62 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'name',
-        'email',
-        'password',
-        'phone',
-        'address',
-        'profile_image',
-        'role',
-        'status',
-        'license_number',
-        'license_expiry',
-        'area',
-        'latitude',
-        'longitude',
-        'working_hours',
-        'delivery_available',
-        'delivery_fee',
-        'rating',
-        'review_count',
-        'is_active',
-        'permissions',
+        'name', 'email', 'password', 'phone', 'role', 'avatar', 'is_active',
     ];
+
+    protected $hidden = ['password', 'remember_token'];
 
     protected $casts = [
-        'working_hours' => 'array',
-        'permissions' => 'array',
-        'delivery_available' => 'boolean',
         'is_active' => 'boolean',
-        'license_expiry' => 'date',
-        'rating' => 'decimal:2',
     ];
 
-    // Citizen orders
-    public function orders()
+    // roles: admin | citizen | pharmacy
+    public function getJWTIdentifier(): mixed
     {
-        return $this->hasMany(orders::class, 'citizen_id');
+        return $this->getKey();
     }
 
-    // Pharmacy orders
-    public function pharmacyOrders()
+    public function getJWTCustomClaims(): array
     {
-        return $this->hasMany(orders::class, 'pharmacy_id');
+        return ['role' => $this->role];
     }
 
-    /** ملف الصيدلية المرتبط بحساب المستخدم (إن كان role = pharmacy) */
-    public function pharmacyProfile()
+    public function pharmacy()
     {
         return $this->hasOne(Pharmacy::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(order::class, 'citizen_id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'citizen_id');
+    }
+
+    public function broadcastRequests()
+    {
+        return $this->hasMany(BroadcastRequest::class, 'citizen_id');
+    }
+
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class, 'citizen_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'citizen_id');
     }
 }
