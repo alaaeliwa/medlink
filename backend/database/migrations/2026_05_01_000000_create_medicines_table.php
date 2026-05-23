@@ -1,54 +1,29 @@
 <?php
-//DONE
-// database/migrations/2026_05_11_000004_create_medicines_table.php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
-        Schema::create('medicines', function (Blueprint $table) {
-
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->string('description')->nullable();
+            $table->string('icon')->nullable();
+            $table->timestamps();
+        });
 
-            $table->foreignId('category_id')
-                ->constrained()
-                ->onDelete('cascade');
-
+        Schema::create('medicines', function (Blueprint $table) {
+            $table->id();
             $table->string('name');
-
-            $table->string('generic_name')->nullable();
-
-            $table->string('strength')->nullable();
-
-            $table->decimal('price', 10, 2);
-
-            $table->enum('form', [
-                'tablet',
-                'capsule',
-                'liquid',
-                'cream',
-                'injection'
-            ])->default('tablet');
-
-            $table->string('manufacturer')->nullable();
-            $table->integer('stock');
-
+            $table->string('active_ingredient');
+            $table->foreignId('category_id')->constrained()->restrictOnDelete();
             $table->text('description')->nullable();
-
-            $table->boolean('requires_prescription')
-                ->default(false);
-
-            $table->boolean('is_controlled')
-                ->default(false);
-
-            $table->date('expiry_date')->nullable();
-
-            $table->boolean('is_active')->default(true);
-
+            $table->string('manufacturer')->nullable();
+            $table->boolean('requires_prescription')->default(false);
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
@@ -56,5 +31,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('medicines');
+        Schema::dropIfExists('categories');
     }
 };
