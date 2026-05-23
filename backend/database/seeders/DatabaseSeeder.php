@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{User, Pharmacy, Category, Medicine, InventoryItem, Order, BroadcastRequest, Review, Complaint};
+use App\Models\{User, Pharmacy, Category, Medicine, InventoryItem, Order, BroadcastRequest, Review, Complaint, medicines};
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -109,7 +109,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($medicineData as [$name, $ingredient, $catIdx, $desc, $mfr, $rx]) {
-            $medicines[] = Medicine::create([
+            $medicines[] = medicines::create([
                 'name'                  => $name,
                 'active_ingredient'     => $ingredient,
                 'category_id'           => $cats[$catIdx]->id,
