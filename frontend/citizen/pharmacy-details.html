@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="../images/favicon.ico" />
+
+    <title>Al Shifa Pharmacy - MedLink</title>
+    <!-- icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- globals -->
+    <link rel="stylesheet" href="../css/global.css" />
+    <!-- specific styles -->
+    <link rel="stylesheet" href="../css/citizen-dashboard.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="dashboard-header">
+      <div class="container flex-between">
+        <a href="../index.html" class="logo-link">
+          <img src="../images/logo.png" alt="MedLink logo" class="logo" />
+        </a>
+        <nav class="dashboard-nav">
+          <ul class="nav-links">
+            <li><a href="citizen-dashboard.html">Dashboard</a></li>
+            <li><a href="medicines.html">Medicines</a></li>
+            <li><a href="pharmacies.html" class="active">Pharmacies</a></li>
+            <li><a href="requests.html">My Requests</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <a href="favorites.html" class="icon-btn" title="Favorites">
+            <i class="far fa-heart"></i>
+          </a>
+          <div class="profile-dropdown">
+            <button class="profile-btn" id="profileToggle" title="Profile Details">
+              <img src="../images/user.png" alt="Ahmed Ali" class="profile-img" />
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-header">
+                <strong>Ahmed Ali</strong>
+                <p class="text-sm text-muted mb-0">ahmed@example.com</p>
+              </div>
+              <hr class="dropdown-divider" />
+              <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+              <a href="requests.html" class="dropdown-item"><i class="fas fa-clipboard-list"></i> My Requests</a>
+              <hr class="dropdown-divider" />
+              <a href="../index.html" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+          <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main pb-0" style="padding-top: 0;">
+      <!-- Hero Cover -->
+      <div class="pharmacy-hero-cover">
+        <img src="../images/PHAR.jpg" alt="Al Shifa Pharmacy" />
+        <div class="pharmacy-hero-gradient"></div>
+        
+        <div class="container pharmacy-hero-content">
+          <div class="glass-badge success-badge mb-4" style="background: white; position:static; display:inline-block;"><i class="fas fa-circle text-xs"></i> Open Now</div>
+          <h1 class="pharmacy-hero-title">Al Shifa Pharmacy</h1>
+          <p class="pharmacy-hero-meta">
+            <span><i class="fas fa-map-marker-alt text-accent"></i> 123 Health Ave, City Center</span>
+            <span class="separator">|</span>
+            <span><i class="fas fa-star text-warning"></i> 4.9 Rating (120 reviews)</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="container main-content-padding mt-4">
+        <!-- Floating Info Bar -->
+        <div class="modern-card pharmacy-info-bar">
+          <div class="pharmacy-info-details">
+             <div class="pharmacy-info-item"><strong>Working Hours</strong><span class="text-muted">8:00 AM - 11:30 PM</span></div>
+             <div class="pharmacy-info-item"><strong>Phone</strong><span class="text-muted">+962 79 123 4567</span></div>
+             <div class="pharmacy-info-item"><strong>Delivery</strong><span class="text-success font-bold"><i class="fas fa-check"></i> Available (Under 30 mins)</span></div>
+             <div class="pharmacy-info-item">
+               <strong style="color:var(--text-muted); font-size:0.9rem;">Your Rating</strong>
+               <div class="star-rating-widget">
+                 <i class="fas fa-star" data-rating="1"></i>
+                 <i class="fas fa-star" data-rating="2"></i>
+                 <i class="fas fa-star" data-rating="3"></i>
+                 <i class="fas fa-star" data-rating="4"></i>
+                 <i class="fas fa-star" data-rating="5"></i>
+               </div>
+             </div>
+          </div>
+          <div class="pharmacy-info-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
+             <button class="btn btn-primary modern-btn" style="padding: 12px 24px;"><i class="fas fa-phone"></i> Call Now</button>
+             <button class="btn btn-outline modern-btn-outline" id="btn-open-complaint" style="padding: 12px 24px; border-color: var(--danger); color: var(--danger);"><i class="fas fa-exclamation-circle"></i> File Complaint</button>
+          </div>
+        </div>
+
+        <!-- Inventory -->
+        <div class="mt-80 pb-100">
+          <div class="section-header-flex">
+            <h2><i class="fas fa-boxes text-accent"></i> Available Inventory</h2>
+            
+            <div class="search-container-large inventory-search">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="medicine-search" class="search-input-large" placeholder="Search inventory..." />
+            </div>
+          </div>
+
+          <!-- Smart Search Results / Empty State -->
+          <div class="search-results-container" id="search-results" style="display: none; padding: 24px; margin-top: 16px;">
+            <div class="empty-state" id="empty-state" style="display: none; padding: 24px;">
+               <div class="empty-icon-modern" style="width: 60px; height: 60px; font-size: 1.5rem;"><i class="fas fa-box-open"></i></div>
+               <h4>Out of Stock</h4>
+               <p class="text-sm">We couldn't find "<span id="search-query-display" class="highlight-query"></span>" in Al Shifa Pharmacy.</p>
+               <button class="btn btn-primary mt-4 modern-btn" id="btn-request-medicine" style="padding: 10px 24px; font-size: 1rem;"><i class="fas fa-paper-plane"></i> Request in Network</button>
+            </div>
+          </div>
+
+          <!-- Grid -->
+          <div class="grid grid-3 mt-4">
+             <div class="modern-card">
+              <div class="card-image-wrapper">
+                <img src="../images/MID.webp" alt="Panadol Extra" class="card-img" />
+                <button class="favorite-btn floating-action" title="Add to Favorites"><i class="far fa-heart"></i></button>
+                <div class="glass-badge">Pain Relief</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Panadol Extra</h3>
+                <div class="card-meta">
+                  <div class="meta-item"><i class="fas fa-boxes text-success"></i> <span class="font-bold">In Stock (15)</span></div>
+                  <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>$5.00</span></div>
+                </div>
+                <div class="flex-btn-group">
+                  <a href="medicine-details.html" class="btn btn-outline modern-btn-outline" style="flex: 1; text-align: center; font-size: 0.9rem; padding: 10px;">Details</a>
+                  <button class="btn btn-primary modern-btn btn-request" data-medicine="Panadol Extra" data-price="5.00" style="flex: 1; font-size: 0.9rem; padding: 10px;">Request</button>
+                </div>
+              </div>
+            </div>
+            
+             <div class="modern-card">
+              <div class="card-image-wrapper">
+                <img src="../images/MID.webp" alt="Augmentin 1g" class="card-img" />
+                <button class="favorite-btn floating-action active" title="Remove from Favorites"><i class="fas fa-heart text-danger"></i></button>
+                <div class="glass-badge">Antibiotics</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Augmentin 1g</h3>
+                <div class="card-meta">
+                  <div class="meta-item"><i class="fas fa-boxes text-success"></i> <span class="font-bold">In Stock (2)</span></div>
+                  <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>$18.50</span></div>
+                </div>
+                <div class="flex-btn-group">
+                  <a href="medicine-details.html" class="btn btn-outline modern-btn-outline" style="flex: 1; text-align: center; font-size: 0.9rem; padding: 10px;">Details</a>
+                  <button class="btn btn-primary modern-btn btn-request" data-medicine="Augmentin 1g" data-price="18.50" style="flex: 1; font-size: 0.9rem; padding: 10px;">Request</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Complaint Modal -->
+    <div class="ml-modal-overlay" id="complaint-modal">
+        <div class="ml-modal" style="max-width: 500px; text-align: left;">
+            <div class="ml-modal-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); margin: 0 0 24px 0;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="ml-modal-title">File a Complaint</h2>
+            <p class="ml-modal-text">Report price manipulation or expired medication at this pharmacy. Our team will investigate immediately.</p>
+            
+            <form id="complaint-form" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 8px; display: block; font-size: 0.9rem;">Issue Category</label>
+                    <select id="complaint-category" class="form-control" style="width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 12px; outline: none; background: white;" required>
+                        <option value="">Select a category...</option>
+                        <option value="Expired Medication">Expired Medication</option>
+                        <option value="Price Manipulation">Price Manipulation</option>
+                        <option value="Poor Service">Poor Service / Behavior</option>
+                        <option value="Incorrect Prescription">Incorrect Prescription Dispensed</option>
+                        <option value="Other">Other Issues</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 8px; display: block; font-size: 0.9rem;">Detailed Description</label>
+                    <textarea id="complaint-details" rows="4" class="form-control" style="width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 12px; outline: none; background: white;" placeholder="Tell us exactly what happened..." required></textarea>
+                </div>
+
+                <div class="ml-modal-actions" style="margin-top: 8px;">
+                    <button type="button" class="btn btn-outline" id="btn-close-complaint" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2; background: var(--danger);">Submit Complaint</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/medlink-ui.js"></script>
+    <script src="../js/orders-engine.js"></script>
+    <script src="../js/citizen-dashboard.js"></script>
+  </body>
+</html>

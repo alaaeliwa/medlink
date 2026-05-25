@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../images/favicon.ico" />
+
+    <title>My Network Requests - MedLink</title>
+    <!-- icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- globals -->
+    <link rel="stylesheet" href="../css/global.css" />
+    <!-- specific styles -->
+    <link rel="stylesheet" href="../css/citizen-dashboard.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="dashboard-header">
+      <div class="container flex-between">
+        <a href="../index.html" class="logo-link">
+          <img src="../images/logo.png" alt="MedLink logo" class="logo" />
+        </a>
+        <nav class="dashboard-nav">
+          <ul class="nav-links">
+            <li><a href="citizen-dashboard.html">Dashboard</a></li>
+            <li><a href="medicines.html">Medicines</a></li>
+            <li><a href="pharmacies.html">Pharmacies</a></li>
+            <li><a href="requests.html" class="active">My Requests</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <a href="favorites.html" class="icon-btn" title="Favorites">
+            <i class="far fa-heart"></i>
+          </a>
+          <div class="profile-dropdown">
+            <button
+              class="profile-btn"
+              id="profileToggle"
+              title="Profile Details"
+            >
+              <img src="../images/user.png" alt="Ahmed Ali" class="profile-img" />
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-header">
+                <strong>Ahmed Ali</strong>
+                <p class="text-sm text-muted mb-0">ahmed@example.com</p>
+              </div>
+              <hr class="dropdown-divider" />
+              <a href="settings.html" class="dropdown-item"
+                ><i class="fas fa-cog"></i> Settings</a
+              >
+              <a href="requests.html" class="dropdown-item active"
+                ><i class="fas fa-clipboard-list"></i> My Requests</a
+              >
+              <hr class="dropdown-divider" />
+              <a href="../index.html" class="dropdown-item text-danger"
+                ><i class="fas fa-sign-out-alt"></i> Logout</a
+              >
+            </div>
+          </div>
+          <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main pb-0">
+      <section class="welcome-banner" style="padding: 40px 0 60px 0">
+        <div class="container welcome-container">
+          <div
+            class="welcome-text page-header"
+            style="text-align: center; margin: 0 auto"
+          >
+            <h1>My <span>Requests</span></h1>
+            <p
+              class="subtitle page-header"
+              style="text-align: center; margin: 0 auto; min-width: 100%"
+            >
+              Create broadcast requests to instantly scan nearby pharmacies for
+              specific stock.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div
+        class="container main-content-padding mt-4"
+        style="margin-top: -80px; position: relative; z-index: 10"
+      >
+        <!-- Submit New Request Form -->
+        <div class="request-form-card">
+          <div class="section-header-flex" style="margin-bottom: 8px">
+            <h2 style="font-size: 1.6rem">
+              <i
+                class="fas fa-search-plus text-primary"
+                style="margin-right: 12px"
+              ></i
+              >Can't Find a Medicine?
+            </h2>
+          </div>
+          <p class="text-muted mb-4 text-base">
+            Submit a request below, and we'll instantly broadcast your search to
+            all pharmacies in your network.
+          </p>
+
+          <form
+            id="standalone-request-form"
+            class="orders-form-logic"
+            style="display: flex; flex-direction: column; gap: 24px"
+          >
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 24px;
+              "
+            >
+              <div class="form-group">
+                <label
+                  for="med-name"
+                  style="
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    display: block;
+                    font-size: 0.95rem;
+                  "
+                  >Medicine Name</label
+                >
+                <input
+                  type="text"
+                  id="med-name"
+                  class="form-control modern-input"
+                  style="width: 100%; border-radius: 12px; padding: 14px"
+                  placeholder="e.g., Panadol Extra 500mg"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label
+                  for="med-qty"
+                  style="
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    display: block;
+                    font-size: 0.95rem;
+                  "
+                  >Quantity Needed</label
+                >
+                <input
+                  type="number"
+                  id="med-qty"
+                  class="form-control modern-input"
+                  style="width: 100%; border-radius: 12px; padding: 14px"
+                  placeholder="e.g., 2 boxes"
+                  min="1"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label
+                style="
+                  font-weight: 600;
+                  margin-bottom: 12px;
+                  display: block;
+                  font-size: 0.95rem;
+                "
+                >Urgency Level</label
+              >
+              <div class="urgency-pills">
+                <div class="urgency-pill">
+                  <input
+                    type="radio"
+                    id="urg-standard"
+                    name="urgency"
+                    value="standard"
+                    checked
+                  />
+                  <label for="urg-standard"
+                    ><i class="fas fa-clock"></i> Standard</label
+                  >
+                </div>
+                <div class="urgency-pill">
+                  <input
+                    type="radio"
+                    id="urg-high"
+                    name="urgency"
+                    value="high"
+                  />
+                  <label for="urg-high"
+                    ><i class="fas fa-exclamation-triangle"></i> Urgent
+                    (24h)</label
+                  >
+                </div>
+                <div class="urgency-pill">
+                  <input
+                    type="radio"
+                    id="urg-critical"
+                    name="urgency"
+                    value="critical"
+                  />
+                  <label for="urg-critical" style="color: var(--danger)"
+                    ><i class="fas fa-ambulance"></i> Critical Now!</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label
+                for="med-notes"
+                style="
+                  font-weight: 600;
+                  margin-bottom: 8px;
+                  display: block;
+                  font-size: 0.95rem;
+                "
+                >Additional Notes (Optional)</label
+              >
+              <textarea
+                id="med-notes"
+                class="form-control modern-input"
+                style="width: 100%; border-radius: 12px; padding: 14px"
+                rows="2"
+                placeholder="Any specific instructions, dosage alternatives..."
+              ></textarea>
+            </div>
+
+            <div
+              style="display: flex; justify-content: flex-end; margin-top: 8px"
+            >
+              <button
+                type="submit"
+                id="btn-submit-request"
+                class="btn btn-primary modern-btn"
+                style="
+                  padding: 14px 32px;
+                  font-size: 1.05rem;
+                  transition: all 0.25s ease;
+                "
+              >
+                Request
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tracking History -->
+        <div class="pb-100">
+          <div class="section-header-flex" style="margin-bottom: 24px">
+            <h2 style="font-size: 1.5rem">Recent Requests</h2>
+          </div>
+
+          <div class="tracking-grid" id="requests-history-container">
+             <!-- Dynamic Content Here -->
+             <div class="empty-state-placeholder" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                 <i class="fas fa-clipboard-list" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;"></i>
+                 <p>No requests found. Your submitted requests will appear here.</p>
+             </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../js/medlink-ui.js"></script>
+    <script src="../js/orders-engine.js"></script>
+    <script src="../js/citizen-dashboard.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const historyContainer = document.getElementById('requests-history-container');
+        const submitBtn = document.getElementById("btn-submit-request");
+        const form = document.getElementById("standalone-request-form");
+
+        function renderRequests() {
+            if(!window.OrdersEngine || !historyContainer) return;
+            const orders = window.OrdersEngine.getOrders();
+            
+            if(orders.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="empty-state-placeholder" style="grid-column: 1/-1; text-align: center; padding: 60px 40px; color: var(--text-muted);">
+                        <div style="background: var(--bg-soft); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                            <i class="fas fa-clipboard-list" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        </div>
+                        <h4 style="color: var(--text-main); margin-bottom: 8px;">No requests found</h4>
+                        <p>Your submitted requests will appear here for tracking.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            historyContainer.innerHTML = '';
+            orders.forEach(order => {
+                let statusClass = 'status-pending';
+                let icon = 'fa-satellite-dish';
+                let pillText = 'Searching...';
+                let subText = `Waiting for response from ${order.pharmacyName}`;
+
+                if(order.status === 'Approved') {
+                    statusClass = 'status-available';
+                    icon = 'fa-check';
+                    pillText = 'Available Now';
+                    subText = `Reserved at <strong>${order.pharmacyName}</strong>`;
+                } else if(order.status === 'Rejected') {
+                    statusClass = 'status-unavailable';
+                    icon = 'fa-times';
+                    pillText = 'Unavailable';
+                    subText = `${order.pharmacyName} reported out of stock.`;
+                } else if(order.status === 'Responded') {
+                    statusClass = 'status-info'; // Blue/Information color
+                    icon = 'fa-comment-medical';
+                    pillText = 'Admin Feedback';
+                    subText = `An administrator has provided helpful info.`;
+                }
+
+                let responseBox = '';
+                if (order.adminResponse) {
+                    responseBox = `
+                        <div class="admin-feedback-box" style="margin-top: 15px; background: #f0f9ff; border-left: 4px solid var(--accent); padding: 12px; border-radius: 8px;">
+                            <strong style="display: block; font-size: 0.85rem; color: var(--accent); margin-bottom: 4px;"><i class="fas fa-user-shield"></i> Admin Assistance:</strong>
+                            <p style="margin: 0; font-size: 0.95rem; line-height: 1.5; color: var(--text-heading); font-style: italic;">"${order.adminResponse}"</p>
+                        </div>
+                    `;
+                }
+
+                const card = `
+                    <div class="tracking-card ${statusClass}">
+                      <div class="tracking-icon"><i class="fas ${icon}"></i></div>
+                      <div class="tracking-content">
+                        <h3 class="tracking-title">${order.medicineName}</h3>
+                        <div class="tracking-meta">
+                          <span><i class="far fa-calendar text-muted"></i> ${order.date}, ${order.time}</span>
+                          <span><i class="fas fa-store text-muted"></i> ${order.pharmacyName}</span>
+                        </div>
+                        ${responseBox}
+                      </div>
+                      <div class="tracking-actions">
+                        <span class="tracking-pill">${pillText}</span>
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted)">${subText}</p>
+                      </div>
+                    </div>
+                `;
+                historyContainer.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        // Initialize Render
+        renderRequests();
+
+        // Form Logic
+        if (form && submitBtn) {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const medName = document.getElementById('med-name').value;
+                const medQty = document.getElementById('med-qty').value;
+                const urgency = document.querySelector('input[name="urgency"]:checked').value;
+                const notes = document.getElementById('med-notes').value;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Broadcasting...';
+                submitBtn.disabled = true;
+
+                setTimeout(() => {
+                    if(window.OrdersEngine) {
+                        window.OrdersEngine.submitOrder("General Network", medName, 0, medQty, urgency, notes);
+                        renderRequests();
+                    }
+                    
+                    submitBtn.innerHTML = 'Request';
+                    submitBtn.disabled = false;
+                    mlAlert(`Broadcast for "${medName}" successful!`, 'success');
+                    form.reset();
+                }, 1000);
+            });
+        }
+      });
+    </script>
+  </body>
+</html>

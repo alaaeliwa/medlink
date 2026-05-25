@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../images/favicon.ico" />
+    <title>Admin Dashboard - MedLink</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/admin-dashboard.css" />
+  </head>
+  <body class="admin-layout" data-page="dashboard">
+    <!-- Mobile Toggle -->
+    <button class="mobile-sidebar-toggle"><i class="fas fa-bars"></i></button>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html"
+          ><img src="../images/logo.png" alt="MedLink Logo" class="logo"
+        /></a>
+        <button class="sidebar-close"><i class="fas fa-times"></i></button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-group">
+          <span class="nav-group-title">Main Menu</span>
+          <a href="admin-dashboard.html" class="sidebar-link active">
+            <i class="fas fa-th-large"></i><span>Dashboard</span>
+          </a>
+          <a href="admin-users.html" class="sidebar-link">
+            <i class="fas fa-users"></i><span>Users Control</span>
+          </a>
+          <a href="admin-pharmacies.html" class="sidebar-link">
+            <i class="fas fa-clinic-medical"></i><span>Pharmacies</span>
+            <span class="sidebar-badge" id="pendingBadge">3</span>
+          </a>
+        </div>
+        <div class="nav-group">
+          <span class="nav-group-title">Operations</span>
+          <a href="admin-medicines.html" class="sidebar-link">
+            <i class="fas fa-pills"></i><span>Medicine Catalog</span>
+          </a>
+          <a href="admin-reports.html" class="sidebar-link">
+            <i class="fas fa-flag"></i><span>Reports & Monitoring</span>
+          </a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../index.html" class="sidebar-link text-danger">
+          <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-title">
+          <h1>
+            Welcome Back, <span style="color: var(--primary)">Admin</span>
+          </h1>
+          <p>Here's what's happening with MedLink today.</p>
+        </div>
+        <div class="admin-actions">
+          <div class="badge badge-accent">
+            <i class="fas fa-calendar-alt"></i> April 09, 2026
+          </div>
+        </div>
+      </header>
+
+      <!-- Stats -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon users"><i class="fas fa-users"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="statUsers">1,284</span>
+            <span class="stat-label">Total Users</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon pharmacies">
+            <i class="fas fa-store-alt"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="statPharmacies">156</span>
+            <span class="stat-label">Registered Pharmacies</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon requests">
+            <i class="fas fa-clipboard-list"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="statRequests">42</span>
+            <span class="stat-label">Missing Medicine Requests</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts -->
+      <section class="charts-grid">
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>Platform Activity</h3>
+            <select class="chart-select">
+              <option>Last 7 Days</option>
+              <option>Last 30 Days</option>
+            </select>
+          </div>
+          <div style="height: 300px"><canvas id="activityChart"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>Request Categories</h3>
+          </div>
+          <div style="height: 300px">
+            <canvas id="categoriesChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Missing Requests -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>
+            <i
+              class="fas fa-clock"
+              style="color: var(--accent); margin-right: 8px"
+            ></i
+            >Recent Missing Medicine Requests
+          </h3>
+          <a href="admin-reports.html" class="btn btn-accent text-sm"
+            >View All <i class="fas fa-arrow-right"></i
+          ></a>
+        </div>
+        <div class="admin-card-body">
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Medicine Name</th>
+                  <th>Requested By</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Glucophage 850mg</strong></td>
+                  <td>
+                    <div class="cell-user">
+                      <img
+                        src="../images/user.png"
+                        class="cell-avatar circle"
+                      /><span class="cell-name">Ahmed Ali</span>
+                    </div>
+                  </td>
+                  <td>Apr 08, 2026</td>
+                  <td><span class="status-pill pending">Pending</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Insulin Lantus</strong></td>
+                  <td>
+                    <div class="cell-user">
+                      <img
+                        src="../images/user.png"
+                        class="cell-avatar circle"
+                      /><span class="cell-name">Sara Mohamed</span>
+                    </div>
+                  </td>
+                  <td>Apr 07, 2026</td>
+                  <td><span class="status-pill pending">Pending</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Metformin 500mg</strong></td>
+                  <td>
+                    <div class="cell-user">
+                      <img
+                        src="../images/user.png"
+                        class="cell-avatar circle"
+                      /><span class="cell-name">Khaled Yassin</span>
+                    </div>
+                  </td>
+                  <td>Apr 06, 2026</td>
+                  <td><span class="status-pill completed">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/medlink-ui.js"></script>
+    <script src="../js/admin-dashboard.js"></script>
+  </body>
+</html>

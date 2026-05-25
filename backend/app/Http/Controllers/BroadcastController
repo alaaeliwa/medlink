@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\BroadcastRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class BroadcastRequestController extends Controller
+{
+    // ── Citizen endpoints ──────────────────────────────────────────────────────
+
+    public function index()
+    {
+        $requests = BroadcastRequest::with(['medicine', 'respondingPharmacy'])
+            ->where('citizen_id', auth('api')->id())
+            ->latest()
+            ->paginate(20);
+
+        return $this->success('Your broadcast requests.', $requests);
+    }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'medicine_id' => 'required|exists:medicines,id',
+            'notes'       => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error('Validation failed.', $validator->errors(), 422);
+        }
+
+        $br = BroadcastRequest::create([
+            'citizen_id'  => auth('api')->id(),
+            'medicine_id' => $request->medicine_id,
+            'notes'       => $request->notes,
+            'status'      => 'open',
+        ]);
+
+        return $this->success('Broadcast request sent.', $br->load('medicine'), 201);
+    }
+
+    public function destroy(int $id)
+    {
+        BroadcastRequest::where('citizen_id', auth('api')->id())->findOrFail($id)->delete();
+        return $this->success('Request deleted.');
+    }
+
+    public function accept(int $id, int $pharmacyId)
+    {
+        $br = BroadcastRequest::where('citizen_id', auth('api')->id())
+            ->where('status', 'responded')
+            ->findOrFail($id);
+
+        $br->update([
+            'responding_pharmacy_id' => $pharmacyId,
+            'status'                 => 'accepted',
+        ]);
+
+        return $this->success('Pharmacy accepted.', $br->load('respondingPharmacy'));
+    }
+
+    // ── Pharmacy endpoints ─────────────────────────────────────────────────────
+
+    public function network()
+    {
+        $requests = BroadcastRequest::with(['medicine', 'citizen'])
+            ->where('status', 'open')
+            ->latest()
+            ->paginate(20);
+
+        return $this->success('Open broadcast requests.', $requests);
+    }
+
+    public function respond(Request $request, int $id)
+    {
+        $pharmacy = auth('api')->user()->pharmacy;
+        if (!$pharmacy) return $this->error('Pharmacy not found.', [], 404);
+
+        $br = BroadcastRequest::where('status', 'open')->findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'pharmacy_notes' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error('Validation failed.', $validator->errors(), 422);
+        }
+
+        $br->update([
+            'responding_pharmacy_id' => $pharmacy->id,
+            'pharmacy_notes'         => $request->pharmacy_notes,
+            'status'                 => 'responded',
+        ]);
+
+        return $this->success('Response sent to citizen.', $br);
+    }
+}
