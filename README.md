@@ -83,4 +83,17 @@ To explore the MedLink prototype:
 
 ---
 
+## Week 9 — Database schema (coursework)
+
+- **SQL (structure + sample data):** [docs/week9/MedLink_week9_schema_and_data.sql](docs/week9/MedLink_week9_schema_and_data.sql)
+- **Report (ERD, normalization, PK/FK):** [docs/week9/Week9_Report.md](docs/week9/Week9_Report.md)
+
+## Week 10 — Laravel API / CRUD (coursework)
+
+- **Report (AR):** [docs/week10/Week10_Report.md](docs/week10/Week10_Report.md)
+- **API routes:** `backend/routes/api.php` — base URL `/api/v1/`
+- **Run:** `cd backend && composer install && php artisan migrate --seed && php artisan serve`
+
+---
+
 > **🏆 Credits:** Developed by **Alaa Eliwa** and team for the Distributed and Parallel Computing Laboratory.
