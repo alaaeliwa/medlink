@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector("#login-form");
 
-  // Password Visibility Toggle
+  // ─── Password Visibility Toggle ───────────────────────────────────────────
+  // Kept exactly as-is — no changes needed
   document.querySelectorAll(".toggle-password").forEach((icon) => {
     icon.addEventListener("click", () => {
       const input = icon.previousElementSibling;
@@ -17,40 +18,60 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Form Submission with Automatic Role Detection
+  // ─── Form Submission ──────────────────────────────────────────────────────
   if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Extract email to simulate role checking
-      const emailInput = loginForm.querySelector('input[type="email"]');
-      const email = emailInput ? emailInput.value.toLowerCase() : '';
+      const emailInput    = loginForm.querySelector('input[type="email"]');
+      const passwordInput = loginForm.querySelector('input[type="password"]');
+      const submitBtn     = loginForm.querySelector('button[type="submit"]');
 
-      const submitBtn = loginForm.querySelector('button[type="submit"]');
-      if (submitBtn) {
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
-        submitBtn.disabled = true;
+      const email    = emailInput?.value?.trim();
+      const password = passwordInput?.value;
 
-        setTimeout(() => {
-          // Determine role based on email input (Mocking Backend Response)
-          // If the email contains 'pharmacy', treat it as a pharmacy account.
-          let detectedRole = 'citizen';
-          if (email.includes('pharmacy')) {
-            detectedRole = 'pharmacy';
-          }
+      // Basic client-side check
+      if (!email || !password) {
+        mlAlert('Please enter your email and password.', 'error');
+        return;
+      }
 
-          // Optional: Store the user details for future use across the app
-          localStorage.setItem('medlink_user_role', detectedRole);
-          localStorage.setItem('medlink_user_email', email);
+      // Show loading state
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+      submitBtn.disabled  = true;
 
-          // Route to the appropriate dashboard
-          const routes = {
-            citizen: '../citizen/citizen-dashboard.html',
-            pharmacy: '../pharmacy/pharmacy-dashboard.html',
-          };
+      // ── Call the real API ─────────────────────────────────────────────────
+      const res = await AuthAPI.login(email, password);
 
-          window.location.href = routes[detectedRole] || routes.citizen;
-        }, 1500);
+      if (res?.success) {
+        // Auth.setSession() was already called inside AuthAPI.login()
+        // Just redirect to the correct dashboard based on role
+        const role = res.data.role;
+
+        const routes = {
+          citizen:  '../citizen/citizen-dashboard.html',
+          pharmacy: '../pharmacy/pharmacy-dashboard.html',
+          admin:    '../admin/admin-dashboard.html',
+        };
+
+        window.location.href = routes[role] || routes.citizen;
+
+      } else {
+        // Restore button and show error
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled  = false;
+
+        const message = res?.message || 'Invalid email or password. Please try again.';
+        mlAlert(message, 'error');
+
+        // Highlight password field on auth failure
+        if (passwordInput) {
+          passwordInput.style.borderColor = '#ef4444';
+          passwordInput.addEventListener('input', () => {
+            passwordInput.style.borderColor = '';
+          }, { once: true });
+        }
       }
     });
   }

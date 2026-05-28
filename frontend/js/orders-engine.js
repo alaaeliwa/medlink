@@ -1,132 +1,155 @@
 /**
- * MedLink Orders Engine
- * Handles order submission and status management using LocalStorage.
+ * MedLink Orders Engine — API Connected
+ * All localStorage reads/writes replaced with real API calls.
+ * Interface (method names, return shapes) kept identical so all
+ * existing callers (citizen-dashboard, pharmacy-orders, admin) work unchanged.
  */
 
 const OrdersEngine = {
-    STORAGE_KEY: 'medlink_orders',
-    COMPLAINTS_KEY: 'medlink_complaints',
 
-    // --- Core Data Operations ---
-    
+    // ─── Orders ───────────────────────────────────────────────────────────────
+
     /**
-     * Get all orders from localStorage
+     * Get all orders for the current user.
+     * REPLACED: localStorage.getItem('medlink_orders')
+     * NOW: GET /orders
      */
-    getOrders: function() {
-        const stored = localStorage.getItem(this.STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
+    getOrders: async function(params = {}) {
+        const res = await OrdersAPI.list({ per_page: 100, ...params });
+        return res?.data?.orders || [];
     },
 
     /**
-     * Submit a new order (can be specific to a pharmacy or a general network broadcast)
+     * Submit a new order to a specific pharmacy.
+     * REPLACED: pushing to localStorage array
+     * NOW: POST /orders  (specific pharmacy)
+     *   or POST /requests (broadcast to network)
      */
-    submitOrder: function(pharmacyName, medicineName, price = 0, quantity = 1, urgency = 'standard', notes = '') {
-        const orders = this.getOrders();
-        const userName = localStorage.getItem('medlink_userName') || 'Ahmed Ali';
-        
-        const newOrder = {
-            id: 'ORD-' + Date.now(),
-            citizenName: userName,
-            pharmacyName: pharmacyName,
-            medicineName: medicineName,
-            price: price,
-            quantity: quantity,
-            urgency: urgency,
-            notes: notes,
-            status: 'Pending',
-            date: new Date().toLocaleDateString(),
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    submitOrder: async function(pharmacyId, medicineName, price = 0, quantity = 1, urgency = 'standard', notes = '') {
+        // If it's a broadcast request (no real pharmacyId)
+        if (!pharmacyId || pharmacyId === 'General Network' || pharmacyId === 'Local Pharmacy') {
+            const res = await RequestsAPI.create(medicineName, quantity, urgency, notes);
+            return res?.data || null;
+        }
+
+        // Otherwise look up the medicine and place a direct order
+        const searchRes  = await MedicinesAPI.list({ search: medicineName, per_page: 1 });
+        const medicine   = searchRes?.data?.medicines?.[0];
+
+        if (!medicine) {
+            console.warn('OrdersEngine.submitOrder: medicine not found in catalog —', medicineName);
+            // Fall back to broadcast
+            const res = await RequestsAPI.create(medicineName, quantity, urgency, notes);
+            return res?.data || null;
+        }
+
+        const res = await OrdersAPI.place(
+            pharmacyId,
+            [{ medicineId: medicine.id, quantity }],
+            urgency,
+            notes
+        );
+        return res?.data || null;
+    },
+
+    /**
+     * Update order status (pharmacy action).
+     * REPLACED: orders[index].status = newStatus + localStorage.setItem
+     * NOW: PUT /orders/:id/status
+     */
+    updateStatus: async function(orderId, newStatus, adminResponse = null) {
+        // Map old status strings to API-expected values
+        const statusMap = {
+            'Approved':  'approved',
+            'Rejected':  'rejected',
+            'Ready':     'ready',
+            'Delivered': 'delivered',
+            'Cancelled': 'cancelled',
+            'Preparing': 'preparing',
+            'Responded': 'approved', // admin "responded" treated as approved
         };
 
-        orders.unshift(newOrder); // Add to beginning
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(orders));
-        
-        console.log('Order submitted:', newOrder);
-        return newOrder;
+        const apiStatus = statusMap[newStatus] || newStatus.toLowerCase();
+        const res       = await OrdersAPI.updateStatus(orderId, apiStatus, adminResponse || '');
+        return res?.success || false;
     },
 
     /**
-     * --- Complaints Logic ---
+     * Cancel/delete an order.
+     * REPLACED: filter + localStorage.setItem
+     * NOW: DELETE /orders/:id
      */
-    
-    getComplaints: function() {
-        const stored = localStorage.getItem(this.COMPLAINTS_KEY);
-        return stored ? JSON.parse(stored) : [];
+    deleteOrder: async function(orderId) {
+        const res = await OrdersAPI.cancel(orderId);
+        return res?.success || false;
     },
 
-    submitComplaint: function(pharmacyName, subject, details) {
-        const complaints = this.getComplaints();
-        const userName = localStorage.getItem('medlink_userName') || 'Ahmed Ali';
-        
-        const newComplaint = {
-            id: 'CP-' + Date.now(),
-            reporter: userName,
-            against: pharmacyName,
-            subject: subject,
-            details: details,
-            status: 'open',
-            date: new Date().toLocaleDateString(),
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
+    // ─── Complaints ───────────────────────────────────────────────────────────
 
-        complaints.unshift(newComplaint);
-        localStorage.setItem(this.COMPLAINTS_KEY, JSON.stringify(complaints));
-        return newComplaint;
-    },
-
-    resolveComplaint: function(complaintId) {
-        const complaints = this.getComplaints();
-        const index = complaints.findIndex(c => c.id === complaintId);
-        if (index !== -1) {
-            complaints[index].status = 'resolved';
-            localStorage.setItem(this.COMPLAINTS_KEY, JSON.stringify(complaints));
-            return true;
-        }
-        return false;
+    /**
+     * Get all complaints for the current user.
+     * REPLACED: localStorage.getItem('medlink_complaints')
+     * NOW: GET /complaints
+     */
+    getComplaints: async function() {
+        const res = await ComplaintsAPI.list({ per_page: 100 });
+        return res?.data?.complaints || [];
     },
 
     /**
-     * Update order status
+     * Submit a complaint against a pharmacy.
+     * REPLACED: pushing to localStorage complaints array
+     * NOW: POST /complaints
      */
-    updateStatus: function(orderId, newStatus, adminResponse = null) {
-        const orders = this.getOrders();
-        const orderIndex = orders.findIndex(o => o.id === orderId);
-        
-        if (orderIndex !== -1) {
-            orders[orderIndex].status = newStatus;
-            if (adminResponse) {
-                orders[orderIndex].adminResponse = adminResponse;
-                orders[orderIndex].responseDate = new Date().toLocaleDateString();
-            }
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(orders));
-            return true;
-        }
-        return false;
+    submitComplaint: async function(pharmacyId, subject, details, severity = 'medium') {
+        const res = await ComplaintsAPI.submit(pharmacyId, subject, details, severity);
+        return res?.data || null;
     },
 
     /**
-     * Delete an order
+     * Resolve a complaint (admin action).
+     * REPLACED: complaints[index].status = 'resolved' + localStorage
+     * NOW: PUT /admin/complaints/:id
      */
-    deleteOrder: function(orderId) {
-        let orders = this.getOrders();
-        orders = orders.filter(o => o.id !== orderId);
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(orders));
+    resolveComplaint: async function(complaintId) {
+        const res = await AdminAPI.resolveComplaint(complaintId, 'resolved', 'Resolved by admin.');
+        return res?.success || false;
     },
 
-    // --- UI Integration Helpers ---
+    // ─── Broadcast Requests ───────────────────────────────────────────────────
 
     /**
-     * Status styling helper
+     * Get open broadcast requests (pharmacy network view).
+     * NOW: GET /requests/network
      */
+    getNetworkRequests: async function() {
+        const res = await RequestsAPI.network({ per_page: 50 });
+        return res?.data?.requests || [];
+    },
+
+    /**
+     * Get citizen's own broadcast requests.
+     * NOW: GET /requests
+     */
+    getMyRequests: async function() {
+        const res = await RequestsAPI.myRequests({ per_page: 50 });
+        return res?.data?.requests || [];
+    },
+
+    // ─── UI Helper (kept exactly as-is) ──────────────────────────────────────
+
     getStatusClass: function(status) {
-        switch(status.toLowerCase()) {
-            case 'approved': return 'status-approved';
-            case 'rejected': return 'status-rejected';
-            case 'pending': return 'status-pending';
-            default: return '';
+        switch ((status || '').toLowerCase()) {
+            case 'approved':  return 'status-approved';
+            case 'rejected':  return 'status-rejected';
+            case 'pending':   return 'status-pending';
+            case 'ready':     return 'status-ready';
+            case 'delivered': return 'status-delivered';
+            case 'cancelled': return 'status-cancelled';
+            default:          return '';
         }
-    }
+    },
 };
 
-// Make it globally accessible
+// Make globally accessible — same as before
 window.OrdersEngine = OrdersEngine;

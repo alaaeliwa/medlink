@@ -2,10 +2,15 @@
  * MedLink UI UX Helpers
  * Replaces native alert() and confirm() with high-end, aesthetic UI components.
  * Version: 2.0 (Premium Revamp)
+ * 
+ * CHANGE from original:
+ * - Logout interceptor now calls Auth.logout() (invalidates JWT token via API)
+ *   instead of just navigating to index.html directly.
+ * Everything else is identical.
  */
 
 const MedLinkUI = {
-    // 1. Toast Notifications (Revamped with Glassmorphism & Progress Bar)
+    // 1. Toast Notifications
     toast: function(message, type = 'success', duration = 4000) {
         let container = document.querySelector('.ml-toast-container');
         if (!container) {
@@ -16,12 +21,11 @@ const MedLinkUI = {
 
         const toast = document.createElement('div');
         toast.className = `ml-toast ${type}`;
-        
-        // Icon mapping
+
         const icons = {
             success: 'fa-check-circle',
-            error: 'fa-exclamation-circle',
-            info: 'fa-info-circle'
+            error:   'fa-exclamation-circle',
+            info:    'fa-info-circle'
         };
 
         toast.innerHTML = `
@@ -34,31 +38,20 @@ const MedLinkUI = {
 
         container.appendChild(toast);
 
-        // Auto remove after duration
-        const timer = setTimeout(() => {
-            this.removeToast(toast);
-        }, duration);
-
-        // Allow manual close on click
-        toast.onclick = () => {
-            clearTimeout(timer);
-            this.removeToast(toast);
-        };
+        const timer = setTimeout(() => { this.removeToast(toast); }, duration);
+        toast.onclick = () => { clearTimeout(timer); this.removeToast(toast); };
     },
 
     removeToast: function(toast) {
         toast.style.animation = 'toastFadeOut 0.4s ease forwards';
         setTimeout(() => {
             toast.remove();
-            // Remove container if empty for clean DOM
             const container = document.querySelector('.ml-toast-container');
-            if (container && container.childNodes.length === 0) {
-                container.remove();
-            }
+            if (container && container.childNodes.length === 0) container.remove();
         }, 400);
     },
 
-    // 2. Custom Confirmation Modal (Premium Revamp)
+    // 2. Custom Confirmation Modal
     confirm: function(title, text, confirmBtnText, onConfirm) {
         let overlay = document.querySelector('.ml-modal-overlay');
         if (!overlay) {
@@ -78,60 +71,47 @@ const MedLinkUI = {
             document.body.appendChild(overlay);
         }
 
-        const titleEl = overlay.querySelector('.ml-modal-title');
-        const textEl = overlay.querySelector('.ml-modal-text');
+        const titleEl    = overlay.querySelector('.ml-modal-title');
+        const textEl     = overlay.querySelector('.ml-modal-text');
         const confirmBtn = overlay.querySelector('#ml-modal-confirm');
-        const cancelBtn = overlay.querySelector('#ml-modal-cancel');
-        const iconContainer = overlay.querySelector('.ml-modal-icon');
+        const cancelBtn  = overlay.querySelector('#ml-modal-cancel');
+        const iconEl     = overlay.querySelector('.ml-modal-icon');
 
-        titleEl.textContent = title;
-        textEl.textContent = text;
+        titleEl.textContent    = title;
+        textEl.textContent     = text;
         confirmBtn.textContent = confirmBtnText;
 
-        // Visual distinction for destructive actions (Delete)
         const isDestructive = title.toLowerCase().includes('delete') || title.toLowerCase().includes('clear');
-        
         if (isDestructive) {
-            iconContainer.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            iconContainer.style.background = '#fef2f2';
-            iconContainer.style.color = '#ef4444';
+            iconEl.innerHTML         = '<i class="fas fa-trash-alt"></i>';
+            iconEl.style.background  = '#fef2f2';
+            iconEl.style.color       = '#ef4444';
             confirmBtn.style.backgroundColor = '#ef4444';
-            confirmBtn.style.borderColor = '#ef4444';
+            confirmBtn.style.borderColor     = '#ef4444';
         } else {
-            iconContainer.innerHTML = '<i class="fas fa-question-circle"></i>';
-            iconContainer.style.background = '#f0f9ff';
-            iconContainer.style.color = 'var(--accent)';
+            iconEl.innerHTML         = '<i class="fas fa-question-circle"></i>';
+            iconEl.style.background  = '#f0f9ff';
+            iconEl.style.color       = 'var(--accent)';
             confirmBtn.style.backgroundColor = 'var(--accent)';
-            confirmBtn.style.borderColor = 'var(--accent)';
+            confirmBtn.style.borderColor     = 'var(--accent)';
         }
 
-        // Add 'open' class for animation
         setTimeout(() => overlay.classList.add('open'), 10);
 
-        // Cleanup and reattach listeners (cloning removes all internal listeners)
         const newConfirmBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-        
+
         const closeModal = () => {
             overlay.classList.remove('open');
-            // Remove overlay from DOM after animation for fresh state next time
             setTimeout(() => overlay.remove(), 400);
         };
 
-        newConfirmBtn.addEventListener('click', () => {
-            closeModal();
-            if (onConfirm) onConfirm();
-        });
-
+        newConfirmBtn.addEventListener('click', () => { closeModal(); if (onConfirm) onConfirm(); });
         cancelBtn.addEventListener('click', closeModal);
-
-        // Close on overlay click
-        overlay.onclick = (e) => {
-            if (e.target === overlay) closeModal();
-        };
+        overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
     },
 
-    // 4. Initial Avatars & Dynamic Colors
+    // 3. Avatar Helper
     stringToColor: function(str) {
         if (!str) return '#074799';
         let hash = 0;
@@ -139,7 +119,7 @@ const MedLinkUI = {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
         const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
-        return "#" + "00000".substring(0, 6 - c.length) + c;
+        return '#' + '00000'.substring(0, 6 - c.length) + c;
     },
 
     getInitials: function(name) {
@@ -155,36 +135,44 @@ const MedLinkUI = {
             return `<img src="${image}" alt="${name}" class="${className}" onerror="this.outerHTML=MedLinkUI.getAvatarHTML('${name}', null, '${className}')" />`;
         }
         const initials = this.getInitials(name);
-        const color = this.stringToColor(name);
+        const color    = this.stringToColor(name);
         return `<div class="${className}" style="background-color: ${color}; overflow: hidden;">
             <div class="ml-avatar-placeholder">${initials}</div>
         </div>`;
     }
 };
 
-// Global shorthand for easy usage
-window.mlAlert = (msg, type) => MedLinkUI.toast(msg, type);
+// Global shorthands — kept exactly as-is
+window.mlAlert   = (msg, type) => MedLinkUI.toast(msg, type);
 window.mlConfirm = (title, text, confirmBtn, callback) => MedLinkUI.confirm(title, text, confirmBtn, callback);
-window.mlAvatar = (name, img, cls) => MedLinkUI.getAvatarHTML(name, img, cls);
+window.mlAvatar  = (name, img, cls) => MedLinkUI.getAvatarHTML(name, img, cls);
 
-// 3. Global Graceful Logout Interceptor
+// ─── Logout Interceptor ───────────────────────────────────────────────────────
+// CHANGED: now calls Auth.logout() which hits POST /auth/logout to invalidate
+// the JWT token on the server, then clears localStorage and redirects.
+// Previously it just navigated directly to index.html.
 document.addEventListener('click', (e) => {
-    // Match any link that ends with 'index.html' AND contains the word 'Logout'
     const logoutLink = e.target.closest('a');
-    
-    if (logoutLink && 
-        logoutLink.href.toLowerCase().endsWith('index.html') && 
+
+    if (logoutLink &&
+        logoutLink.href.toLowerCase().endsWith('index.html') &&
         logoutLink.textContent.includes('Logout')) {
-        
+
         e.preventDefault();
-        
+
         mlConfirm(
             'Logout Confirmation',
             'Are you sure you want to sign out? Your session will be closed.',
             'Logout',
             () => {
-                // Use the exact href from the link (handles ../ index.html etc automatically)
-                window.location.href = logoutLink.href;
+                // CHANGED: use Auth.logout() instead of window.location.href
+                if (window.Auth) {
+                    Auth.logout();
+                } else {
+                    // Fallback if api-client.js not loaded yet
+                    localStorage.clear();
+                    window.location.href = logoutLink.href;
+                }
             }
         );
     }
