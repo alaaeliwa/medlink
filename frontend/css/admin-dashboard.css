@@ -42,9 +42,7 @@
   justify-content: space-between;
 }
 
-.sidebar-header .logo {
-  height: 32px;
-}
+/* Logo uses global height variable for consistency */
 
 .sidebar-close {
   display: none;
