@@ -416,41 +416,95 @@ async function loadRecentMedicines() {
   const container = document.getElementById('recent-medicines');
   if (!container) return;
 
-  const res = await MedicinesAPI.list({ per_page: 6, sort: 'default' });
-  if (!res?.success || !res.data.medicines.length) return;
+  container.innerHTML = skeletonCards(3);
 
-  // Render medicines into existing card structure
-  res.data.medicines.forEach(med => {
-    const card = container.querySelector(`[data-medicine-id="${med.id}"]`);
-    if (card) {
-      // Update price if card already exists in HTML
-      const priceEl = card.querySelector('.medicine-price, .card-price');
-      if (priceEl && med.lowestPrice) {
-        priceEl.textContent = `$${parseFloat(med.lowestPrice).toFixed(2)}`;
-      }
-      // Update availability badge
-      const availEl = card.querySelector('.availability-badge, .stock-badge');
-      if (availEl) {
-        availEl.textContent = med.pharmaciesCount > 0 ? `${med.pharmaciesCount} pharmacies` : 'Unavailable';
-      }
-    }
-  });
+  const res = await MedicinesAPI.list({ per_page: 3, sort: 'default' });
+  if (!res?.success || !res.data.medicines.length) {
+    container.innerHTML = '<p class="text-muted">No medicines found.</p>';
+    return;
+  }
+
+  container.innerHTML = res.data.medicines.map(med => `
+    <div class="modern-card">
+      <div class="card-image-wrapper">
+        <img src="../images/MID.webp" alt="${med.name}" class="card-img" />
+        <button class="favorite-btn floating-action${med.isFavorite ? ' active' : ''}" data-id="${med.id}" title="${med.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}">
+          <i class="${med.isFavorite ? 'fas' : 'far'} fa-heart${med.isFavorite ? ' text-danger' : ''}"></i>
+        </button>
+        <div class="glass-badge">${med.category || 'General'}</div>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">${med.name}</h3>
+        <div class="card-meta">
+          <div class="meta-item"><i class="fas fa-store-alt text-success"></i> <span>${med.pharmaciesCount || 0} Pharmacies</span></div>
+          <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>From $${parseFloat(med.lowestPrice || 0).toFixed(2)}</span></div>
+        </div>
+        <a href="medicine-details.html?id=${med.id}" class="btn btn-primary w-full modern-btn-outline" style="text-align:center;">View Details</a>
+      </div>
+    </div>
+  `).join('');
+
+  bindDashboardFavorites(container, 'medicine');
 }
 
 async function loadRecentPharmacies() {
   const container = document.getElementById('recent-pharmacies');
   if (!container) return;
 
-  const res = await PharmaciesAPI.list({ per_page: 4, sort: 'rating_high' });
-  if (!res?.success) return;
+  container.innerHTML = skeletonCards(3);
 
-  // Update rating displays in existing pharmacy cards
-  res.data.pharmacies.forEach(pharmacy => {
-    const card = container.querySelector(`[data-pharmacy-id="${pharmacy.id}"]`);
-    if (card) {
-      const ratingEl = card.querySelector('.pharmacy-rating, .rating-value');
-      if (ratingEl) ratingEl.textContent = parseFloat(pharmacy.rating).toFixed(1);
-    }
+  const res = await PharmaciesAPI.list({ per_page: 3, sort: 'rating_high' });
+  if (!res?.success || !res.data.pharmacies.length) {
+    container.innerHTML = '<p class="text-muted">No pharmacies found.</p>';
+    return;
+  }
+
+  container.innerHTML = res.data.pharmacies.map(p => {
+    const rating = parseFloat(p.rating || 0).toFixed(1);
+    return `
+      <div class="modern-card">
+        <div class="card-image-wrapper pharmacy-wrapper">
+          <img src="../images/PHAR.jpg" alt="${p.name}" class="card-img" />
+          <div class="glass-badge success-badge"><i class="fas fa-circle text-xs"></i> ${p.area || 'Nearby'}</div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">${p.name}</h3>
+          <p class="pharmacy-address"><i class="fas fa-map-marker-alt text-accent"></i> ${p.area || '—'}</p>
+          <div class="pharmacy-stats">
+            <span class="rating"><i class="fas fa-star text-warning"></i> ${rating > 0 ? rating : 'New'}</span>
+          </div>
+          <a href="pharmacy-details.html?id=${p.id}" class="btn btn-outline w-full hover-fill modern-btn-outline pharmacy-btn" style="text-align:center;">View Pharmacy</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function skeletonCards(count) {
+  return Array(count).fill(`
+    <div class="modern-card" style="opacity:0.5;">
+      <div class="card-image-wrapper" style="background:var(--border);height:180px;border-radius:12px;"></div>
+      <div class="card-content">
+        <div style="background:var(--border);height:18px;border-radius:6px;margin-bottom:12px;"></div>
+        <div style="background:var(--border);height:14px;border-radius:6px;width:60%;"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function bindDashboardFavorites(container, type) {
+  container.querySelectorAll('.favorite-btn[data-id]').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const id = btn.dataset.id;
+      const res = await FavoritesAPI.toggle(type, id);
+      if (res?.success) {
+        const isFav = res.data?.isFavorite;
+        btn.classList.toggle('active', isFav);
+        btn.querySelector('i').className = isFav ? 'fas fa-heart text-danger' : 'far fa-heart';
+        MedLinkUI.toast(isFav ? 'Added to favorites' : 'Removed from favorites', 'success');
+      }
+    });
   });
 }
 

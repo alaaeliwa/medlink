@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -36,18 +36,18 @@
           </a>
           <div class="profile-dropdown">
             <button class="profile-btn" id="profileToggle" title="Profile Details">
-              <img src="../images/user.png" alt="Ahmed Ali" class="profile-img" />
+              <img src="../images/user.png" alt="User" class="profile-img" />
             </button>
             <div class="dropdown-menu" id="dropdownMenu">
               <div class="dropdown-header">
-                <strong>Ahmed Ali</strong>
-                <p class="text-sm text-muted mb-0">ahmed@example.com</p>
+                <strong>...</strong>
+                <p class="text-sm text-muted mb-0">...</p>
               </div>
               <hr class="dropdown-divider" />
               <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
               <a href="requests.html" class="dropdown-item"><i class="fas fa-clipboard-list"></i> My Requests</a>
               <hr class="dropdown-divider" />
-              <a href="../index.html" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+              <a href="#" onclick="Auth.logout()" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
           </div>
           <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
@@ -62,12 +62,12 @@
         <div class="pharmacy-hero-gradient"></div>
         
         <div class="container pharmacy-hero-content">
-          <div class="glass-badge success-badge mb-4" style="background: white; position:static; display:inline-block;"><i class="fas fa-circle text-xs"></i> Open Now</div>
-          <h1 class="pharmacy-hero-title">Al Shifa Pharmacy</h1>
+          <div id="pharm-status-badge" class="glass-badge success-badge mb-4" style="background:white;position:static;display:inline-block;">Loading...</div>
+          <h1 id="pharm-name-hero" class="pharmacy-hero-title">...</h1>
           <p class="pharmacy-hero-meta">
-            <span><i class="fas fa-map-marker-alt text-accent"></i> 123 Health Ave, City Center</span>
+            <span><i class="fas fa-map-marker-alt text-accent"></i> <span id="pharm-address">—</span></span>
             <span class="separator">|</span>
-            <span><i class="fas fa-star text-warning"></i> 4.9 Rating (120 reviews)</span>
+            <span><i class="fas fa-star text-warning"></i> <span id="pharm-rating">—</span></span>
           </p>
         </div>
       </div>
@@ -76,9 +76,9 @@
         <!-- Floating Info Bar -->
         <div class="modern-card pharmacy-info-bar">
           <div class="pharmacy-info-details">
-             <div class="pharmacy-info-item"><strong>Working Hours</strong><span class="text-muted">8:00 AM - 11:30 PM</span></div>
-             <div class="pharmacy-info-item"><strong>Phone</strong><span class="text-muted">+962 79 123 4567</span></div>
-             <div class="pharmacy-info-item"><strong>Delivery</strong><span class="text-success font-bold"><i class="fas fa-check"></i> Available (Under 30 mins)</span></div>
+             <div class="pharmacy-info-item"><strong>Working Hours</strong><span id="pharm-hours" class="text-muted">—</span></div>
+             <div class="pharmacy-info-item"><strong>Phone</strong><span id="pharm-phone" class="text-muted">—</span></div>
+             <div class="pharmacy-info-item"><strong>Delivery</strong><span id="pharm-delivery" class="text-muted">—</span></div>
              <div class="pharmacy-info-item">
                <strong style="color:var(--text-muted); font-size:0.9rem;">Your Rating</strong>
                <div class="star-rating-widget">
@@ -91,7 +91,7 @@
              </div>
           </div>
           <div class="pharmacy-info-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
-             <button class="btn btn-primary modern-btn" style="padding: 12px 24px;"><i class="fas fa-phone"></i> Call Now</button>
+             <button id="btn-call" class="btn btn-primary modern-btn" style="padding: 12px 24px;"><i class="fas fa-phone"></i> Call Now</button>
              <button class="btn btn-outline modern-btn-outline" id="btn-open-complaint" style="padding: 12px 24px; border-color: var(--danger); color: var(--danger);"><i class="fas fa-exclamation-circle"></i> File Complaint</button>
           </div>
         </div>
@@ -118,44 +118,8 @@
           </div>
 
           <!-- Grid -->
-          <div class="grid grid-3 mt-4">
-             <div class="modern-card">
-              <div class="card-image-wrapper">
-                <img src="../images/MID.webp" alt="Panadol Extra" class="card-img" />
-                <button class="favorite-btn floating-action" title="Add to Favorites"><i class="far fa-heart"></i></button>
-                <div class="glass-badge">Pain Relief</div>
-              </div>
-              <div class="card-content">
-                <h3 class="card-title">Panadol Extra</h3>
-                <div class="card-meta">
-                  <div class="meta-item"><i class="fas fa-boxes text-success"></i> <span class="font-bold">In Stock (15)</span></div>
-                  <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>$5.00</span></div>
-                </div>
-                <div class="flex-btn-group">
-                  <a href="medicine-details.html" class="btn btn-outline modern-btn-outline" style="flex: 1; text-align: center; font-size: 0.9rem; padding: 10px;">Details</a>
-                  <button class="btn btn-primary modern-btn btn-request" data-medicine="Panadol Extra" data-price="5.00" style="flex: 1; font-size: 0.9rem; padding: 10px;">Request</button>
-                </div>
-              </div>
-            </div>
-            
-             <div class="modern-card">
-              <div class="card-image-wrapper">
-                <img src="../images/MID.webp" alt="Augmentin 1g" class="card-img" />
-                <button class="favorite-btn floating-action active" title="Remove from Favorites"><i class="fas fa-heart text-danger"></i></button>
-                <div class="glass-badge">Antibiotics</div>
-              </div>
-              <div class="card-content">
-                <h3 class="card-title">Augmentin 1g</h3>
-                <div class="card-meta">
-                  <div class="meta-item"><i class="fas fa-boxes text-success"></i> <span class="font-bold">In Stock (2)</span></div>
-                  <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>$18.50</span></div>
-                </div>
-                <div class="flex-btn-group">
-                  <a href="medicine-details.html" class="btn btn-outline modern-btn-outline" style="flex: 1; text-align: center; font-size: 0.9rem; padding: 10px;">Details</a>
-                  <button class="btn btn-primary modern-btn btn-request" data-medicine="Augmentin 1g" data-price="18.50" style="flex: 1; font-size: 0.9rem; padding: 10px;">Request</button>
-                </div>
-              </div>
-            </div>
+          <div id="inventory-grid" class="grid grid-3 mt-4">
+            <!-- populated by pharmacy-details.js -->
           </div>
         </div>
       </div>
@@ -197,8 +161,10 @@
     </div>
 
     <!-- Scripts -->
+     <script src="../js/api-client.js"></script>
     <script src="../js/medlink-ui.js"></script>
     <script src="../js/orders-engine.js"></script>
     <script src="../js/citizen-dashboard.js"></script>
+    <script src="../js/pharmacy-details.js"></script>
   </body>
 </html>

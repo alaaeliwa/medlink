@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -50,15 +50,15 @@
           </button>
           <div class="dropdown-menu" id="dropdownMenu">
             <div class="dropdown-header">
-              <strong id="dropdownPharmName">Care Pharmacy</strong>
-              <p class="text-sm text-muted mb-0" id="dropdownPharmEmail">contact@carepharma.com</p>
+              <strong id="dropdownPharmName">...</strong>
+              <p class="text-sm text-muted mb-0" id="dropdownPharmEmail">...</p>
             </div>
             <hr class="dropdown-divider" />
             <a href="pharmacy-dashboard.html" class="dropdown-item"><i class="fas fa-th-large"></i> Dashboard</a>
             <a href="pharmacy-orders.html" class="dropdown-item"><i class="fas fa-clipboard-list"></i> Orders</a>
             <a href="pharmacy-settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
             <hr class="dropdown-divider" />
-            <a href="../index.html" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <a href="#" onclick="Auth.logout()" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
           </div>
         </div>
       </div>
@@ -70,13 +70,13 @@
       <a href="pharmacy-dashboard.html" class="sidebar-link active"><i class="fas fa-th-large"></i> Dashboard</a>
       <a href="pharmacy-orders.html" class="sidebar-link"><i class="fas fa-clipboard-list"></i> Orders</a>
       <a href="pharmacy-settings.html" class="sidebar-link"><i class="fas fa-cog"></i> Settings</a>
-      <a href="../index.html" class="sidebar-link text-danger" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <a href="#" onclick="Auth.logout()" class="sidebar-link text-danger" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </aside>
 
     <main class="main-content">
       <div class="welcome-section">
         <div class="welcome-text">
-          <h1>Welcome back, Care Pharmacy!</h1>
+          <h1>Welcome back!</h1>
           <p>Manage your inventory and track medicine levels in real-time.</p>
         </div>
       </div>
@@ -226,8 +226,10 @@
     </main>
   </div>
   <!-- Scripts -->
+     <script src="../js/api-client.js"></script>
+
   <script src="../js/medlink-ui.js"></script>
-  <script src="../js/pharmacy'Dashboard.js"></script>
+<script src="../js/pharmacy-dashboard.js"></script>
 </body>
 
 </html>

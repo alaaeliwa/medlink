@@ -59,6 +59,7 @@ async function initDashboardCharts() {
     // REPLACED: hardcoded stat strings ('1,284' etc.)
     // NOW: fetches real counts from /admin/statistics
     const statsRes = await AdminAPI.statistics();
+    loadRecentRequests();
     const stats    = statsRes?.data || {};
 
     const el = id => document.getElementById(id);
@@ -157,7 +158,43 @@ async function initDashboardCharts() {
 
 
 // ============================================
-// 3. USERS PAGE
+// 3. RECENT REQUESTS (Dashboard table)
+// ============================================
+async function loadRecentRequests() {
+    const tbody = document.getElementById('recentRequestsTbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-muted);">Loading...</td></tr>`;
+
+    const res = await APIClient.get('/requests/network?per_page=5');
+    const requests = res?.data?.requests || [];
+
+    if (!requests.length) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-muted);">No recent requests.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = requests.map(r => {
+        const date    = r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+        const status  = (r.status || 'open').toLowerCase();
+        const name    = r.citizenName || r.citizen?.name || 'Unknown';
+        return `
+            <tr>
+                <td><strong>${r.medicineName || '—'}</strong></td>
+                <td>
+                    <div class="cell-user">
+                        <img src="../images/user.png" class="cell-avatar circle" />
+                        <span class="cell-name">${name}</span>
+                    </div>
+                </td>
+                <td>${date}</td>
+                <td><span class="status-pill ${status}">${r.status || 'Open'}</span></td>
+            </tr>`;
+    }).join('');
+}
+
+// ============================================
+// 4. USERS PAGE
 // ============================================
 async function initUsersPage() {
     let currentFilter = 'all';
