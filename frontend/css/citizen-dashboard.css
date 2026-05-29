@@ -21,6 +21,13 @@ body {
   flex-shrink: 0;
 }
 
+.dashboard-header .logo {
+  height: 40px !important;
+  width: auto !important;
+  max-width: 160px !important;
+  max-height: 40px !important;
+}
+
 .flex-between {
   display: flex;
   align-items: center;
