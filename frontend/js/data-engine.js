@@ -322,9 +322,31 @@ function showSkeletonCards() {
     `).join('');
 }
 
-// --- 7. BOOT ---
+// --- 7. DYNAMIC CATEGORIES ---
+async function loadCategories() {
+    const container = document.getElementById('category-options');
+    if (!container) return;
+
+    const res = await MedicinesAPI.categories();
+    if (!res?.success) return;
+
+    const categories = res.data.filter(c => c.medicineCount > 0);
+    categories.forEach(cat => {
+        const span = document.createElement('span');
+        span.className = 'custom-option';
+        span.dataset.value = cat.name;
+        span.textContent = cat.name;
+        container.appendChild(span);
+    });
+
+    // Re-init custom selects so new options are clickable
+    initCustomSelects();
+}
+
+// --- 8. BOOT ---
 document.addEventListener('DOMContentLoaded', () => {
     initCustomSelects();
+    loadCategories();
 
     // CHANGED: initial load from API instead of mock array
     fetchFromAPI();
