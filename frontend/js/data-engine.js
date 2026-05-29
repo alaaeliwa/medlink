@@ -53,7 +53,7 @@ async function fetchFromAPI() {
             category:    m.category || 'General',
             price:       parseFloat(m.lowestPrice || m.averagePrice || 0),
             pharmacies:  m.pharmaciesCount || 0,
-            img:         'images/MID.webp',   // fallback image
+            img: '../images/MID.webp',   // fallback image
             fav:         m.isFavorite || false,
         }));
 
@@ -83,7 +83,7 @@ async function fetchFromAPI() {
             rating:   parseFloat(p.rating || 0),
             reviews:  p.reviewCount || 0,
             status:   p.isOpenNow ? 'Open Now' : 'Closed',
-            img:      p.profileImage || 'images/PHAR.jpg',
+            img:      p.profileImage || '../images/PHAR.jpg',
             fav:      p.isFavorite || false,
         }));
 

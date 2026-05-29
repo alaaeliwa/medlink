@@ -26,7 +26,7 @@
     <header class="dashboard-header">
       <div class="container flex-between">
         <a href="../index.html" class="logo-link">
-          <img src="../images/logo.png" alt="MedLink logo" class="logo" width="131" height="40" />
+          <img src="../images/logo.png" alt="MedLink logo" class="logo" />
         </a>
         
         <nav class="dashboard-nav">
@@ -116,19 +116,68 @@
 
       <div class="container main-content-padding">
         <!-- Trending Medicines -->
-        <section class="content-section">
-          <div class="section-header-flex">
-            <div>
-              <h2>Trending Medicines</h2>
-              <p class="text-muted">Most searched essential medicines in your area</p>
-            </div>
-            <a href="medicines.html" class="link-view-all">View All <i class="fas fa-arrow-right"></i></a>
-          </div>
-          
-          <div id="recent-medicines" class="grid grid-3">
-            <!-- populated by citizen-dashboard.js -->
-          </div>
-        </section>
+ <!-- Trending Medicines -->
+<section class="content-section">
+  <div class="section-header-flex">
+    <div>
+      <h2>Trending Medicines</h2>
+      <p class="text-muted">Most searched essential medicines in your area</p>
+    </div>
+    <a href="medicines.html" class="link-view-all">View All <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="grid grid-3">
+    <!-- Card 1 -->
+    <div class="modern-card">
+      <div class="card-image-wrapper">
+        <img src="../images/MID.webp" alt="Panadol Extra" class="card-img" />
+        <button class="favorite-btn floating-action" title="Add to Favorites"><i class="far fa-heart"></i></button>
+        <div class="glass-badge">Pain Relief</div>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Panadol Extra (500mg)</h3>
+        <div class="card-meta">
+          <div class="meta-item"><i class="fas fa-store-alt text-success"></i> <span>2 Pharmacies</span></div>
+          <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>From $3.99</span></div>
+        </div>
+        <a href="medicines.html" class="btn btn-primary w-full modern-btn-outline" style="text-align: center;">View Details</a>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="modern-card">
+      <div class="card-image-wrapper">
+        <img src="../images/MID.webp" alt="Amoxicillin" class="card-img" />
+        <button class="favorite-btn floating-action" title="Add to Favorites"><i class="far fa-heart"></i></button>
+        <div class="glass-badge">Antibiotics</div>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Amoxicillin 500mg</h3>
+        <div class="card-meta">
+          <div class="meta-item"><i class="fas fa-store-alt text-success"></i> <span>2 Pharmacies</span></div>
+          <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>From $10.99</span></div>
+        </div>
+        <a href="medicines.html" class="btn btn-primary w-full modern-btn-outline" style="text-align: center;">View Details</a>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="modern-card">
+      <div class="card-image-wrapper">
+        <img src="../images/MID.webp" alt="Vitamin C" class="card-img" />
+        <button class="favorite-btn floating-action" title="Add to Favorites"><i class="far fa-heart"></i></button>
+        <div class="glass-badge">Vitamins</div>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Vitamin C 1000mg</h3>
+        <div class="card-meta">
+          <div class="meta-item"><i class="fas fa-store-alt text-success"></i> <span>2 Pharmacies</span></div>
+          <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>From $18.99</span></div>
+        </div>
+        <a href="medicines.html" class="btn btn-primary w-full modern-btn-outline" style="text-align: center;">View Details</a>
+      </div>
+    </div>
+  </div>
+</section>
 
         <!-- Featured Pharmacies -->
         <section class="content-section mt-80">
@@ -140,8 +189,54 @@
             <a href="pharmacies.html" class="link-view-all">View All <i class="fas fa-arrow-right"></i></a>
           </div>
           
-          <div id="recent-pharmacies" class="grid grid-3">
-            <!-- populated by citizen-dashboard.js -->
+          <div class="grid grid-3">
+            <!-- Pharmacy 1 -->
+            <div class="modern-card">
+              <div class="card-image-wrapper pharmacy-wrapper">
+                <img src="../images/PHAR.jpg" alt="Al Shifa Pharmacy" class="card-img" />
+                <div class="glass-badge success-badge"><i class="fas fa-circle text-xs"></i> Open Now</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Al Shifa Pharmacy</h3>
+                <p class="pharmacy-address"><i class="fas fa-map-marker-alt text-accent"></i> 123 Health Ave, City Center</p>
+                <div class="pharmacy-stats">
+                  <span class="rating"><i class="fas fa-star text-warning"></i> 4.9 (120)</span>
+                </div>
+                <a href="pharmacy-details.html" class="btn btn-outline w-full hover-fill modern-btn-outline pharmacy-btn" style="text-align: center;">View Pharmacy</a>
+              </div>
+            </div>
+
+            <!-- Pharmacy 2 -->
+            <div class="modern-card">
+              <div class="card-image-wrapper pharmacy-wrapper">
+                <img src="../images/PHAR.jpg" alt="CarePlus Pharmacy" class="card-img" />
+                <div class="glass-badge success-badge"><i class="fas fa-circle text-xs"></i> Open 24/7</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">CarePlus Pharmacy</h3>
+                <p class="pharmacy-address"><i class="fas fa-map-marker-alt text-accent"></i> 45 Wellness Blvd, Downtown</p>
+                <div class="pharmacy-stats">
+                  <span class="rating"><i class="fas fa-star text-warning"></i> 4.7 (85)</span>
+                </div>
+                <a href="pharmacy-details.html" class="btn btn-outline w-full hover-fill modern-btn-outline pharmacy-btn" style="text-align: center;">View Pharmacy</a>
+              </div>
+            </div>
+
+            <!-- Pharmacy 3 -->
+            <div class="modern-card">
+              <div class="card-image-wrapper pharmacy-wrapper">
+                <img src="../images/PHAR.jpg" alt="LifeStyle Pharmacy" class="card-img" />
+                <div class="glass-badge danger-badge"><i class="fas fa-clock text-xs"></i> Closed</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">LifeStyle Pharmacy</h3>
+                <p class="pharmacy-address"><i class="fas fa-map-marker-alt text-accent"></i> 78 Medical Square, West End</p>
+                <div class="pharmacy-stats">
+                  <span class="rating"><i class="fas fa-star text-warning"></i> 4.5 (64)</span>
+                </div>
+                <a href="pharmacy-details.html" class="btn btn-outline w-full hover-fill modern-btn-outline pharmacy-btn" style="text-align: center;">View Pharmacy</a>
+              </div>
+            </div>
           </div>
         </section>
       </div>

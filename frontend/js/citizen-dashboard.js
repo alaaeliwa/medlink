@@ -418,33 +418,42 @@ async function loadRecentMedicines() {
 
   container.innerHTML = skeletonCards(3);
 
-  const res = await MedicinesAPI.list({ per_page: 3, sort: 'default' });
-  if (!res?.success || !res.data.medicines.length) {
-    container.innerHTML = '<p class="text-muted">No medicines found.</p>';
-    return;
+  try {
+    const res = await MedicinesAPI.list({ per_page: 3 });
+    const medicines = res?.data?.medicines || [];
+
+    if (!medicines.length) {
+      container.innerHTML = '<p class="text-muted">No medicines found.</p>';
+      return;
+    }
+
+    container.innerHTML = medicines.map(med => {
+      const image = med.image || med.imageUrl || '../images/MID.webp';
+      const price = parseFloat(med.lowestPrice || med.averagePrice || 0).toFixed(2);
+      return `
+        <div class="modern-card">
+          <div class="card-image-wrapper">
+            <img src="${image}" alt="${med.name}" class="card-img" onerror="this.src='../images/MID.webp'" />
+            <button class="favorite-btn floating-action${med.isFavorite ? ' active' : ''}" data-id="${med.id}">
+              <i class="${med.isFavorite ? 'fas' : 'far'} fa-heart${med.isFavorite ? ' text-danger' : ''}"></i>
+            </button>
+            <div class="glass-badge">${med.category || 'General'}</div>
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">${med.name}</h3>
+            <div class="card-meta">
+              <div class="meta-item"><i class="fas fa-store-alt text-success"></i> <span>${med.pharmaciesCount || 0} Pharmacies</span></div>
+              <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>From $${price}</span></div>
+            </div>
+            <a href="medicine-details.html?id=${med.id}" class="btn btn-primary w-full modern-btn-outline" style="text-align:center;">View Details</a>
+          </div>
+        </div>`;
+    }).join('');
+
+    bindDashboardFavorites(container, 'medicine');
+  } catch (e) {
+    container.innerHTML = '<p class="text-muted">Could not load medicines.</p>';
   }
-
-  container.innerHTML = res.data.medicines.map(med => `
-    <div class="modern-card">
-      <div class="card-image-wrapper">
-        <img src="../images/MID.webp" alt="${med.name}" class="card-img" />
-        <button class="favorite-btn floating-action${med.isFavorite ? ' active' : ''}" data-id="${med.id}" title="${med.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}">
-          <i class="${med.isFavorite ? 'fas' : 'far'} fa-heart${med.isFavorite ? ' text-danger' : ''}"></i>
-        </button>
-        <div class="glass-badge">${med.category || 'General'}</div>
-      </div>
-      <div class="card-content">
-        <h3 class="card-title">${med.name}</h3>
-        <div class="card-meta">
-          <div class="meta-item"><i class="fas fa-store-alt text-success"></i> <span>${med.pharmaciesCount || 0} Pharmacies</span></div>
-          <div class="meta-item"><i class="fas fa-tag text-accent"></i> <span>From $${parseFloat(med.lowestPrice || 0).toFixed(2)}</span></div>
-        </div>
-        <a href="medicine-details.html?id=${med.id}" class="btn btn-primary w-full modern-btn-outline" style="text-align:center;">View Details</a>
-      </div>
-    </div>
-  `).join('');
-
-  bindDashboardFavorites(container, 'medicine');
 }
 
 async function loadRecentPharmacies() {
@@ -453,31 +462,43 @@ async function loadRecentPharmacies() {
 
   container.innerHTML = skeletonCards(3);
 
-  const res = await PharmaciesAPI.list({ per_page: 3, sort: 'rating_high' });
-  if (!res?.success || !res.data.pharmacies.length) {
-    container.innerHTML = '<p class="text-muted">No pharmacies found.</p>';
-    return;
-  }
+  try {
+    const res = await PharmaciesAPI.list({ per_page: 3, sort: 'rating_high' });
+    const pharmacies = res?.data?.pharmacies || [];
 
-  container.innerHTML = res.data.pharmacies.map(p => {
-    const rating = parseFloat(p.rating || 0).toFixed(1);
-    return `
-      <div class="modern-card">
-        <div class="card-image-wrapper pharmacy-wrapper">
-          <img src="../images/PHAR.jpg" alt="${p.name}" class="card-img" />
-          <div class="glass-badge success-badge"><i class="fas fa-circle text-xs"></i> ${p.area || 'Nearby'}</div>
-        </div>
-        <div class="card-content">
-          <h3 class="card-title">${p.name}</h3>
-          <p class="pharmacy-address"><i class="fas fa-map-marker-alt text-accent"></i> ${p.area || '—'}</p>
-          <div class="pharmacy-stats">
-            <span class="rating"><i class="fas fa-star text-warning"></i> ${rating > 0 ? rating : 'New'}</span>
+    if (!pharmacies.length) {
+      container.innerHTML = '<p class="text-muted">No pharmacies found.</p>';
+      return;
+    }
+
+    container.innerHTML = pharmacies.map(p => {
+      const rating      = parseFloat(p.rating || 0);
+      const reviewCount = p.reviewCount || 0;
+      const isOpen      = p.isOpenNow;
+      const image       = p.profileImage || '../images/PHAR.jpg';
+      const address     = p.address || p.area || '—';
+
+      return `
+        <div class="modern-card">
+          <div class="card-image-wrapper pharmacy-wrapper">
+            <img src="${image}" alt="${p.name}" class="card-img" onerror="this.src='../images/PHAR.jpg'" />
+            <div class="glass-badge ${isOpen ? 'success-badge' : 'danger-badge'}">
+              <i class="fas fa-circle text-xs"></i> ${isOpen ? 'Open Now' : 'Closed'}
+            </div>
           </div>
-          <a href="pharmacy-details.html?id=${p.id}" class="btn btn-outline w-full hover-fill modern-btn-outline pharmacy-btn" style="text-align:center;">View Pharmacy</a>
-        </div>
-      </div>
-    `;
-  }).join('');
+          <div class="card-content">
+            <h3 class="card-title">${p.name}</h3>
+            <p class="pharmacy-address"><i class="fas fa-map-marker-alt text-accent"></i> ${address}</p>
+            <div class="pharmacy-stats">
+              <span class="rating"><i class="fas fa-star text-warning"></i> ${rating > 0 ? rating.toFixed(1) : 'New'}${reviewCount > 0 ? ' (' + reviewCount + ')' : ''}</span>
+            </div>
+            <a href="pharmacy-details.html?id=${p.id}" class="btn btn-outline w-full hover-fill modern-btn-outline pharmacy-btn" style="text-align:center;">View Pharmacy</a>
+          </div>
+        </div>`;
+    }).join('');
+  } catch (e) {
+    container.innerHTML = '<p class="text-muted">Could not load pharmacies.</p>';
+  }
 }
 
 function skeletonCards(count) {

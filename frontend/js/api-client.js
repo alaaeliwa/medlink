@@ -42,12 +42,12 @@ const Auth = {
     localStorage.removeItem('medlink_user_id');
     localStorage.removeItem('medlink_user');
     localStorage.removeItem('medlink_token_expires');
-    window.location.href = '/auth/login.html';
+    window.location.href = '/medlink/frontend/auth/login.html';
   },
 
   redirectIfNotLoggedIn() {
     if (!this.isLoggedIn()) {
-      window.location.href = '/auth/login.html';
+      window.location.href = '/medlink/frontend/auth/login.html';
     }
   },
 
