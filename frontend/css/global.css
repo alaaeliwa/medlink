@@ -304,8 +304,11 @@ li {
 .logo,
 .footer-logo,
 .logo-mobile {
-  height: var(--logo-height);
+  height: 40px;
+  max-height: 40px;
   width: auto;
+  max-width: 160px;
+  object-fit: contain;
 }
 
 /* ==========================================
