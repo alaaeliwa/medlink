@@ -26,7 +26,7 @@
     <header class="dashboard-header">
       <div class="container flex-between">
         <a href="../index.html" class="logo-link">
-          <img src="../images/logo.png" alt="MedLink logo" class="logo" width="131" height="40" style="height:40px;width:auto;max-width:160px;" />
+          <img src="../images/logo.png" alt="MedLink logo" class="logo" />
         </a>
         <nav class="dashboard-nav">
           <ul class="nav-links">
@@ -275,112 +275,89 @@
     <script src="../js/orders-engine.js"></script>
     <script src="../js/citizen-dashboard.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const historyContainer = document.getElementById('requests-history-container');
-        const submitBtn = document.getElementById("btn-submit-request");
-        const form = document.getElementById("standalone-request-form");
+document.addEventListener('DOMContentLoaded', async () => {
+    const historyContainer = document.getElementById('requests-history-container');
+    const submitBtn = document.getElementById("btn-submit-request");
+    const form = document.getElementById("standalone-request-form");
 
-        function renderRequests() {
-            if(!window.OrdersEngine || !historyContainer) return;
-            const orders = window.OrdersEngine.getOrders();
-            
-            if(orders.length === 0) {
-                historyContainer.innerHTML = `
-                    <div class="empty-state-placeholder" style="grid-column: 1/-1; text-align: center; padding: 60px 40px; color: var(--text-muted);">
-                        <div style="background: var(--bg-soft); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                            <i class="fas fa-clipboard-list" style="font-size: 2.5rem; opacity: 0.3;"></i>
-                        </div>
-                        <h4 style="color: var(--text-main); margin-bottom: 8px;">No requests found</h4>
-                        <p>Your submitted requests will appear here for tracking.</p>
+    // Load existing requests from API
+    async function renderRequests() {
+        if (!historyContainer) return;
+        historyContainer.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-muted);">Loading...</p>';
+
+        const res = await RequestsAPI.myRequests();
+        const requests = res?.data?.requests || [];
+
+        if (requests.length === 0) {
+            historyContainer.innerHTML = `
+                <div style="text-align: center; padding: 60px 40px; color: var(--text-muted);">
+                    <div style="background: var(--bg-soft); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                        <i class="fas fa-clipboard-list" style="font-size: 2.5rem; opacity: 0.3;"></i>
                     </div>
-                `;
-                return;
-            }
+                    <h4 style="color: var(--text-main); margin-bottom: 8px;">No requests found</h4>
+                    <p>Your submitted requests will appear here for tracking.</p>
+                </div>
+            `;
+            return;
+        }
 
-            historyContainer.innerHTML = '';
-            orders.forEach(order => {
-                let statusClass = 'status-pending';
-                let icon = 'fa-satellite-dish';
-                let pillText = 'Searching...';
-                let subText = `Waiting for response from ${order.pharmacyName}`;
+        historyContainer.innerHTML = requests.map(r => {
+            let statusClass = 'status-pending';
+            let icon = 'fa-satellite-dish';
+            let pillText = 'Searching...';
 
-                if(order.status === 'Approved') {
-                    statusClass = 'status-available';
-                    icon = 'fa-check';
-                    pillText = 'Available Now';
-                    subText = `Reserved at <strong>${order.pharmacyName}</strong>`;
-                } else if(order.status === 'Rejected') {
-                    statusClass = 'status-unavailable';
-                    icon = 'fa-times';
-                    pillText = 'Unavailable';
-                    subText = `${order.pharmacyName} reported out of stock.`;
-                } else if(order.status === 'Responded') {
-                    statusClass = 'status-info'; // Blue/Information color
-                    icon = 'fa-comment-medical';
-                    pillText = 'Admin Feedback';
-                    subText = `An administrator has provided helpful info.`;
-                }
+            if (r.status === 'accepted') { statusClass = 'status-available'; icon = 'fa-check'; pillText = 'Accepted'; }
+            else if (r.status === 'expired') { statusClass = 'status-unavailable'; icon = 'fa-times'; pillText = 'Expired'; }
+            else if (r.status === 'closed') { statusClass = 'status-unavailable'; icon = 'fa-times'; pillText = 'Closed'; }
 
-                let responseBox = '';
-                if (order.adminResponse) {
-                    responseBox = `
-                        <div class="admin-feedback-box" style="margin-top: 15px; background: #f0f9ff; border-left: 4px solid var(--accent); padding: 12px; border-radius: 8px;">
-                            <strong style="display: block; font-size: 0.85rem; color: var(--accent); margin-bottom: 4px;"><i class="fas fa-user-shield"></i> Admin Assistance:</strong>
-                            <p style="margin: 0; font-size: 0.95rem; line-height: 1.5; color: var(--text-heading); font-style: italic;">"${order.adminResponse}"</p>
-                        </div>
-                    `;
-                }
-
-                const card = `
-                    <div class="tracking-card ${statusClass}">
-                      <div class="tracking-icon"><i class="fas ${icon}"></i></div>
-                      <div class="tracking-content">
-                        <h3 class="tracking-title">${order.medicineName}</h3>
+            return `
+                <div class="tracking-card ${statusClass}">
+                    <div class="tracking-icon"><i class="fas ${icon}"></i></div>
+                    <div class="tracking-content">
+                        <h3 class="tracking-title">${r.medicineName}</h3>
                         <div class="tracking-meta">
-                          <span><i class="far fa-calendar text-muted"></i> ${order.date}, ${order.time}</span>
-                          <span><i class="fas fa-store text-muted"></i> ${order.pharmacyName}</span>
+                            <span><i class="far fa-calendar text-muted"></i> ${new Date(r.createdAt).toLocaleDateString()}</span>
+                            <span><i class="fas fa-box text-muted"></i> Qty: ${r.quantity}</span>
+                            <span><i class="fas fa-exclamation-circle text-muted"></i> ${r.urgency}</span>
                         </div>
-                        ${responseBox}
-                      </div>
-                      <div class="tracking-actions">
-                        <span class="tracking-pill">${pillText}</span>
-                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted)">${subText}</p>
-                      </div>
                     </div>
-                `;
-                historyContainer.insertAdjacentHTML('beforeend', card);
-            });
-        }
+                    <div class="tracking-actions">
+                        <span class="tracking-pill">${pillText}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
 
-        // Initialize Render
-        renderRequests();
+    await renderRequests();
 
-        // Form Logic
-        if (form && submitBtn) {
-            form.addEventListener("submit", (e) => {
-                e.preventDefault();
-                const medName = document.getElementById('med-name').value;
-                const medQty = document.getElementById('med-qty').value;
-                const urgency = document.querySelector('input[name="urgency"]:checked').value;
-                const notes = document.getElementById('med-notes').value;
-                
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Broadcasting...';
-                submitBtn.disabled = true;
+    // Submit new request
+    if (form && submitBtn) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const medName = document.getElementById('med-name').value.trim();
+            const medQty = parseInt(document.getElementById('med-qty').value) || 1;
+            const urgency = document.querySelector('input[name="urgency"]:checked').value;
+            const notes = document.getElementById('med-notes').value.trim();
 
-                setTimeout(() => {
-                    if(window.OrdersEngine) {
-                        window.OrdersEngine.submitOrder("General Network", medName, 0, medQty, urgency, notes);
-                        renderRequests();
-                    }
-                    
-                    submitBtn.innerHTML = 'Request';
-                    submitBtn.disabled = false;
-                    mlAlert(`Broadcast for "${medName}" successful!`, 'success');
-                    form.reset();
-                }, 1000);
-            });
-        }
-      });
-    </script>
-  </body>
-</html>
+            if (!medName) { mlAlert('Please enter a medicine name.', 'error'); return; }
+
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Broadcasting...';
+            submitBtn.disabled = true;
+
+            const res = await RequestsAPI.create(medName, medQty, urgency, notes);
+
+            submitBtn.innerHTML = 'Request';
+            submitBtn.disabled = false;
+
+            if (res?.success) {
+                mlAlert(`Broadcast for "${medName}" successful!`, 'success');
+                form.reset();
+                await renderRequests();
+            } else {
+                mlAlert(res?.message || 'Failed to submit request.', 'error');
+            }
+        });
+    }
+});
+</script>
