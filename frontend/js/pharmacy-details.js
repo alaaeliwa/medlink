@@ -155,6 +155,20 @@ function bindComplaintForm(pharmacyId) {
     if (openBtn && modal)  openBtn.addEventListener('click',  () => modal.classList.add('active'));
     if (closeBtn && modal) closeBtn.addEventListener('click', () => modal.classList.remove('active'));
 
+    // Close on overlay background click
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
+        });
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+        }
+    });
+
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();

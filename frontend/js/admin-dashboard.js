@@ -56,11 +56,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ============================================
 async function initDashboardCharts() {
 
-    // REPLACED: hardcoded stat strings ('1,284' etc.)
-    // NOW: fetches real counts from /admin/statistics
-    const statsRes = await AdminAPI.statistics();
+    // Fetch stats and pending pharmacies count in parallel
+    const [statsRes, pendingRes] = await Promise.all([
+        AdminAPI.statistics(),
+        AdminAPI.pendingPharmacies('pending'),
+    ]);
     loadRecentRequests();
     const stats    = statsRes?.data || {};
+
+    // Update pending pharmacies badge in sidebar
+    const pendingCount = (pendingRes?.data?.pharmacies || []).length;
+    const badge = document.getElementById('pendingBadge');
+    if (badge) badge.textContent = pendingCount;
+
+    // Update today's date
+    const dateEl = document.getElementById('currentDate');
+    if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' });
 
     const el = id => document.getElementById(id);
 
@@ -588,8 +599,8 @@ async function initReportsPage() {
         modal.classList.add('open');
 
         if (type === 'request') {
-            // Fetch broadcast request details
-            const res = await APIClient.get(`/requests?per_page=100`);
+            // Fetch broadcast request details (admin uses /requests/network)
+            const res = await APIClient.get(`/requests/network?per_page=100`);
             const req = res?.data?.requests?.find(r => r.id === id);
 
             mTitle.textContent = 'Medicine Request Details';

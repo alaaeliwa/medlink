@@ -261,15 +261,62 @@ const RequestsAPI = {
 
 const FavoritesAPI = {
   async list(type = 'all') {
-    return await APIClient.get(`/favorites?type=${type}`);
+    let favs = JSON.parse(localStorage.getItem('medlink_favorites')) || [];
+    
+    // Auto-clean corrupted favorites (ones without a target name)
+    const originalLength = favs.length;
+    favs = favs.filter(f => f.target && f.target.name);
+    if (favs.length !== originalLength) {
+        localStorage.setItem('medlink_favorites', JSON.stringify(favs));
+    }
+
+    let filtered = favs;
+    if (type !== 'all') {
+      filtered = favs.filter(f => f.type === type);
+    }
+    return { success: true, data: { favorites: filtered } };
   },
 
   async toggle(type, targetId, targetData = {}) {
-    return await APIClient.post('/favorites/toggle', { type, targetId, targetData });
+    let favs = JSON.parse(localStorage.getItem('medlink_favorites')) || [];
+    const existingIndex = favs.findIndex(f => f.type === type && String(f.targetId) === String(targetId));
+    let isFavorite = false;
+
+    if (existingIndex >= 0) {
+      favs.splice(existingIndex, 1);
+    } else {
+      isFavorite = true;
+      let finalData = targetData;
+      // If targetData is missing, try to fetch it
+      if (!finalData || Object.keys(finalData).length === 0 || !finalData.name) {
+          try {
+              if (type === 'medicine') {
+                  const res = await MedicinesAPI.get(targetId);
+                  if (res && res.success) finalData = res.data;
+              } else if (type === 'pharmacy') {
+                  const res = await PharmaciesAPI.get(targetId);
+                  if (res && res.success) finalData = res.data;
+              }
+          } catch(e) { console.error(e); }
+      }
+
+      favs.push({
+        id: 'fav_' + Date.now(),
+        type: type,
+        targetId: targetId,
+        target: finalData
+      });
+    }
+
+    localStorage.setItem('medlink_favorites', JSON.stringify(favs));
+    return { success: true, data: { isFavorite } };
   },
 
   async remove(id) {
-    return await APIClient.delete(`/favorites/${id}`);
+    let favs = JSON.parse(localStorage.getItem('medlink_favorites')) || [];
+    favs = favs.filter(f => String(f.id) !== String(id));
+    localStorage.setItem('medlink_favorites', JSON.stringify(favs));
+    return { success: true };
   },
 };
 

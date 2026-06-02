@@ -9,6 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../css/global.css" />
     <link rel="stylesheet" href="../css/admin-dashboard.css" />
+    <style>
+        .modal-overlay { display: none; }
+        .modal-overlay.open { display: flex; }
+    </style>
 </head>
 <body class="admin-layout" data-page="reports">
 
@@ -129,10 +133,26 @@
 </div>
     </main>
 
-    <!-- Detail View Modal for Admin -->
+    <!-- Detail View Modal -->
+    <div id="admin-detail-modal" class="modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;">
+        <div class="modal-box" style="background:#fff;border-radius:16px;padding:32px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;position:relative;">
+            <button id="btn-close-admin-modal" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#666;">&times;</button>
+            <h3 id="admin-modal-title" style="margin-bottom:16px;color:var(--text-main,#1a1a2e);"></h3>
+            <div id="admin-modal-body" style="display:flex;flex-direction:column;gap:10px;font-size:.95rem;color:#444;"></div>
+        </div>
+    </div>
 
-    <!-- Response Modal for Admin Assistance -->
-   
+    <!-- Help / Response Modal -->
+    <div id="admin-response-modal" class="modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;">
+        <div class="modal-box" style="background:#fff;border-radius:16px;padding:32px;max-width:480px;width:90%;position:relative;">
+            <button id="btn-close-response-modal" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#666;">&times;</button>
+            <h3 style="margin-bottom:16px;">Send Assistance Note</h3>
+            <input type="hidden" id="current-request-id" />
+            <textarea id="admin-assistance-text" rows="4" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:.95rem;resize:vertical;" placeholder="Type your message to the citizen..."></textarea>
+            <button id="btn-submit-assistance" class="btn btn-primary" style="margin-top:16px;width:100%;padding:12px;">Send</button>
+        </div>
+    </div>
+
     <script src="../js/api-client.js"></script>
     <script src="../js/medlink-ui.js"></script>
     <script src="../js/orders-engine.js"></script>

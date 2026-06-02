@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -149,78 +149,152 @@
     <script src="../js/medlink-ui.js"></script>
     <script src="../js/citizen-dashboard.js"></script>
     <script>
-      // 1. Populate inputs securely on load
-      const nameInput = document.getElementById('settings-name');
-      const emailInput = document.getElementById('settings-email');
-      
-      const storedName = localStorage.getItem('medlink_userName');
-      const storedEmail = localStorage.getItem('medlink_userEmail');
-      
-      if(storedName && nameInput) nameInput.value = storedName;
-      if(storedEmail && emailInput) emailInput.value = storedEmail;
+      document.addEventListener('DOMContentLoaded', async () => {
+        // 1. Populate inputs from real API / session
+        const nameInput = document.getElementById('settings-name');
+        const emailInput = document.getElementById('settings-email');
+        const phoneInput = document.getElementById('settings-phone');
+        let avatarPreview = document.getElementById('avatarPreview'); // Use let so we can update it if it's replaced
+        
+        // Wait for dashboard.js to load the user, but we can also fetch it directly
+        const res = await AuthAPI.getMe();
+        const user = res?.data || Auth.getUser();
+        let currentName = 'User';
 
-      // 2. Avatar File Upload logic
-      const avatarInput = document.getElementById('avatarInput');
-      const avatarPreview = document.getElementById('avatarPreview');
-      const headerProfileImg = document.querySelector('.profile-btn img');
+        if (user) {
+          currentName = user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User';
+          if (nameInput) nameInput.value = currentName;
+          if (emailInput) emailInput.value = user.email || '';
+          if (phoneInput) phoneInput.value = user.phone || '+962 79 123 4567';
+          
+          if (avatarPreview && typeof window.mlAvatar !== 'undefined') {
+              const profileImg = (user.profileImage && user.profileImage.length > 100) ? user.profileImage : null;
+              const avatarHTML = window.mlAvatar(currentName, profileImg, 'avatar-preview-img');
+              avatarPreview.outerHTML = avatarHTML;
+              
+              // We replaced outerHTML, so we must re-query the new element, but we'll add an ID to the generated HTML first
+              // Since mlAvatar doesn't support passing ID, we'll find the element by class
+              avatarPreview = document.querySelector('.avatar-preview-img');
+              if(avatarPreview) {
+                  // Re-apply inline styles for the large settings preview
+                  avatarPreview.style.width = '100px';
+                  avatarPreview.style.height = '100px';
+                  avatarPreview.style.borderRadius = '50%';
+                  avatarPreview.style.objectFit = 'cover';
+                  avatarPreview.style.border = '1px solid var(--border)';
+              }
+          }
+        }
 
-      if (avatarInput) {
-        avatarInput.addEventListener('change', function(e) {
-          if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              const result = e.target.result;
-              avatarPreview.src = result;
-              if (headerProfileImg) {
-                headerProfileImg.src = result;
+        // 2. Avatar File Upload logic
+        const avatarInput = document.getElementById('avatarInput');
+        
+        if (avatarInput) {
+          avatarInput.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                const result = e.target.result;
+                window.newAvatarBase64 = result;
+                
+                if (avatarPreview) {
+                    if (avatarPreview.tagName.toLowerCase() === 'div') {
+                        const newImg = document.createElement('img');
+                        newImg.src = result;
+                        newImg.className = 'avatar-preview-img';
+                        newImg.style.width = '100px';
+                        newImg.style.height = '100px';
+                        newImg.style.borderRadius = '50%';
+                        newImg.style.objectFit = 'cover';
+                        newImg.style.border = '1px solid var(--border)';
+                        avatarPreview.parentNode.replaceChild(newImg, avatarPreview);
+                        avatarPreview = newImg;
+                    } else {
+                        avatarPreview.src = result;
+                    }
+                }
+              }
+              reader.readAsDataURL(e.target.files[0]);
+            }
+          });
+        }
+
+        // 3. Premium Saving Experience connected to API
+        const saveBtn = document.getElementById('btn-save-profile');
+        const saveStatus = document.getElementById('profile-save-status');
+
+        if (saveBtn) {
+          saveBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const btnContent = saveBtn.innerHTML;
+            
+            // Show spinner
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            saveBtn.disabled = true;
+
+            const updateData = {
+              name: nameInput?.value,
+              email: emailInput?.value,
+              phone: phoneInput?.value,
+            };
+
+            if (window.newAvatarBase64) {
+                updateData.profileImage = window.newAvatarBase64;
+            }
+
+            // Call Real API
+            const apiRes = await AuthAPI.updateProfile(updateData);
+
+            if (apiRes?.success) {
+              // Write to LocalStorage for offline cache
+              const currentUser = Auth.getUser() || {};
+              const updatedUser = { ...currentUser, ...updateData };
+              localStorage.setItem('medlink_user', JSON.stringify(updatedUser));
+              localStorage.setItem('medlink_userName', updateData.name);
+              localStorage.setItem('medlink_userEmail', updateData.email);
+
+              // Sync Navbar DOM instantly
+              const profileNameEl = document.querySelector('.dropdown-header strong');
+              const profileEmailEl = document.querySelector('.dropdown-header p.text-muted');
+              if (profileNameEl) profileNameEl.textContent = updateData.name;
+              if (profileEmailEl) profileEmailEl.textContent = updateData.email;
+
+              // Update Navbar Avatar icon safely (could be img, div, or svg)
+              if (window.newAvatarBase64) {
+                  const headerProfileImg = document.querySelector('.profile-btn .profile-img');
+                  if (headerProfileImg) {
+                      // If it's not an img tag (e.g. div from mlAvatar), replace it with an img
+                      if (headerProfileImg.tagName.toLowerCase() !== 'img') {
+                          const newImg = document.createElement('img');
+                          newImg.src = window.newAvatarBase64;
+                          newImg.className = 'profile-img';
+                          headerProfileImg.parentNode.replaceChild(newImg, headerProfileImg);
+                      } else {
+                          headerProfileImg.src = window.newAvatarBase64;
+                      }
+                  }
+              }
+
+              // Premium Notification
+              if (typeof mlAlert !== 'undefined') {
+                mlAlert('Profile settings updated successfully!', 'success');
+              } else {
+                MedLinkUI.toast('Profile settings updated successfully!', 'success');
+              }
+            } else {
+              if (typeof mlAlert !== 'undefined') {
+                mlAlert(apiRes?.message || 'Failed to update profile.', 'error');
+              } else {
+                MedLinkUI.toast(apiRes?.message || 'Failed to update profile.', 'error');
               }
             }
-            reader.readAsDataURL(e.target.files[0]);
-          }
-        });
-      }
-
-      // 3. Premium Saving Experience (No Alerts, DOM patching)
-      const saveBtn = document.getElementById('btn-save-profile');
-      const saveStatus = document.getElementById('profile-save-status');
-
-      if (saveBtn) {
-        saveBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          const btnContent = saveBtn.innerHTML;
-          
-          // Show spinner
-          saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-          saveBtn.disabled = true;
-
-          setTimeout(() => {
-            // Write to LocalStorage
-            if (nameInput && nameInput.value) {
-              localStorage.setItem('medlink_userName', nameInput.value);
-              localStorage.setItem('medlink_firstName', nameInput.value.split(' ')[0]);
-            }
-            if (emailInput && emailInput.value) {
-              localStorage.setItem('medlink_userEmail', emailInput.value);
-            }
-
-            // Sync Navbar DOM instantly without reloading page
-            const newName = localStorage.getItem('medlink_userName');
-            const newEmail = localStorage.getItem('medlink_userEmail');
-            
-            const profileNameEl = document.querySelector('.dropdown-header strong');
-            const profileEmailEl = document.querySelector('.dropdown-header p.text-muted');
-            if (profileNameEl) profileNameEl.textContent = newName;
-            if (profileEmailEl) profileEmailEl.textContent = newEmail;
 
             // Revert button
             saveBtn.innerHTML = btnContent;
             saveBtn.disabled = false;
-
-            // Premium Notification
-            mlAlert('Profile settings updated successfully!', 'success');
-          }, 800);
-        });
-      }
+          });
+        }
+      });
     </script>
   </body>
 </html>

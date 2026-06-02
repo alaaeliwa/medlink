@@ -7,186 +7,247 @@
 // --- 1. STATE ---
 // REMOVED: ALL_MEDICINES and ALL_PHARMACIES mock arrays
 // These are now fetched from the API and stored here
-let apiDataset    = [];   // holds the full current dataset from the API
-let isLoading     = false;
+let apiDataset = []; // holds the full current dataset from the API
+let isLoading = false;
 
-let currentPage            = 1;
-const ITEMS_PER_PAGE       = 6;
-let currentCategoryFilter  = 'All';
-let currentSortFilter      = 'Default';
-let currentSearchQuery     = '';
+let currentPage = 1;
+const ITEMS_PER_PAGE = 6;
+let currentCategoryFilter = "All";
+let currentSortFilter = "Default";
+let currentSearchQuery = "";
 
 // Page context detection — kept exactly as-is
-const isMedicinesPage  = document.getElementById('medicines-grid') !== null;
-const isPharmaciesPage = document.getElementById('pharmacies-grid') !== null;
-const gridContainer    = document.getElementById('medicines-grid') || document.getElementById('pharmacies-grid');
-const paginationContainer = document.getElementById('dynamic-pagination');
-const statsDisplay     = document.getElementById('stats-display');
+const isMedicinesPage = document.getElementById("medicines-grid") !== null;
+const isPharmaciesPage = document.getElementById("pharmacies-grid") !== null;
+const gridContainer =
+  document.getElementById("medicines-grid") ||
+  document.getElementById("pharmacies-grid");
+const paginationContainer = document.getElementById("dynamic-pagination");
+const statsDisplay = document.getElementById("stats-display");
 
 // --- 2. API FETCH FUNCTIONS ---
 // REPLACED: reading from hardcoded ALL_MEDICINES / ALL_PHARMACIES
 // NOW: fetches from real API with current filters applied
 
 async function fetchFromAPI() {
-    if (!gridContainer) return;
-    isLoading = true;
-    showSkeletonCards();
+  if (!gridContainer) return;
+  isLoading = true;
+  showSkeletonCards();
 
-    let res;
+  let res;
 
-    if (isMedicinesPage) {
-        // Build query params from current filter state
-        const params = { per_page: 100 };
+  if (isMedicinesPage) {
+    // Build query params from current filter state
+    const params = { per_page: 100 };
 
-        if (currentSearchQuery)                          params.search   = currentSearchQuery;
-        if (currentCategoryFilter !== 'All')             params.category = currentCategoryFilter;
-        if (currentSortFilter === 'PriceLow')            params.sort     = 'price_asc';
-        else if (currentSortFilter === 'PriceHigh')      params.sort     = 'price_desc';
-        else if (currentSortFilter === 'A-Z')            params.sort     = 'name_asc';
+    if (currentSearchQuery) params.search = currentSearchQuery;
+    if (currentCategoryFilter !== "All")
+      params.category = currentCategoryFilter;
+    if (currentSortFilter === "PriceLow") params.sort = "price_asc";
+    else if (currentSortFilter === "PriceHigh") params.sort = "price_desc";
+    else if (currentSortFilter === "A-Z") params.sort = "name_asc";
 
-        res = await MedicinesAPI.list(params);
+    console.log(
+      "[Medicines Filter] Category:",
+      currentCategoryFilter,
+      "| Sort:",
+      currentSortFilter,
+      "| Params:",
+      params,
+    );
+    res = await MedicinesAPI.list(params);
 
-        // Map API shape → shape the card renderer expects
-        apiDataset = (res?.data?.medicines || []).map(m => ({
-            id:          m.id,
-            name:        m.name,
-            category:    m.category || 'General',
-            price:       parseFloat(m.lowestPrice || m.averagePrice || 0),
-            pharmacies:  m.pharmaciesCount || 0,
-            img: '../images/MID.webp',   // fallback image
-            fav:         m.isFavorite || false,
-        }));
+    // Map API shape → shape the card renderer expects
+    apiDataset = (res?.data?.medicines || []).map((m) => ({
+      id: m.id,
+      name: m.name,
+      category: m.category || "General",
+      price: parseFloat(m.lowestPrice || m.averagePrice || 0),
+      pharmacies: m.pharmaciesCount || 0,
+      img: "../images/MID.webp", // fallback image
+      fav: m.isFavorite || false,
+    }));
+  } else {
+    // Pharmacies page
+    const params = { per_page: 100 };
 
-    } else {
-        // Pharmacies page
-        const params = { per_page: 100 };
+    if (currentSearchQuery) params.search = currentSearchQuery;
 
-        if (currentSearchQuery) params.search = currentSearchQuery;
-
-        // Area filter
-        if (currentCategoryFilter !== 'All' &&
-            currentCategoryFilter !== 'Open Now' &&
-            currentCategoryFilter !== 'Open 24/7') {
-            params.area = currentCategoryFilter;
-        }
-
-        // Sort
-        if (currentSortFilter === 'Highest Rated') params.sort = 'rating_high';
-
-        res = await PharmaciesAPI.list(params);
-
-        // Map API shape → shape the card renderer expects
-        apiDataset = (res?.data?.pharmacies || []).map(p => ({
-            id:       p.id,
-            name:     p.name,
-            area:     p.area || '—',
-            rating:   parseFloat(p.rating || 0),
-            reviews:  p.reviewCount || 0,
-            status:   p.isOpenNow ? 'Open Now' : 'Closed',
-            img:      p.profileImage || '../images/PHAR.jpg',
-            fav:      p.isFavorite || false,
-        }));
-
-        // Client-side status filter (API doesn't filter by open/closed)
-        if (currentCategoryFilter === 'Open Now' || currentCategoryFilter === 'Open 24/7') {
-            apiDataset = apiDataset.filter(p => p.status === currentCategoryFilter || p.status === 'Open Now');
-        }
+    // Area filter
+    if (
+      currentCategoryFilter !== "All" &&
+      currentCategoryFilter !== "Open Now" &&
+      currentCategoryFilter !== "Open 24/7"
+    ) {
+      params.area = currentCategoryFilter;
     }
 
-    isLoading = false;
-    renderData();
+    // Sort
+    if (currentSortFilter === "Highest Rated") params.sort = "rating_high";
+
+    console.log(
+      "[Pharmacies Filter] Category:",
+      currentCategoryFilter,
+      "| Sort:",
+      currentSortFilter,
+      "| Params:",
+      params,
+    );
+    res = await PharmaciesAPI.list(params);
+
+    // Map API shape → shape the card renderer expects
+    apiDataset = (res?.data?.pharmacies || []).map((p) => ({
+      id: p.id,
+      name: p.name,
+      area: p.area || "—",
+      rating: parseFloat(p.rating || 0),
+      reviews: p.reviewCount || 0,
+      status: p.isOpenNow ? "Open Now" : "Closed",
+      img: p.profileImage || "../images/PHAR.jpg",
+      fav: p.isFavorite || false,
+    }));
+  }
+
+  isLoading = false;
+  renderData();
 }
 
-// --- 3. CUSTOM SELECT COMPONENT LOGIC — kept exactly as-is ---
+// --- 3. CUSTOM SELECT COMPONENT LOGIC — IMPROVED ---
+let selectsInitialized = false;
 function initCustomSelects() {
-    const customSelects = document.querySelectorAll('.custom-select');
+  if (selectsInitialized) return;
+  selectsInitialized = true;
 
-    customSelects.forEach(select => {
-        const trigger    = select.querySelector('.custom-select-trigger');
-        const options    = select.querySelectorAll('.custom-option');
-        const filterType = select.dataset.filterType;
+  document.addEventListener("click", function (e) {
+    // 1. Click on trigger
+    const trigger = e.target.closest(".custom-select-trigger");
+    if (trigger) {
+      const select = trigger.closest(".custom-select");
+      document.querySelectorAll(".custom-select").forEach((s) => {
+        if (s !== select) s.classList.remove("open");
+      });
+      select.classList.toggle("open");
+      return;
+    }
 
-        trigger.addEventListener('click', function(e) {
-            e.stopPropagation();
-            customSelects.forEach(s => { if (s !== select) s.classList.remove('open'); });
-            select.classList.toggle('open');
-        });
+    // 2. Click on option
+    const option = e.target.closest(".custom-option");
+    if (option) {
+      const select = option.closest(".custom-select");
+      if (!select) return;
 
-        options.forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.stopPropagation();
+      select.querySelectorAll(".custom-option").forEach((opt) => opt.classList.remove("selected"));
+      option.classList.add("selected");
+      
+      const span = select.querySelector(".custom-select-trigger span");
+      if (span) span.textContent = option.textContent;
+      
+      select.classList.remove("open");
 
-                options.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                trigger.querySelector('span').textContent = this.textContent;
-                select.classList.remove('open');
+      const filterType = select.dataset.filterType;
+      const value = option.dataset.value;
+      console.log(`[Filter Changed] Type: ${filterType}, Value: ${value}`);
+      if (filterType === "category") {
+        currentCategoryFilter = value;
+      } else if (filterType === "sort") {
+        currentSortFilter = value;
+      }
 
-                const value = this.dataset.value;
-                if (filterType === 'category') {
-                    currentCategoryFilter = value;
-                } else if (filterType === 'sort') {
-                    currentSortFilter = value;
-                }
+      // CHANGED: reset page and re-fetch from API
+      currentPage = 1;
+      fetchFromAPI();
+      return;
+    }
 
-                // CHANGED: reset page and re-fetch from API instead of filtering local mock data
-                currentPage = 1;
-                fetchFromAPI();
-            });
-        });
-    });
-
-    document.addEventListener('click', () => {
-        customSelects.forEach(s => s.classList.remove('open'));
-    });
+    // 3. Click outside
+    document.querySelectorAll(".custom-select").forEach((s) => s.classList.remove("open"));
+  });
 }
 
 // --- 4. RENDER LOGIC — kept exactly as-is ---
 // Now reads from apiDataset instead of ALL_MEDICINES / ALL_PHARMACIES
 // but the pagination math, card HTML, and favorite binding are all unchanged
 function renderData() {
-    if (!gridContainer) return;
+  if (!gridContainer) return;
 
-    let dataSet = [...apiDataset];
+  let dataSet = [...apiDataset];
 
-    // Client-side search fallback (API already searched, this handles edge cases)
-    if (currentSearchQuery) {
-        const q = currentSearchQuery.toLowerCase();
-        dataSet = dataSet.filter(item => item.name.toLowerCase().includes(q));
+  // 1. Client-side Search filter
+  if (currentSearchQuery) {
+    const q = currentSearchQuery.toLowerCase();
+    dataSet = dataSet.filter((item) => item.name.toLowerCase().includes(q));
+  }
+
+  // 2. Client-side Category / Area / Status filter
+  if (isMedicinesPage) {
+    if (currentCategoryFilter !== "All") {
+      dataSet = dataSet.filter(
+        (item) => item.category === currentCategoryFilter,
+      );
     }
-
-    // D. Pagination Math — kept exactly as-is
-    const totalItems = dataSet.length;
-    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
-    if (currentPage > totalPages) currentPage = totalPages;
-
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex   = startIndex + ITEMS_PER_PAGE;
-    const pageData   = dataSet.slice(startIndex, endIndex);
-
-    // E. Update Stats Text — kept exactly as-is
-    if (statsDisplay) {
-        if (totalItems === 0) {
-            statsDisplay.textContent = `Showing 0 results`;
-        } else {
-            statsDisplay.textContent = `Showing ${startIndex + 1}–${Math.min(endIndex, totalItems)} of ${totalItems} ${isMedicinesPage ? 'medicines' : 'pharmacies'}`;
-        }
+  } else {
+    // Pharmacies Page
+    if (
+      currentCategoryFilter === "Open Now" ||
+      currentCategoryFilter === "Open 24/7"
+    ) {
+      dataSet = dataSet.filter(
+        (p) => p.status === currentCategoryFilter || p.status === "Open Now",
+      );
+    } else if (currentCategoryFilter !== "All") {
+      dataSet = dataSet.filter((p) => p.area === currentCategoryFilter);
     }
+  }
 
-    // F. Render Grid HTML — kept exactly as-is
-    gridContainer.innerHTML = '';
-
-    if (pageData.length === 0) {
-        gridContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">No items matched your filters.</div>`;
+  // 3. Client-side Sorting
+  if (isMedicinesPage) {
+    if (currentSortFilter === "PriceLow") {
+      dataSet.sort((a, b) => a.price - b.price);
+    } else if (currentSortFilter === "PriceHigh") {
+      dataSet.sort((a, b) => b.price - a.price);
+    } else if (currentSortFilter === "A-Z") {
+      dataSet.sort((a, b) => a.name.localeCompare(b.name));
     }
+  } else {
+    // Pharmacies Page
+    if (currentSortFilter === "Highest Rated") {
+      dataSet.sort((a, b) => b.rating - a.rating);
+    }
+  }
 
-    pageData.forEach(item => {
-        let cardHTML = '';
+  // D. Pagination Math — kept exactly as-is
+  const totalItems = dataSet.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+  if (currentPage > totalPages) currentPage = totalPages;
 
-        if (isMedicinesPage) {
-            const favClass   = item.fav ? 'fas text-danger' : 'far';
-            const activeClass= item.fav ? 'active' : '';
-            // CHANGED: href now passes real database ID
-            cardHTML = `
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const pageData = dataSet.slice(startIndex, endIndex);
+
+  // E. Update Stats Text — kept exactly as-is
+  if (statsDisplay) {
+    if (totalItems === 0) {
+      statsDisplay.textContent = `Showing 0 results`;
+    } else {
+      statsDisplay.textContent = `Showing ${startIndex + 1}–${Math.min(endIndex, totalItems)} of ${totalItems} ${isMedicinesPage ? "medicines" : "pharmacies"}`;
+    }
+  }
+
+  // F. Render Grid HTML — kept exactly as-is
+  gridContainer.innerHTML = "";
+
+  if (pageData.length === 0) {
+    gridContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">No items matched your filters.</div>`;
+  }
+
+  pageData.forEach((item) => {
+    let cardHTML = "";
+
+    if (isMedicinesPage) {
+      const favClass = item.fav ? "fas text-danger" : "far";
+      const activeClass = item.fav ? "active" : "";
+      // CHANGED: href now passes real database ID
+      cardHTML = `
                 <div class="modern-card">
                     <div class="card-image-wrapper">
                         <img src="${item.img}" alt="${item.name}" class="card-img" />
@@ -206,21 +267,21 @@ function renderData() {
                     </div>
                 </div>
             `;
-        } else {
-            let badgeClass = 'success-badge';
-            let badgeIcon  = 'fa-circle';
-            if (item.status === 'Closed') {
-                badgeClass = 'danger-badge';
-                badgeIcon  = 'fa-clock';
-            }
-            // CHANGED: href now passes real database ID
-            cardHTML = `
+    } else {
+      let badgeClass = "success-badge";
+      let badgeIcon = "fa-circle";
+      if (item.status === "Closed") {
+        badgeClass = "danger-badge";
+        badgeIcon = "fa-clock";
+      }
+      // CHANGED: href now passes real database ID
+      cardHTML = `
                 <div class="modern-card">
                     <div class="card-image-wrapper pharmacy-wrapper">
                         <img src="${item.img}" alt="${item.name}" class="card-img" onerror="this.src='images/PHAR.jpg'" />
-                        <button class="favorite-btn floating-action ${item.fav ? 'active' : ''}"
+                        <button class="favorite-btn floating-action ${item.fav ? "active" : ""}"
                             data-type="pharmacy" data-id="${item.id}">
-                            <i class="${item.fav ? 'fas text-danger' : 'far'} fa-heart"></i>
+                            <i class="${item.fav ? "fas text-danger" : "far"} fa-heart"></i>
                         </button>
                         <div class="glass-badge ${badgeClass}"><i class="fas ${badgeIcon} text-xs"></i> ${item.status}</div>
                     </div>
@@ -234,83 +295,106 @@ function renderData() {
                     </div>
                 </div>
             `;
+    }
+
+    gridContainer.insertAdjacentHTML("beforeend", cardHTML);
+  });
+
+  // Re-bind favorite buttons
+  gridContainer.querySelectorAll(".favorite-btn").forEach((btn) => {
+    btn.addEventListener("click", async function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const type = this.dataset.type;
+      const targetId = this.dataset.id;
+      if (!targetId) return;
+
+      // Optimistic visual toggle
+      const isNowActive = !this.classList.contains("active");
+      this.classList.toggle("active", isNowActive);
+      const icon = this.querySelector("i");
+      if (isNowActive) {
+        icon.classList.replace("far", "fas");
+        icon.classList.add("text-danger");
+      } else {
+        icon.classList.remove("fas", "text-danger");
+        icon.classList.add("far");
+      }
+
+      const targetData = apiDataset.find(item => String(item.id) === String(targetId)) || {};
+      const res = await FavoritesAPI.toggle(type, targetId, targetData);
+
+      if (res?.success) {
+        const isFav = res.data?.isFavorite;
+        MedLinkUI.toast(isFav ? "Added to favorites" : "Removed from favorites", "success");
+      } else {
+        // Revert visual on failure
+        this.classList.toggle("active", !isNowActive);
+        if (!isNowActive) {
+          icon.classList.replace("far", "fas");
+          icon.classList.add("text-danger");
+        } else {
+          icon.classList.remove("fas", "text-danger");
+          icon.classList.add("far");
         }
-
-        gridContainer.insertAdjacentHTML('beforeend', cardHTML);
+      }
     });
+  });
 
-    // Re-bind favorite buttons — UPDATED to call real API
-    gridContainer.querySelectorAll('.favorite-btn').forEach(btn => {
-        btn.addEventListener('click', async function(e) {
-            e.preventDefault();
-
-            const type     = this.dataset.type;
-            const targetId = this.dataset.id;
-
-            // Instant visual toggle (same as before)
-            this.classList.toggle('active');
-            const icon = this.querySelector('i');
-            if (this.classList.contains('active')) {
-                icon.classList.replace('far', 'fas');
-                icon.classList.add('text-danger');
-            } else {
-                icon.classList.remove('fas', 'text-danger');
-                icon.classList.add('far');
-            }
-
-            // CHANGED: persist to real API instead of just toggling class
-            if (targetId) {
-                await FavoritesAPI.toggle(type, targetId);
-            }
-        });
-    });
-
-    // G. Render Pagination — kept exactly as-is
-    renderPaginationData(totalPages);
+  // G. Render Pagination — kept exactly as-is
+  renderPaginationData(totalPages);
 }
 
 // --- 5. PAGINATION — kept exactly as-is ---
 function renderPaginationData(totalPages) {
-    if (!paginationContainer) return;
-    paginationContainer.innerHTML = '';
-    if (totalPages <= 1) return;
+  if (!paginationContainer) return;
+  paginationContainer.innerHTML = "";
+  if (totalPages <= 1) return;
 
-    const prevDisabled = currentPage === 1 ? 'disabled' : '';
-    let html = `<button class="page-btn nav-btn" data-page="prev" ${prevDisabled}><i class="fas fa-chevron-left" style="margin-right: 6px;"></i> Prev</button>`;
+  const prevDisabled = currentPage === 1 ? "disabled" : "";
+  let html = `<button class="page-btn nav-btn" data-page="prev" ${prevDisabled}><i class="fas fa-chevron-left" style="margin-right: 6px;"></i> Prev</button>`;
 
-    for (let i = 1; i <= totalPages; i++) {
-        html += `<button class="page-btn ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
-    }
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="page-btn ${currentPage === i ? "active" : ""}" data-page="${i}">${i}</button>`;
+  }
 
-    const nextDisabled = currentPage === totalPages ? 'disabled' : '';
-    html += `<button class="page-btn nav-btn" data-page="next" ${nextDisabled}>Next <i class="fas fa-chevron-right" style="margin-left: 6px;"></i></button>`;
+  const nextDisabled = currentPage === totalPages ? "disabled" : "";
+  html += `<button class="page-btn nav-btn" data-page="next" ${nextDisabled}>Next <i class="fas fa-chevron-right" style="margin-left: 6px;"></i></button>`;
 
-    paginationContainer.innerHTML = html;
+  paginationContainer.innerHTML = html;
 
-    paginationContainer.querySelectorAll('.page-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.disabled || this.classList.contains('active')) return;
+  paginationContainer.querySelectorAll(".page-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      if (this.disabled || this.classList.contains("active")) return;
 
-            const action = this.dataset.page;
-            if (action === 'prev')      currentPage--;
-            else if (action === 'next') currentPage++;
-            else                        currentPage = parseInt(action);
+      const action = this.dataset.page;
+      if (action === "prev") currentPage--;
+      else if (action === "next") currentPage++;
+      else currentPage = parseInt(action);
 
-            // CHANGED: re-fetch from API on page change to get fresh page data
-            // (API handles pagination server-side for large datasets)
-            renderData(); // uses already-fetched apiDataset, just re-slices
+      // CHANGED: re-fetch from API on page change to get fresh page data
+      // (API handles pagination server-side for large datasets)
+      renderData(); // uses already-fetched apiDataset, just re-slices
 
-            const searchSection = document.querySelector('.search-section');
-            if (searchSection) window.scrollTo({ top: searchSection.offsetTop - 20, behavior: 'smooth' });
+      const searchSection = document.querySelector(".search-section");
+      if (searchSection)
+        window.scrollTo({
+          top: searchSection.offsetTop - 20,
+          behavior: "smooth",
         });
     });
+  });
 }
 
 // --- 6. SKELETON CARDS while loading ---
 // NEW: shows placeholder cards while API is fetching
 function showSkeletonCards() {
-    if (!gridContainer) return;
-    gridContainer.innerHTML = Array(ITEMS_PER_PAGE).fill('').map(() => `
+  if (!gridContainer) return;
+  gridContainer.innerHTML = Array(ITEMS_PER_PAGE)
+    .fill("")
+    .map(
+      () => `
         <div class="modern-card" style="opacity:0.5; pointer-events:none;">
             <div style="height:180px; background:var(--border,#e5e7eb); border-radius:12px 12px 0 0;"></div>
             <div class="card-content" style="display:flex; flex-direction:column; gap:10px; padding:16px;">
@@ -319,49 +403,55 @@ function showSkeletonCards() {
                 <div style="height:36px; background:var(--border,#e5e7eb); border-radius:8px; margin-top:8px;"></div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 // --- 7. DYNAMIC CATEGORIES ---
 async function loadCategories() {
-    const container = document.getElementById('category-options');
-    if (!container) return;
+  const container = document.getElementById("category-options");
+  if (!container) return;
 
-    const res = await MedicinesAPI.categories();
-    if (!res?.success) return;
+  const res = await MedicinesAPI.categories();
+  if (!res?.success) {
+    console.warn("[loadCategories] Failed to load categories");
+    return;
+  }
 
-    const categories = res.data.filter(c => c.medicineCount > 0);
-    categories.forEach(cat => {
-        const span = document.createElement('span');
-        span.className = 'custom-option';
-        span.dataset.value = cat.name;
-        span.textContent = cat.name;
-        container.appendChild(span);
-    });
+  const categories = res.data.filter((c) => c.medicineCount > 0);
+  console.log("[loadCategories] Found categories:", categories);
 
-    // Re-init custom selects so new options are clickable
-    initCustomSelects();
+  categories.forEach((cat) => {
+    const span = document.createElement("span");
+    span.className = "custom-option";
+    span.dataset.value = cat.name;
+    span.textContent = cat.name;
+    container.appendChild(span);
+  });
+
+  // Event delegation handles new options automatically
 }
 
 // --- 8. BOOT ---
-document.addEventListener('DOMContentLoaded', () => {
-    initCustomSelects();
-    loadCategories();
+document.addEventListener("DOMContentLoaded", () => {
+  initCustomSelects();
+  loadCategories();
 
-    // CHANGED: initial load from API instead of mock array
-    fetchFromAPI();
+  // CHANGED: initial load from API instead of mock array
+  fetchFromAPI();
 
-    // Search — CHANGED: re-fetches from API on each keystroke (debounced)
-    const searchInput = document.getElementById('medicine-search');
-    if (searchInput) {
-        let searchTimeout;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                currentSearchQuery = e.target.value.trim();
-                currentPage = 1;
-                fetchFromAPI();
-            }, 350); // debounce: wait 350ms after user stops typing
-        });
-    }
+  // Search — CHANGED: re-fetches from API on each keystroke (debounced)
+  const searchInput = document.getElementById("medicine-search");
+  if (searchInput) {
+    let searchTimeout;
+    searchInput.addEventListener("input", (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        currentSearchQuery = e.target.value.trim();
+        currentPage = 1;
+        fetchFromAPI();
+      }, 350); // debounce: wait 350ms after user stops typing
+    });
+  }
 });

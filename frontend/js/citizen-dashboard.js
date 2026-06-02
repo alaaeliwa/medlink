@@ -94,32 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     mobileBtn.addEventListener('click', () => navLinks.classList.toggle('active'));
   }
 
-  // --- Favorite Button Toggle ---
-  // UPDATED: now calls real API on toggle instead of just CSS change
-  document.querySelectorAll('.favorite-btn').forEach(btn => {
-    btn.addEventListener('click', async function(e) {
-      e.preventDefault();
-
-      const type     = this.dataset.type || 'medicine';
-      const targetId = this.dataset.id;
-      const icon     = this.querySelector('i');
-
-      // Optimistic UI update first (instant feedback)
-      this.classList.toggle('active');
-      if (this.classList.contains('active')) {
-        icon.classList.replace('far', 'fas');
-        icon.classList.add('text-danger');
-      } else {
-        icon.classList.remove('fas', 'text-danger');
-        icon.classList.add('far');
-      }
-
-      // Then sync with API
-      if (targetId) {
-        await FavoritesAPI.toggle(type, targetId);
-      }
-    });
-  });
 
   // --- Smart Search ---
   const searchInput            = document.getElementById('medicine-search');
@@ -450,7 +424,7 @@ async function loadRecentMedicines() {
         </div>`;
     }).join('');
 
-    bindDashboardFavorites(container, 'medicine');
+    bindDashboardFavorites(container, 'medicine', medicines);
   } catch (e) {
     container.innerHTML = '<p class="text-muted">Could not load medicines.</p>';
   }
@@ -496,6 +470,8 @@ async function loadRecentPharmacies() {
           </div>
         </div>`;
     }).join('');
+
+    bindDashboardFavorites(container, 'pharmacy', pharmacies);
   } catch (e) {
     container.innerHTML = '<p class="text-muted">Could not load pharmacies.</p>';
   }
@@ -513,12 +489,13 @@ function skeletonCards(count) {
   `).join('');
 }
 
-function bindDashboardFavorites(container, type) {
+function bindDashboardFavorites(container, type, dataArray = []) {
   container.querySelectorAll('.favorite-btn[data-id]').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.preventDefault();
       const id = btn.dataset.id;
-      const res = await FavoritesAPI.toggle(type, id);
+      const targetData = dataArray.find(item => String(item.id) === String(id)) || {};
+      const res = await FavoritesAPI.toggle(type, id, targetData);
       if (res?.success) {
         const isFav = res.data?.isFavorite;
         btn.classList.toggle('active', isFav);

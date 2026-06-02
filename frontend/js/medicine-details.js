@@ -108,7 +108,7 @@ function bindFavoriteBtn(med) {
     if (!favBtn) return;
 
     favBtn.addEventListener('click', async () => {
-        const res = await FavoritesAPI.toggle('medicine', med.id);
+        const res = await FavoritesAPI.toggle('medicine', med.id, med);
         if (res?.success) {
             const isFav = res.data?.isFavorite;
             favBtn.querySelector('i').className = isFav ? 'fas fa-heart' : 'far fa-heart';

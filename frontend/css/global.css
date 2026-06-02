@@ -284,9 +284,7 @@ a:hover {
 }
 
 a:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: var(--radius-xs);
+  outline: none;
 }
 
 ul,
@@ -495,8 +493,7 @@ li {
 }
 
 .btn:focus {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+  outline: none;
 }
 
 .btn i {
@@ -1279,4 +1276,20 @@ select:disabled {
   a[href]::after {
     content: "";
   }
+}
+
+/* ==========================================
+   1️⃣5️⃣ AVATAR PLACEHOLDER
+   ========================================== */
+.ml-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  font-weight: var(--font-weight-bold);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  user-select: none;
 }
